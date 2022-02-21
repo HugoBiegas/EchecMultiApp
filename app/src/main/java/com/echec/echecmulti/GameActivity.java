@@ -3,6 +3,7 @@ package com.echec.echecmulti;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -22,59 +23,72 @@ public class GameActivity extends AppCompatActivity {
     String roomName = "";
     String role = "";
     String message = "";
-    FirebaseDatabase database;
-    DatabaseReference messageRef;
+    Button buttonqui;
+    FirebaseDatabase database;//pour se connecter as la BDD
+    DatabaseReference messageRef;//pour faire référence as la BDD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        button = findViewById(R.id.buttonPoke);
-        button.setEnabled(false);
+        button = findViewById(R.id.buttonPoke);//prend le bouton
+        button.setEnabled(false);//mais le bouton a inclicable
 
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();//créer une instance
+        buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
 
         SharedPreferences preferences = getSharedPreferences("PREFS",0);
         playerName = preferences.getString("playerName","");
 
-        Bundle extra = getIntent().getExtras();
+        Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null){
-            roomName = extra.getString("roomName");
-            if(roomName.equals(playerName))
+            roomName = extra.getString("roomName");//récupére la valeur envoiller
+            if(roomName.equals(playerName)){//teste pour savoir si ces le joueur1 ou 2
                 role = "host";
-            else
+            }
+            else{
                 role = "guest";
+            }
         }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //afficher un message
-                button.setEnabled(false);
-                message = role + ":Poked!:";
-                messageRef.setValue(message);
+                button.setEnabled(false);//mais le bouton a false une foit que la personne as cliquer sur le bouton
+                message = role + ":Poked!:";//change le texte pour mettre host ou guest
+                messageRef.setValue(message);//change l'informatiosn dans la BDD
             }
         });
-        //
-        messageRef = database.getReference("rooms/"+roomName+"/message");
-        message = role + ":Poked!:";
-        messageRef.setValue(message);
+            messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
+            message = role + ":Poked!:";//change le texte pour mettre host ou guest
+            messageRef.setValue(message);//change l'informatiosn dans la BDD
+
+        buttonqui.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //bouton pour quiter l'applications
+            }
+        });
         addRoomEventListener();
     }
+
     private void addRoomEventListener(){
         messageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
-                if(role.equals("host")){
-                    if(snapshot.getValue(String.class).contains("guest:")){//regarde si dans la BD il y as guest
-                        button.setEnabled(true);
+                if(role.equals("host")){//teste si le joueur est l'host ou pas
+                    if(snapshot.getValue(String.class).contains("guest:")){//regarde si l'endroit ou les donnée a changer contient guest
+                        button.setEnabled(true);//si oui il fait que le bouton est cliquable
+                        //est affiche un message
                         Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("gest:",""), Toast.LENGTH_SHORT).show();
 
                     }
                 }else{
-                    if(snapshot.getValue(String.class).contains("host:")){//regarde si dans la BD il y as host
-                        button.setEnabled(true);
+                    if(snapshot.getValue(String.class).contains("host:")){//regarde si l'endroit ou les donnée a changer contient host:
+                        button.setEnabled(true);//mais le bouton as clicable
+                        //est affiche un message
                         Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:",""), Toast.LENGTH_SHORT).show();
 
                     }

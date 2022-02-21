@@ -13,4 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Poke" />
+
+    <Button
+        android:id="@+id/quiter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="quiter" />
 </RelativeLayout>

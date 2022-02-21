@@ -20,18 +20,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomActivity extends AppCompatActivity {
-    ListView listView;
-    Button button;
+    ListView listView;//liste des View
+    Button button;//bouton de créations de room
 
-    List<String> roomList = new ArrayList<>();
-    String playerName="";
-    String roomName="";
-    FirebaseDatabase database;
-    DatabaseReference roomRef;
-    DatabaseReference roomsRef;
+    List<String> roomList = new ArrayList<>();//liste des room
+    String playerName="";//nom du joueur
+    String roomName="";//nom de la room
+    FirebaseDatabase database;//connections a la base de données
+    DatabaseReference roomRef;//référence as la base de donnée pour une room
+    DatabaseReference roomsRef;//référence as la base de donnée pour les room
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,69 +45,73 @@ public class RoomActivity extends AppCompatActivity {
         //récupérer le nom du joueur et donner le nom du joueur pour la room
         SharedPreferences preferences = getSharedPreferences("PREFS",0);
         playerName = preferences.getString("playerName","");
-        listView = findViewById(R.id.listRoom);
-        button = findViewById(R.id.buttonCreateRoom);
-
-
+        listView = findViewById(R.id.listRoom);//affectations de la liste des room
+        button = findViewById(R.id.buttonCreateRoom);//affectations du bonton
+        //si le bouton de créations de room est cliquer
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //créations de la room et assigniations du joueur 1
                 button.setText("créations de room");
                 button.setEnabled(false);
-                roomName = playerName;
-                roomRef = database.getReference("rooms/" + playerName + "/player1");
-                addRoomEventListener();
-                roomRef.setValue(playerName);
+                roomName = playerName;// on mais le nom du joueur comme nom de room
+                roomRef = database.getReference("rooms/" + playerName + "/player1");//créations de la room avec le jouer1
+                addRoomEventListener();//appelle de l'actions pour changer de page
+                roomRef.setValue(playerName);//mais la valeur de player1 aux nom du joueur
+
             }
         });
+        //si une personne clique sur un itéme de la liste des room
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //créations du joueur 2
-                roomName = roomList.get(i);
-                roomRef = database.getReference("rooms/" + roomName + "/player2");
-                addRoomEventListener();
-                roomRef.setValue(playerName);
+                roomName = roomList.get(i);//on donne as roomName le nom de l'endroi ou a cliquer la personne
+                roomRef = database.getReference("rooms/" + roomName + "/player2");//on crée le player2 dans la partie
+                addRoomEventListener();//appelle de l'actions pour changer de page
+                roomRef.setValue(playerName);//on mais la valeur de player2 aux nom du joueur
             }
         });
         //controle pour sa voir si la nouvelle room et valable
         addRoomsEventListener();
     }
+
     private void addRoomEventListener(){
         roomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //rejoidre une room
-                button.setText("crations de room");
-                button.setEnabled(true);
-                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                intent.putExtra("roomName",roomName);
-                startActivity(intent);
+                    button.setText("crations de room");//changement du bouton
+                    button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
+                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
+                    intent.putExtra("roomName",roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    startActivity(intent);//on lance l'activiter
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 //ereur
-                button.setText("creations de room");
-                button.setEnabled(true);
-                Toast.makeText(RoomActivity.this,"erreur!",Toast.LENGTH_SHORT).show();
+                button.setText("creations de room");//changement du bouton
+                button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
+                Toast.makeText(RoomActivity.this,"erreur!",Toast.LENGTH_SHORT).show();//message d'erreur
 
             }
         });
     }
+
     private void addRoomsEventListener(){
-    roomsRef = database.getReference("rooms");
+    roomsRef = database.getReference("rooms");//on récupére la référence de rooms
     roomsRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             //controle de la liste des room
-            roomList.clear();
-            Iterable<DataSnapshot> rooms = snapshot.getChildren();
-            for (DataSnapshot snapshot1 : rooms){
-                roomList.add(snapshot1.getKey());
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);
-                listView.setAdapter(adapter);
+            roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
+            Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
+            for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
+                roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
+                listView.setAdapter(adapter);//ajoute un élément dans la liste
             }
         }
 
