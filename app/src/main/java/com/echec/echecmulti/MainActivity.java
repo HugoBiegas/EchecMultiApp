@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
                     button.setText("connections");
                     button.setEnabled(true);
-                    //startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                    startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     finish();
                 }
             }
