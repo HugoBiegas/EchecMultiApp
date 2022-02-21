@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("playerName", playerName);
                     editor.apply();
-                    button.setText("connections");
-                    button.setEnabled(true);
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     finish();
                 }
