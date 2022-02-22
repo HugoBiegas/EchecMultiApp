@@ -92,7 +92,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void addRoomEventListener(){
-        messageRef.addValueEventListener(new ValueEventListener() {
+        messageRef.addValueEventListener(addRoomEvent());
+    }
+
+    private ValueEventListener addRoomEvent(){
+        return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
@@ -115,11 +119,10 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-            //erreur retenter
+                //erreur retenter
                 messageRef.setValue(message);
             }
-        });
-
+        };
     }
 
 }

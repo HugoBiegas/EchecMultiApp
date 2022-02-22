@@ -28,14 +28,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initialisation();
+        BTNClique();
+
+    }
+    private void initialisation(){
         //regarder si le joueur existe
         editText = findViewById(R.id.editTextLogin);//récupérations du champs nom
         button = findViewById(R.id.buttonLogin);//récupérations du bouton(pour l'actions)
-
         database = FirebaseDatabase.getInstance();//créations de l'instance
-
+    }
+    private void BTNClique(){
         //action appret avoir cliquer sur connection
-        button.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(btntchec());
+    }
+
+    private View.OnClickListener btntchec(){
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 playerName = editText.getText().toString();//récupérations du nom de l'utilisateur
@@ -49,22 +58,24 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-        });
-
+        };
     }
     //créations de l'endroit ou on vas gérer les évenement
-    public void addEventListener(){
-        playerRef.addValueEventListener(new ValueEventListener() {
+    private void addEventListener(){
+        playerRef.addValueEventListener(addEnvent());
+    }
+    private ValueEventListener addEnvent(){
+        return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 //succer - continue sur le prochain écran et sauvegarde le nom du joueur
-                    SharedPreferences preferences = getSharedPreferences("PREFS",0);//permet de modifier un ensemble particulier
-                    SharedPreferences.Editor editor = preferences.edit();//permet de changer la valeur contenut dans preferences
-                    editor.putString("playerName", playerName);//remplace le nom du joueur par le vraix nom du joueur
-                    editor.apply();//applique le changement de nom de joueur
-                    startActivity(new Intent(getApplicationContext(),RoomActivity.class));//on lance l'activiter RooomActivity
-                    finish();//on arréte la tache actuelle
+                SharedPreferences preferences = getSharedPreferences("PREFS",0);//permet de modifier un ensemble particulier
+                SharedPreferences.Editor editor = preferences.edit();//permet de changer la valeur contenut dans preferences
+                editor.putString("playerName", playerName);//remplace le nom du joueur par le vraix nom du joueur
+                editor.apply();//applique le changement de nom de joueur
+                startActivity(new Intent(getApplicationContext(),RoomActivity.class));//on lance l'activiter RooomActivity
+                finish();//on arréte la tache actuelle
             }
 
             @Override
@@ -74,6 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 button.setEnabled(true);//rend visible le bouton
                 Toast.makeText(MainActivity.this,"erreur!",Toast.LENGTH_SHORT).show();//affiche un message d'erreur
             }
-        });
+        };
     }
 }

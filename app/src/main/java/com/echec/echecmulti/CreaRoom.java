@@ -31,13 +31,11 @@ public class CreaRoom extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crea_room);
+        initialisations();
+        créationderoom();
 
-        button = findViewById(R.id.CreaRoom);
-        nomDonner = findViewById(R.id.nomRoom);
-        SharedPreferences preferences = getSharedPreferences("PREFS",0);
-        playerName = preferences.getString("playerName","");
-        database = FirebaseDatabase.getInstance();
-
+    }
+    private void créationderoom(){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,31 +45,45 @@ public class CreaRoom extends AppCompatActivity {
                     button.setText("en cours de créations...");
                     button.setEnabled(false);
                     roomRef = database.getReference("rooms/"+roomName);//ping un endroit prési de la BDD
-                    roomRef.addListenerForSingleValueEvent(new ValueEventListener() {// regarde si sa existe
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(!snapshot.exists()){//verifications si la room existe ou pas
-                                roomRef = database.getReference("rooms/" + roomName + "/player1");//créations de la room avec le jouer1
-                                addRoomEventListener();
-                                roomRef.setValue(playerName);
-                            }else{
-                                Toast.makeText(CreaRoom.this, "Room dejat existante", Toast.LENGTH_SHORT).show();
-                                button.setText("Créations room");
-                                button.setEnabled(true);
-                            }
-
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                    roomRef.addListenerForSingleValueEvent(contentgetexiste());
                 }
             }
         });
     }
+    private ValueEventListener contentgetexiste(){
+        return new ValueEventListener() {// regarde si sa existe
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){//verifications si la room existe ou pas
+                    roomRef = database.getReference("rooms/" + roomName + "/player1");//créations de la room avec le jouer1
+                    addRoomEventListener();
+                    roomRef.setValue(playerName);
+                }else{
+                    Toast.makeText(CreaRoom.this, "Room dejat existante", Toast.LENGTH_SHORT).show();
+                    button.setText("Créations room");
+                    button.setEnabled(true);
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+    }
+
+    private void initialisations(){
+        button = findViewById(R.id.CreaRoom);
+        nomDonner = findViewById(R.id.nomRoom);
+        SharedPreferences preferences = getSharedPreferences("PREFS",0);
+        playerName = preferences.getString("playerName","");
+        database = FirebaseDatabase.getInstance();
+    }
     private void addRoomEventListener(){
-        roomRef.addValueEventListener(new ValueEventListener() {
+        roomRef.addValueEventListener(addRoom());
+    }
+
+    private ValueEventListener addRoom(){
+        return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //rejoidre une room
@@ -92,6 +104,6 @@ public class CreaRoom extends AppCompatActivity {
                 Toast.makeText(CreaRoom.this,"erreur!",Toast.LENGTH_SHORT).show();//message d'erreur
 
             }
-        });
+        };
     }
 }
