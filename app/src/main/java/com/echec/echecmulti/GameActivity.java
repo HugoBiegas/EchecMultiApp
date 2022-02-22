@@ -56,13 +56,10 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //afficher un message
                 button.setEnabled(false);//mais le bouton a false une foit que la personne as cliquer sur le bouton
-                message = role + ":Poked!:";//change le texte pour mettre host ou guest
-                messageRef.setValue(message);//change l'informatiosn dans la BDD
+                messageRef.setValue(role);//change l'informatiosn dans la BDD
             }
         });
-            messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
-            message = role + ":Poked!:";//change le texte pour mettre host ou guest
-            messageRef.setValue(message);//change l'informatiosn dans la BDD
+
 
         buttonqui.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +67,9 @@ public class GameActivity extends AppCompatActivity {
                 //bouton pour quiter l'applications
             }
         });
+
+        messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
+        messageRef.setValue(role);//change l'informatiosn dans la BDD
         addRoomEventListener();
     }
 
@@ -79,17 +79,17 @@ public class GameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
-                    if(snapshot.getValue(String.class).contains("guest:")){//regarde si l'endroit ou les donnée a changer contient guest
+                    if(snapshot.getValue(String.class).contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         button.setEnabled(true);//si oui il fait que le bouton est cliquable
                         //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("gest:",""), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest","a toi de jouer"), Toast.LENGTH_SHORT).show();
 
                     }
                 }else{
-                    if(snapshot.getValue(String.class).contains("host:")){//regarde si l'endroit ou les donnée a changer contient host:
+                    if(snapshot.getValue(String.class).contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
                         button.setEnabled(true);//mais le bouton as clicable
                         //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:",""), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host","a toi de jouer"), Toast.LENGTH_SHORT).show();
 
                     }
                 }

@@ -20,7 +20,7 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\hugob\.android\avd\Pixel_2_API_30_2.avd" />
+            <value value="C:\Users\hugob\.android\avd\Pixel_2_API_30_3.avd" />
           </Key>
         </deviceKey>
       </Target>
@@ -29,7 +29,7 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\hugob\.android\avd\Pixel_2_API_30.avd" />
+            <value value="C:\Users\hugob\.android\avd\Pixel_2_API_30_4.avd" />
           </Key>
         </deviceKey>
       </Target>
