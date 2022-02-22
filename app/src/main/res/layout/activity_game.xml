@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".GameActivity">
 
 
@@ -11,7 +12,7 @@
         android:id="@+id/buttonPoke"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="850px"
         android:text="Poke" />
 
     <Button
@@ -19,4 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="quiter" />
+
+    <TextView
+        android:id="@+id/NomJoueur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="40px"
+        android:text="joueur : " />
+
 </RelativeLayout>
