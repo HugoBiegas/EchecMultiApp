@@ -46,9 +46,26 @@ public class CreaRoom extends AppCompatActivity {
                 if (!roomName.equals("")){
                     button.setText("en cours de créations...");
                     button.setEnabled(false);
-                    roomRef = database.getReference("rooms/" + roomName + "/player1");//créations de la room avec le jouer1
-                    addRoomEventListener();
-                    roomRef.setValue(playerName);
+                    roomRef = database.getReference("rooms/"+roomName);//ping un endroit prési de la BDD
+                    roomRef.addListenerForSingleValueEvent(new ValueEventListener() {// regarde si sa existe
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(!snapshot.exists()){
+                                roomRef = database.getReference("rooms/" + roomName + "/player1");//créations de la room avec le jouer1
+                                addRoomEventListener();
+                                roomRef.setValue(playerName);
+                            }else{
+                                Toast.makeText(CreaRoom.this, "Room dejat existante", Toast.LENGTH_SHORT).show();
+                                button.setText("Créations room");
+                                button.setEnabled(true);
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
         });

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,6 +34,8 @@ public class RoomActivity extends AppCompatActivity {
     String roomName="";//nom de la room
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
+    DatabaseReference player1ref;
+    DatabaseReference player2ref;
     DatabaseReference roomsRef;//référence as la base de donnée pour les room
 
 
@@ -57,10 +60,6 @@ public class RoomActivity extends AppCompatActivity {
                 button.setEnabled(false);
                 finish();
                 startActivity(new Intent(getApplicationContext(),CreaRoom.class));//on lance l'activiter RooomActivity
-                //roomName = playerName;// on mais le nom du joueur comme nom de room
-                //roomRef = database.getReference("rooms/" + playerName + "/player1");//créations de la room avec le jouer1
-                //addRoomEventListener();//appelle de l'actions pour changer de page
-                //roomRef.setValue(playerName);//mais la valeur de player1 aux nom du joueur
 
             }
         });
@@ -89,7 +88,7 @@ public class RoomActivity extends AppCompatActivity {
                     button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
                     Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
                     intent.putExtra("roomName",roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                    intent.putExtra("playerhost","no");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("playerhost","");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                     startActivity(intent);//on lance l'activiter
 
             }
@@ -107,16 +106,18 @@ public class RoomActivity extends AppCompatActivity {
 
     private void addRoomsEventListener(){
     roomsRef = database.getReference("rooms");//on récupére la référence de rooms
-    roomsRef.addValueEventListener(new ValueEventListener() {
+        roomsRef.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             //controle de la liste des room
             roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
             Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
             for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-                roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
-                listView.setAdapter(adapter);//ajoute un élément dans la liste
+                if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
+                    roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
+                    listView.setAdapter(adapter);//ajoute un élément dans la liste
+                }
             }
         }
 
