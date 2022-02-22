@@ -114,6 +114,7 @@ public class GameActivity extends AppCompatActivity {
                         else
                             color = Color.LTGRAY; // blanc
                         view.setBackgroundColor(color);
+                        //couleur
                         return view;
                     }
                 };
