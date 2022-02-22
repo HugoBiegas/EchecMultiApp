@@ -47,6 +47,7 @@ public class RoomActivity extends AppCompatActivity {
         playerName = preferences.getString("playerName","");
         listView = findViewById(R.id.listRoom);//affectations de la liste des room
         button = findViewById(R.id.buttonCreateRoom);//affectations du bonton
+
         //si le bouton de créations de room est cliquer
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,13 +55,16 @@ public class RoomActivity extends AppCompatActivity {
                 //créations de la room et assigniations du joueur 1
                 button.setText("créations de room");
                 button.setEnabled(false);
-                roomName = playerName;// on mais le nom du joueur comme nom de room
-                roomRef = database.getReference("rooms/" + playerName + "/player1");//créations de la room avec le jouer1
-                addRoomEventListener();//appelle de l'actions pour changer de page
-                roomRef.setValue(playerName);//mais la valeur de player1 aux nom du joueur
+                finish();
+                startActivity(new Intent(getApplicationContext(),CreaRoom.class));//on lance l'activiter RooomActivity
+                //roomName = playerName;// on mais le nom du joueur comme nom de room
+                //roomRef = database.getReference("rooms/" + playerName + "/player1");//créations de la room avec le jouer1
+                //addRoomEventListener();//appelle de l'actions pour changer de page
+                //roomRef.setValue(playerName);//mais la valeur de player1 aux nom du joueur
 
             }
         });
+
         //si une personne clique sur un itéme de la liste des room
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
