@@ -20,6 +20,7 @@ public class GameActivity extends AppCompatActivity {
 
     Button button;
     String playerName = "";
+    String CompartPlayer="";
     String roomName = "";
     String role = "";
     String message = "";
@@ -42,8 +43,10 @@ public class GameActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null){
-            roomName = extra.getString("roomName");//récupére la valeur envoiller
-            if(roomName.equals(playerName)){//teste pour savoir si ces le joueur1 ou 2
+            roomName = extra.getString("roomName");;//récupére la valeur envoiller
+            CompartPlayer = extra.getString("playerhost");
+            Toast.makeText(this, CompartPlayer + ":" +playerName , Toast.LENGTH_SHORT).show();
+            if(CompartPlayer.equals(playerName)){//teste pour savoir si ces le joueur1 ou 2
                 role = "host";
             }
             else{
