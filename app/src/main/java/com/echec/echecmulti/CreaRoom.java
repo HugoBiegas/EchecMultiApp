@@ -88,7 +88,7 @@ public class CreaRoom extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //rejoidre une room
                 button.setText("crations de room");//changement du bouton
-                button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
+                button.setEnabled(false);//changement du bouton pour le rendre non-cliquable
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
                 intent.putExtra("roomName",roomName);
                 intent.putExtra("playerhost", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
