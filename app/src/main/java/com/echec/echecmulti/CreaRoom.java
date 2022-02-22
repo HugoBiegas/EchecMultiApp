@@ -50,7 +50,7 @@ public class CreaRoom extends AppCompatActivity {
                     roomRef.addListenerForSingleValueEvent(new ValueEventListener() {// regarde si sa existe
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(!snapshot.exists()){
+                            if(!snapshot.exists()){//verifications si la room existe ou pas
                                 roomRef = database.getReference("rooms/" + roomName + "/player1");//créations de la room avec le jouer1
                                 addRoomEventListener();
                                 roomRef.setValue(playerName);
