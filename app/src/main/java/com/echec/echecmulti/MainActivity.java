@@ -35,16 +35,22 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
     DatabaseReference roomsRef;//référence as la base de donnée pour les room
-
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
+        fAuth = FirebaseAuth.getInstance();
+
+        if(fAuth.getCurrentUser() == null){
+            startActivity(new Intent(getApplicationContext(), Register.class));
+        }
         initialisation();
         CréationRoom();
         ItemCliquer();
         addRoomsEventListener();
+
     }
 
     private void ItemCliquer(){
