@@ -55,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Go dans le layout Room
+        //Go dans le layout Room (Jouer!)
         mCheckRoom = findViewById(R.id.checkRoom);
         mCheckRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RoomActivity.class));
+                startActivity(new Intent(getApplicationContext(), connexiontest.class));
             }
         });
     }
