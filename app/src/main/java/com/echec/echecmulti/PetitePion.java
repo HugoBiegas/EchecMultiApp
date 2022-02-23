@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 public class PetitePion {
 
-    public String[] déplacementHost(String[] Echiquier,int coordoner,String[] color){
+    public String[] déplacementHostPion(String[] Echiquier,int coordoner,String[] color){
         String[] déplacement = new String[4];
         int cpt=0,premier=0;
         //test tout les endroi ou peux marcher un pion et ou il peux manger
@@ -43,7 +43,8 @@ public class PetitePion {
         cpt=0;
         return déplacement;
     }
-    public String[] déplacementGuest(String[] Echiquier,int coordoner,String[] color){
+
+    public String[] déplacementGuestPion(String[] Echiquier,int coordoner,String[] color){
         String[] déplacement = new String[4];
         int cpt=0,premier=0;
         //test tout les endroi ou peux marcher un pion et ou il peux manger

@@ -273,9 +273,9 @@ public class GameActivity extends AppCompatActivity {
     private void trouverLesDéplacement(int i){
         if (BordPiece[i].equals("P")){
             if (role.equals("host"))
-                ColorAction = pion.déplacementHost(BordPiece,i,colorP);
+                ColorAction = pion.déplacementHostPion(BordPiece,i,colorP);
             else
-                ColorAction = pion.déplacementGuest(BordPiece,i,colorP);
+                ColorAction = pion.déplacementGuestPion(BordPiece,i,colorP);
 
             piéceColorDeplacement();
             debugPiece=0;
