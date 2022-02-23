@@ -24,6 +24,9 @@
             android:name=".GameActivity"
             android:exported="false" />
         <activity
+            android:name=".RoomActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

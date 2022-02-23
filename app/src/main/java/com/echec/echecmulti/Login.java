@@ -87,7 +87,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        //Bouton switch Creer compte
+        //Bouton switch layout Creer compte
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +95,9 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
+        //Partie qui va suivre va concerner le reset de mdp
+        //Popup quand on va appuyer sur le TextView forgotTextLink du layout login
         forgotTextLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +107,7 @@ public class Login extends AppCompatActivity {
                 passwordResetDialog.setMessage("Entrer votre email.");
                 passwordResetDialog.setView(resetMail);
 
+                //Si appuie sur Oui, on vérifie que le mot de passe existe dans la bd
                 passwordResetDialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -122,6 +126,7 @@ public class Login extends AppCompatActivity {
                     }
                 });
 
+                //Si appuie sur Non, on ferme la popup
                 passwordResetDialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
