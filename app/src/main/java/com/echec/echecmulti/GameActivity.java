@@ -298,7 +298,7 @@ public class GameActivity extends AppCompatActivity {
             if (role.equals("host"))
                 colorActionPion = dame.deplacementDameHost(BordPiece,i,colorP);
             else
-                colorActionPion = dame.deplacementDameHost(BordPiece,i,colorP);
+                colorActionPion = dame.deplacementDameGuest(BordPiece,i,colorP);
         }else if (BordPiece[i].equals("R")){
         }
         piéceColorDeplacement();
