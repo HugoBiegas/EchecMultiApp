@@ -290,7 +290,10 @@ public class GameActivity extends AppCompatActivity {
             else
                 colorActionPion = cavalier.deplacementCavalierGuest(BordPiece,i,colorP);
         }else if (BordPiece[i].equals("F")){
-
+            if (role.equals("host"))
+                colorActionPion = foue.deplacementFoueHost(BordPiece,i,colorP);
+            else
+                colorActionPion = foue.deplacementFoueGuest(BordPiece,i,colorP);
         }else if (BordPiece[i].equals("D")){
 
         }else if (BordPiece[i].equals("R")){
