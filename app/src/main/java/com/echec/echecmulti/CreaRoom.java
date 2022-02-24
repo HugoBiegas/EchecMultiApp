@@ -91,7 +91,7 @@ public class CreaRoom extends AppCompatActivity {
                 button.setEnabled(false);//changement du bouton pour le rendre non-cliquable
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
                 intent.putExtra("roomName",roomName);
-                intent.putExtra("playerhost", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerhost", "hugo");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter
 
             }

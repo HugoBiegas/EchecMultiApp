@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_connexiontest.xml" value="0.22010869565217392" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_crea_room.xml" value="0.2265193370165746" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_game.xml" value="0.25" />
+        <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_login.xml" value="0.22010869565217392" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_register.xml" value="0.22010869565217392" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_room.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/EchecMultiApp/app/src/main/res/layout/activity_connexiontest.xml" value="0.21331521739130435" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/EchecMultiApp/app/src/main/res/layout/activity_crea_room.xml" value="0.17831813576494426" />

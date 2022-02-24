@@ -29,15 +29,19 @@ import java.util.ArrayList;
 public class GameActivity extends AppCompatActivity {
 
     GridView gridView;
-    String[] ColorAction = new String[32];
+    ArrayList<String> colorActionPion = new ArrayList<>();
     ArrayList<Integer> PositionValble =new ArrayList<>();
-    PetitePion pion = new PetitePion();
-    int selectionner=-1;
-    int coup=0;
+    PetitePion pion = new PetitePion();//créer les pion
+    Tour tour = new Tour();//créer les tour
+    Cavalier cavalier = new Cavalier();//créer les cavalier
+    Dame dame = new Dame();//créer les dame
+    Foue foue = new Foue();//créer les foue
+    Roi roi = new Roi();//créer les roi
+    int selectionner=-1;//emplacement celectionner par la personne, initialiser a -1 car nes pas sur le plataux
+    int coup=0;//nombre de coup jouer par la personne
     int couleur=0;
-    int debugPiece=0;
     TextView textView;
-    Integer positiondépart=0;
+    Integer positiondepart=0;
     Integer positionarriver=0;
     String[] BordPiece = new String[64];
     String[] colorP = new String[64];
@@ -87,33 +91,33 @@ public class GameActivity extends AppCompatActivity {
         gridView = findViewById(R.id.grid_echec);
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
         gridView = findViewById(R.id.grid_echec);
-        textView = findViewById(R.id.NomJoueur);
+        //textView = findViewById(R.id.NomJoueur);
 
         gridView.setEnabled(false);
         database = FirebaseDatabase.getInstance();//créer une instance
 
-        SharedPreferences preferences = getSharedPreferences("PREFS",0);
-        playerName = preferences.getString("playerName","");
-        textView.setText("joueur : " + playerName);
+        //SharedPreferences preferences = getSharedPreferences("PREFS",0);
+        //playerName = preferences.getString("playerName","");
+        //textView.setText("joueur : " + playerName);
 
     }
     private void echecini(){
         initialisationsEchiquier();
-        piécedéplacement();
+        piecedeplacement();
     }
 
-    private void déplacement(){
-        String déplace = BordPiece[positiondépart];
-        BordPiece[positiondépart]="";
+    private void deplacement(){
+        String déplace = BordPiece[positiondepart];
+        BordPiece[positiondepart]="";
         BordPiece[positionarriver]=déplace;
-        déplace = colorP[positiondépart];
-        colorP[positiondépart] ="";
+        déplace = colorP[positiondepart];
+        colorP[positiondepart] ="";
         colorP[positionarriver]= déplace;
-        piécedéplacement();
+        piecedeplacement();
 
     }
 
-    private void piécedéplacement(){
+    private void piecedeplacement(){
         //permet de mettre la couleur et de remettre le tableaux
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BordPiece) {
@@ -193,62 +197,93 @@ public class GameActivity extends AppCompatActivity {
                 //on regarde si ces l'host et que la couleur est Blanc alors on mais le coup a 1 et selecltionner a i pui si coup == 1 alors on fait des test pour bouger
                 int posible=0;
                 if(role.equals("host") && colorP[i].equals("B") || coup==1){
-                    if(coup==1){//si la piéce et vide ou que ces le deusiéme coup
+                    if(coup==1)//si la piéce et vide ou que ces le deusiéme coup
                         if (selectionner == i){
-                            Toast.makeText(GameActivity.this, "veuiller selectionner une case valide", Toast.LENGTH_SHORT).show();
-                            coup--;
-                            selectionner=-1;
-                            piécedéplacement();
+                            caseNonValide();
+                            colorActionPion.clear();
                         }
                         else{
                             trouverPositionCorecte(i);
+                            colorActionPion.clear();
                         }
-                    }else
-                        trouverLesDéplacement(i);
+                    else
+                        trouverLesdeplacement(i);
                 }else if(role.equals("guest") && colorP[i].equals("N") || coup==1){
-                    if(coup==1){//si la piéce et vide ou que ces le deusiéme coup
+                    if(coup==1)//si la piéce et vide ou que ces le deusiéme coup
                         if (selectionner == i){
-                            Toast.makeText(GameActivity.this, "veuiller selectionner une case valide", Toast.LENGTH_SHORT).show();
-                            coup--;
-                            selectionner=-1;
-                            piécedéplacement();
+                            caseNonValide();
+                            colorActionPion.clear();
                         }
                         else{
                             trouverPositionCorecte(i);
-                            //trouverPositionCorecte(i);
+                            colorActionPion.clear();
                         }
-
-                    }else
-                        trouverLesDéplacement(i);
+                    else
+                        trouverLesdeplacement(i);
                 }
             }
         };
     }
     private void trouverPositionCorecte(int i){
         int posible=0;
-        if (BordPiece[selectionner].equals("P")) {
-            for (int j = 0; j < PositionValble.size(); j++) {
-                if (i == PositionValble.get(j)) {
-                    posible = 1;
-                }
+        for (int j = 0; j < PositionValble.size(); j++) {
+            if (PositionValble.get(j) == i) {
+                posible = 1;
             }
-            PositionValble.clear();
-            if (posible == 1) {
-                positiondépart = selectionner;
-                positionarriver = i;
-                déplacement();
-                gridView.setEnabled(false);
-                messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
-                coup = 0;
-                selectionner = -1;
-                Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
-            } else {
-                positiondépart = -1;
-                coup--;
-                piécedéplacement();
-                Toast.makeText(GameActivity.this, "imposible", Toast.LENGTH_SHORT).show();
-            }
-        }else if (BordPiece[i].equals("T")){
+        }
+        PositionValble.clear();//nétoiller le tableaux
+        if (BordPiece[selectionner].equals("P"))
+            posibiliter(posible,i);
+        else if (BordPiece[selectionner].equals("T"))
+            posibiliter(posible,i);
+        else if(BordPiece[selectionner].equals("C"))
+            posibiliter(posible,i);
+        else if (BordPiece[selectionner].equals("F"))
+            posibiliter(posible,i);
+        else if (BordPiece[selectionner].equals("D"))
+            posibiliter(posible,i);
+        else if (BordPiece[selectionner].equals("R"))
+            posibiliter(posible,i);
+    }
+
+    private void posibiliter(int posible,int i){
+        if (posible == 1)
+            caseValide(i);
+        else
+            caseNonValide();
+    }
+
+    private void caseNonValide(){
+        positiondepart = -1;
+        coup--;
+        piecedeplacement();
+        Toast.makeText(GameActivity.this, "imposible", Toast.LENGTH_SHORT).show();
+    }
+    private void caseValide(int i){
+        positiondepart = selectionner;
+        positionarriver = i;
+        deplacement();
+        gridView.setEnabled(false);
+        messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
+        coup = 0;
+        selectionner = -1;
+        Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void trouverLesdeplacement(int i){
+        PositionValble.clear();
+        if (BordPiece[i].equals("P")){
+            if (role.equals("host"))
+                colorActionPion.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
+            else
+                colorActionPion.addAll(pion.deplacementGuestPion(BordPiece,i,colorP));
+        }
+        else if (BordPiece[i].equals("T")){
+            if (role.equals("host"))
+                colorActionPion = tour.deplacementTourHost(BordPiece,i,colorP);
+            else
+                colorActionPion = tour.deplacementTourGuest(BordPiece,i,colorP);
         }else if(BordPiece[i].equals("C")){
 
         }else if (BordPiece[i].equals("F")){
@@ -256,30 +291,8 @@ public class GameActivity extends AppCompatActivity {
         }else if (BordPiece[i].equals("D")){
 
         }else if (BordPiece[i].equals("R")){
-
-        }else{
-            positiondépart = selectionner;
-            positionarriver = i;
-            déplacement();
-            gridView.setEnabled(false);
-            messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
-            coup = 0;
-            selectionner = -1;
-            Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
-
         }
-    }
-
-    private void trouverLesDéplacement(int i){
-        if (BordPiece[i].equals("P")){
-            if (role.equals("host"))
-                ColorAction = pion.déplacementHostPion(BordPiece,i,colorP);
-            else
-                ColorAction = pion.déplacementGuestPion(BordPiece,i,colorP);
-
-            piéceColorDeplacement();
-            debugPiece=0;
-        }
+        piéceColorDeplacement();
         coup++;
         selectionner = i;
     }
@@ -291,25 +304,27 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
-                        int color,couleurNb=0;
-                        debugPiece = 0;
+                        int color,couleurNb=0,fin=0;
                         couleur=0;
                         color = coloration(position);
-                        String[] Lettre = new String[4];
-                        Integer[] coordonner = new Integer[4];
-                        for (int i=0;i<4;i++){
-                            coordonner[i] = Integer.parseInt(ColorAction[i].substring(ColorAction[i].indexOf(":")+1,ColorAction[i].length()));
-                            Lettre[i] = ColorAction[i].substring(0,ColorAction[i].indexOf(":"));
-                            if (coordonner[i] == position){
-                                 if (Lettre[i].equals("A")){
-                                    couleurNb = 3;
-                                    PositionValble.add(coordonner[i]);
-                                }
-                                else if (Lettre[i].equals("D")){
-                                    couleurNb = 2;
-                                    PositionValble.add(coordonner[i]);
-                                }
-                            }
+                        String[] Lettre = new String[colorActionPion.size()];
+                        Integer[] coordonner = new Integer[colorActionPion.size()];
+                        for (int i=0;i<colorActionPion.size();i++){
+                            coordonner[i] = Integer.parseInt(colorActionPion.get(i).substring(colorActionPion.get(i).indexOf(":")+1,colorActionPion.get(i).length()));
+                            Lettre[i] = colorActionPion.get(i).substring(0,colorActionPion.get(i).indexOf(":"));
+
+                                if(position == coordonner[i]){
+                                    if (Lettre[i].equals("O")){
+                                        fin=1;
+                                    } else if (Lettre[i].equals("A")){
+                                         couleurNb = 3;
+                                         PositionValble.add(coordonner[i]);
+                                     }
+                                     else if (Lettre[i].equals("D") && fin == 0){
+                                         couleurNb = 2;
+                                         PositionValble.add(coordonner[i]);
+                                     }
+                                 }
                         }
                         if(couleurNb == 2 )
                             color = Color.GREEN;
@@ -342,7 +357,7 @@ public class GameActivity extends AppCompatActivity {
         if(extra != null){
             roomName = extra.getString("roomName");;//récupére la valeur envoiller
             CompartPlayer = extra.getString("playerhost");
-            if(CompartPlayer.equals(playerName))//teste pour savoir si ces le joueur1 ou 2
+            if(CompartPlayer.equals("hugo"))//teste pour savoir si ces le joueur1 ou 2(playerName)
                 role = "host";
             else
                 role = "guest";
@@ -379,18 +394,15 @@ public class GameActivity extends AppCompatActivity {
                 //message recu
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
-                        gridView.setEnabled(true);
-                        //Toast.makeText(GameActivity.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-                        séparateur(snapshot.getValue().toString());//pour récupérer les changement de piéce
+                        action(snapshot);
                         //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondépart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
-                        gridView.setEnabled(true);
-                        séparateur(snapshot.getValue().toString());
+                        action(snapshot);
                         //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondépart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -403,10 +415,15 @@ public class GameActivity extends AppCompatActivity {
             }
         };
     }
+    private void action(DataSnapshot snapshot){
+        gridView.setEnabled(true);
+        séparateur(snapshot.getValue().toString());
+    }
+
     private void séparateur(String snapshot){
         String séparaeur = snapshot.substring(snapshot.indexOf(":")+1,snapshot.length());
-        positiondépart = Integer.parseInt(séparaeur.substring(0,séparaeur.indexOf(":")));
+        positiondepart = Integer.parseInt(séparaeur.substring(0,séparaeur.indexOf(":")));
         positionarriver = Integer.parseInt(séparaeur.substring(séparaeur.indexOf(":")+1,séparaeur.length()));
-        déplacement();
+        deplacement();
     }
 }

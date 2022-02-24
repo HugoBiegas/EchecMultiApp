@@ -33,36 +33,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //recherche par ID sur le layout main
-        user = findViewById(R.id.ProfileUser);
-        email = findViewById(R.id.ProfileEmail);
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        //user = findViewById(R.id.ProfileUser);
+        //email = findViewById(R.id.ProfileEmail);
+        //fAuth = FirebaseAuth.getInstance();
+        //fStore = FirebaseFirestore.getInstance();
         //recherche de l'id du joueur connecté
-        userId = fAuth.getCurrentUser().getUid();
+        //userId = fAuth.getCurrentUser().getUid();
+        finish();
+        startActivity(new Intent(getApplicationContext(),RoomActivity.class));
 
         //Vérification de la connexion
-        if(fAuth.getCurrentUser() == null){
-            startActivity(new Intent(getApplicationContext(), Register.class));
-        }
+        //if(fAuth.getCurrentUser() == null){
+        //    startActivity(new Intent(getApplicationContext(), Register.class));
+        //}
 
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                user.setText(value.getString("username"));
-                email.setText(value.getString("email"));
-            }
-        });
+        //DocumentReference documentReference = fStore.collection("users").document(userId);
+        //documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        //    @Override
+        //    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+        //        user.setText(value.getString("username"));
+        //        email.setText(value.getString("email"));
+        //    }
+        //});
 
         //Go dans le layout Room (Jouer!)
-        mCheckRoom = findViewById(R.id.checkRoom);
-        mCheckRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), connexiontest.class));
-            }
-        });
+        //mCheckRoom = findViewById(R.id.checkRoom);
+        //mCheckRoom.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        startActivity(new Intent(getApplicationContext(), connexiontest.class));
+        //    }
+        //});
     }
 
     //Déconnexion
