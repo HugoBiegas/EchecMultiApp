@@ -56,13 +56,9 @@ public class Tour {
         écar = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-                    if (bordBase ==0)
+                    if (bordBase ==0 ||écar == (coordoner+1) && bordBase == 1||bordBase == 2 && écar == (coordoner-1))
                         non=1;
-                    else if(écar == (coordoner+1) && bordBase == 1){
-                        non=1;
-                    }else if (bordBase == 2 && écar == (coordoner-1)) {
-                        non = 1;
-                    }else if (non == 0){
+                    else if (non == 0){
                         for (int j=0;j<7;j++){
                             if (borderD[j] == écar || borderG[j] ==écar){
                                 non=1;
@@ -91,12 +87,8 @@ public class Tour {
         écar = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0)
+            if (bordBase ==0 ||écar == (coordoner+1) && bordBase == 1||bordBase == 2 && écar == (coordoner-1))
                 non=1;
-            else if(écar == (coordoner+1) && bordBase == 1)
-                 non=1;
-            else if (bordBase == 2 && écar == (coordoner-1))
-                    non = 1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == écar || borderG[j] ==écar){
@@ -177,13 +169,9 @@ public class Tour {
         écar = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-            if (bordBase ==0)
+            if (bordBase ==0 ||écar == (coordoner+1) && bordBase == 1||bordBase == 2 && écar == (coordoner-1))
                 non=1;
-            else if(écar == (coordoner+1) && bordBase == 1){
-                non=1;
-            }else if (bordBase == 2 && écar == (coordoner-1)) {
-                non = 1;
-            }else if (non == 0){
+            else if (non == 0){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == écar || borderG[j] ==écar){
                         non=1;
@@ -212,12 +200,8 @@ public class Tour {
         écar = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0)
+            if (bordBase ==0 ||écar == (coordoner+1) && bordBase == 1||bordBase == 2 && écar == (coordoner-1))
                 non=1;
-            else if(écar == (coordoner+1) && bordBase == 1)
-                non=1;
-            else if (bordBase == 2 && écar == (coordoner-1))
-                non = 1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == écar || borderG[j] ==écar){

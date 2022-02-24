@@ -1,5 +1,6 @@
 package com.echec.echecmulti;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -11,12 +12,10 @@ public class PetitePion {
 
     public ArrayList<String> deplacementHostPion(String[] Echiquier, int coordoner, String[] color){
         ArrayList<String> déplacement = new ArrayList<>();
-        int début= coordoner;
-        int premier=0;
-        //test tout les endroi ou peux marcher un pion et ou il peux manger
+        int début= coordoner,premier=0,bordBase=4;
         coordoner +=7;
             for (int i = 0; i < 3; i++) {
-                if (i == 0 || i == 2) {
+                if (i == 0 || i == 2 ) {
                     if (!Echiquier[coordoner].equals("") && color[coordoner].equals("N")) {
                         déplacement.add("A:" + coordoner);
                     } else {
@@ -48,6 +47,7 @@ public class PetitePion {
     public ArrayList<String> deplacementGuestPion(String[] Echiquier,int coordoner,String[] color){
         ArrayList<String> déplacement = new ArrayList<>();
         int debut=coordoner,premier=0;
+
         //test tout les endroi ou peux marcher un pion et ou il peux manger
         coordoner -=7;
         for (int i=0;i<3;i++){
@@ -75,5 +75,9 @@ public class PetitePion {
                 déplacement.add("O:"+coordoner);
         }
         return déplacement;
+    }
+
+    private void GrandRemplacement(){
+
     }
 }
