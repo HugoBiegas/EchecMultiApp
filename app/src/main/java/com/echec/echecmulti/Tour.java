@@ -21,9 +21,8 @@ public class Tour {
                 else if (color[ecart].equals("N")){
                     déplacement.add("A:"+ecart);
                     non =1;
-                 }else{
+                 }else
                     non =1;
-                }
             }else
                 i=8;//sortire de la boucle
             ecart+=8;
