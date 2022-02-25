@@ -107,12 +107,47 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void deplacement(){
-        String déplace = BordPiece[positiondepart];
-        BordPiece[positiondepart]="";
-        BordPiece[positionarriver]=déplace;
-        déplace = colorP[positiondepart];
-        colorP[positiondepart] ="";
-        colorP[positionarriver]= déplace;
+        String déplace;
+        if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
+            déplace = BordPiece[positiondepart];
+            BordPiece[positiondepart]="";
+            BordPiece[2]=déplace;
+            déplace = BordPiece[positionarriver];
+            BordPiece[positionarriver]="";
+            BordPiece[3]=déplace;
+        }else if (positionarriver==7 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
+            déplace = BordPiece[positiondepart];
+            BordPiece[positiondepart]="";
+            BordPiece[6]=déplace;
+            déplace = BordPiece[positionarriver];
+            BordPiece[positionarriver]="";
+            BordPiece[5]=déplace;
+        }
+        else if (positionarriver==56 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1)){
+            déplace = BordPiece[positiondepart];
+            BordPiece[positiondepart]="";
+            BordPiece[58]=déplace;
+            déplace = BordPiece[positionarriver];
+            BordPiece[positionarriver]="";
+            BordPiece[59]=déplace;
+        }
+        else if (positionarriver==63 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1))
+        {
+            déplace = BordPiece[positiondepart];
+            BordPiece[positiondepart]="";
+            BordPiece[62]=déplace;
+            déplace = BordPiece[positionarriver];
+            BordPiece[positionarriver]="";
+            BordPiece[61]=déplace;
+        }else{
+            déplace = BordPiece[positiondepart];
+            BordPiece[positiondepart]="";
+            BordPiece[positionarriver]=déplace;
+
+            déplace = colorP[positiondepart];
+            colorP[positiondepart] ="";
+            colorP[positionarriver]= déplace;
+        }
         piecedeplacement();
 
     }
@@ -311,7 +346,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void piéceColorDeplacement() {
-        //permet de mettre la couleur et de remettre le tableaux
+        //permet de mettre la couleur et de remettre le tableaux car il passe tout le temps
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BordPiece) {
                     @Override
@@ -336,13 +371,22 @@ public class GameActivity extends AppCompatActivity {
                                      else if (Lettre[i].equals("D") && fin == 0){
                                          couleurNb = 2;
                                          PositionValble.add(coordonner[i]);
-                                     }
+                                     }else if (Lettre[i].equals("R1")){
+                                        couleurNb = 4;
+                                        PositionValble.add(coordonner[i]);
+                                    }else if (Lettre[i].equals("R2")){
+                                        couleurNb = 4;
+                                        PositionValble.add(coordonner[i]);
+                                    }
+
                                  }
                         }
                         if(couleurNb == 2 )
                             color = Color.GREEN;
                         else if(couleurNb == 3)
                             color = Color.RED;
+                        else if (couleurNb == 4)
+                            color = Color.rgb(51,102,0);
                         view.setBackgroundColor(color);
                         return view;
                     }
