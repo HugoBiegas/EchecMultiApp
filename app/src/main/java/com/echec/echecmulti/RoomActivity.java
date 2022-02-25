@@ -1,6 +1,7 @@
 package com.echec.echecmulti;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,6 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,10 +38,10 @@ public class RoomActivity extends AppCompatActivity {
     List<String> roomList = new ArrayList<>();//liste des room
     String playerName="";//nom du joueur
     String roomName="";//nom de la room
+
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
     DatabaseReference roomsRef;//référence as la base de donnée pour les room
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +112,7 @@ public class RoomActivity extends AppCompatActivity {
                 button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
                 intent.putExtra("roomName",roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                intent.putExtra("playerhost","vincent");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerhost","");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter
 
             }

@@ -91,16 +91,17 @@ public class GameActivity extends AppCompatActivity {
         gridView = findViewById(R.id.grid_echec);
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
         gridView = findViewById(R.id.grid_echec);
-        //textView = findViewById(R.id.NomJoueur);
+        textView = findViewById(R.id.NomJoueur);
 
         gridView.setEnabled(false);
         database = FirebaseDatabase.getInstance();//créer une instance
 
-        //SharedPreferences preferences = getSharedPreferences("PREFS",0);
-        //playerName = preferences.getString("playerName","");
-        //textView.setText("joueur : " + playerName);
+        SharedPreferences preferences = getSharedPreferences("PREFS",0);
+        playerName = preferences.getString("playerName","");
+        textView.setText("joueur : " + playerName);
 
     }
+
     private void echecini(){
         initialisationsEchiquier();
         piecedeplacement();
@@ -414,7 +415,7 @@ public class GameActivity extends AppCompatActivity {
         if(extra != null){
             roomName = extra.getString("roomName");;//récupére la valeur envoiller
             CompartPlayer = extra.getString("playerhost");
-            if(CompartPlayer.equals("hugo"))//teste pour savoir si ces le joueur1 ou 2(playerName)
+            if(CompartPlayer.equals(playerName))//teste pour savoir si ces le joueur1 ou 2(playerName)
                 role = "host";
             else
                 role = "guest";
