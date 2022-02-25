@@ -4,6 +4,8 @@ package com.echec.echecmulti;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ public class GameActivity extends AppCompatActivity {
     GridView gridView;
     ArrayList<String> colorActionPion = new ArrayList<>();
     ArrayList<String> echecMath = new ArrayList<>();
+    ArrayList<String> Posibiliter = new ArrayList<>();
     ArrayList<Integer> PositionValble =new ArrayList<>();
     PetitePion pion = new PetitePion();//créer les pion
     Tour tour = new Tour();//créer les tour
@@ -45,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
     Integer positiondepart=0;
     Integer positionarriver=0;
     String[] BordPiece = new String[64];
+    String[] BordPieceTest = new String[64];
     String[] colorP = new String[64];
     String playerName = "";
     String CompartPlayer="";
@@ -110,7 +114,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void deplacement(){
         String déplace="";
-        if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
+        if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2) && positiondepart == 4 && BordPiece[0].equals("T")){
             déplace=BordDepDepart(déplace);
             BordPiece[2]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -120,7 +124,7 @@ public class GameActivity extends AppCompatActivity {
             BordPiece[3]=déplace;
             déplace=ColorDepArriver(déplace);
             colorP[3]= déplace;
-        }else if (positionarriver==7 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
+        }else if (positionarriver==7 && BordPiece[7].equals("T")&&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2 ) && positiondepart == 4){
             déplace=BordDepDepart(déplace);
             BordPiece[6]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -131,7 +135,7 @@ public class GameActivity extends AppCompatActivity {
             déplace=ColorDepArriver(déplace);
             colorP[5]= déplace;
         }
-        else if (positionarriver==56 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1)){
+        else if (positionarriver==56 && BordPiece[56].equals("T") &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1) && positiondepart == 60){
             déplace=BordDepDepart(déplace);
             BordPiece[58]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -142,7 +146,7 @@ public class GameActivity extends AppCompatActivity {
             déplace=ColorDepArriver(déplace);
             colorP[59]= déplace;
         }
-        else if (positionarriver==63 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1))
+        else if (positionarriver==63 && BordPiece[63].equals("T") &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1) && positiondepart == 60)
         {
             déplace=BordDepDepart(déplace);
             BordPiece[62]=déplace;
@@ -239,6 +243,7 @@ public class GameActivity extends AppCompatActivity {
                 colorP[i] = "N";
             }
             else if(8<=i && i<=15){
+
                 BordPiece[i]="P";//petite pion
                 colorP[i] = "B";
             }else if (48<=i && i<=55){
@@ -326,15 +331,27 @@ public class GameActivity extends AppCompatActivity {
         Toast.makeText(GameActivity.this, "imposible", Toast.LENGTH_SHORT).show();
     }
     private void caseValide(int i){
-        Echec();
         positiondepart = selectionner;
         positionarriver = i;
-        deplacement();
-        gridView.setEnabled(false);
-        messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
-        coup = 0;
-        selectionner = -1;
-        Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
+        if(Echec() == 1){
+            Toast.makeText(GameActivity.this, "votre roi est toucher", Toast.LENGTH_SHORT).show();
+            piecedeplacement();
+            positiondepart = -1;
+            coup--;
+        }else if(Echec() == 2){
+            Toast.makeText(GameActivity.this, "Echec et mat", Toast.LENGTH_SHORT).show();
+            piecedeplacement();
+            positiondepart = -1;
+            coup--;
+        }
+        else{
+            deplacement();
+            gridView.setEnabled(false);
+            messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
+            coup = 0;
+            selectionner = -1;
+            Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -459,6 +476,11 @@ public class GameActivity extends AppCompatActivity {
         buttonqui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                messageRef = database.getReference("rooms/"+roomName+"/close");//crée le message de la BDD
+                messageRef.setValue("close");//change l'informatiosn dans la BDD
+                finish();
+                startActivity(new Intent(getApplicationContext(), RoomActivity.class));
                 //bouton pour quiter l'applications
             }
         });
@@ -482,6 +504,10 @@ public class GameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
+                    if (snapshot.getValue().toString().contains("close")){
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                    }
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
                         //est affiche un message
@@ -516,22 +542,240 @@ public class GameActivity extends AppCompatActivity {
         deplacement();
     }
 
-    private void Echec(){
-        if (role.equals("host")){
-            echecMath.clear();
-            for (int i=0;i<63;i++){
-                if (!BordPiece[i].equals("") && colorP[i].equals("N")){
-                    if (BordPiece[i].equals("T"))
-                        echecMath.addAll(tour.deplacementTourHost(BordPiece,i,colorP));
-                    if (BordPiece[i].equals("C"))
-                        echecMath.addAll(cavalier.deplacementCavalierHost(BordPiece,i,colorP));
-                }
-            }
-            Toast.makeText(this, echecMath.toString(), Toast.LENGTH_SHORT).show();
-            echecMath.clear();
-
-        }else{
+    private int Echec(){
+        echecMath.clear();
+        Posibiliter.clear();
+        ArrayList<Integer> toucher = new ArrayList<Integer>();
+        toucher.clear();
+        int compteur = 0;
+        int  AttaqueR=0;
+        for (int i=0;i<BordPiece.length;i++){
+            BordPieceTest[i] = BordPiece[i];
 
         }
+        String deplace =BordPieceTest[positiondepart];
+        BordPieceTest[positiondepart] ="";
+        BordPieceTest[positionarriver]=deplace;
+
+        if (role.equals("host")){
+            toucher.addAll(RechecheGuesttoucherHost());
+            if (toucher.size() != 0){
+                RechecheHostP();
+                for (int i=0;i< toucher.size();i++){
+                    trouverLesdeplacementAttaquer(toucher.get(i));
+                    for (int j=0;j<echecMath.size();j++){
+                        for (int k=0;k<Posibiliter.size();k++){
+                            if (Posibiliter.get(k).equals(echecMath.get(j))){
+                                AttaqueR=1;
+                            }
+                       }
+                   }
+                }
+                //echec et mat
+                if (AttaqueR ==0){
+                    Toast.makeText(this, "echec et math", Toast.LENGTH_SHORT).show();
+                    AttaqueR = 2;
+                }else if (AttaqueR == 1){
+                    Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
+                    AttaqueR = 1;
+                }
+            }
+            //rien le roi nes pas toucher
+        }else{
+            toucher.addAll(RechechehosttoucherGuest());
+            if (toucher.size() != 0){
+                RechecheGuestP();
+                for (int i=0;i< toucher.size();i++){
+                    trouverLesdeplacementAttaquer(toucher.get(i));
+                    for (int j=0;j<echecMath.size();j++){
+                        for (int k=0;k<Posibiliter.size();k++){
+                            if (Posibiliter.get(k).equals(echecMath.get(j))){
+                                AttaqueR=1;
+                            }
+                        }
+                    }
+                }
+                //echec et mat
+                if (AttaqueR ==0){
+                    Toast.makeText(this, "echec et math", Toast.LENGTH_SHORT).show();
+                    AttaqueR = 2;
+                }else if (AttaqueR == 1){
+                    AttaqueR = 1;
+                    Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
+                }
+            }
+            //rien le roi nes pas toucher
+        }
+        return AttaqueR;
     }
+
+    private ArrayList<Integer> RechecheGuesttoucherHost(){
+        ArrayList<Integer> toucher = new ArrayList<>();
+        for (int i=0;i<63;i++){
+            if (!BordPieceTest[i].equals("") && colorP[i].equals("N")){
+                if (BordPieceTest[i].equals("P")){
+                    echecMath = pion.deplacementGuestPion(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("F")){
+                    echecMath = foue.deplacementFoueGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("D")){
+                    echecMath = dame.deplacementDameGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("R")){
+                    echecMath = roi.deplacementRoiGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("T")){
+                    echecMath = tour.deplacementTourGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("C")){
+                    echecMath = cavalier.deplacementCavalierGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueGuest() == true)
+                        toucher.add(i);
+                }
+                echecMath.clear();
+            }
+        }
+        return toucher;
+    }
+
+    private ArrayList<Integer> RechechehosttoucherGuest(){
+        ArrayList<Integer> toucher = new ArrayList<>();
+        for (int i=0;i<63;i++){
+            if (!BordPieceTest[i].equals("") && colorP[i].equals("B")){
+                if (BordPieceTest[i].equals("P")){
+                    echecMath = pion.deplacementGuestPion(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("F")){
+                    echecMath = foue.deplacementFoueGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("D")){
+                    echecMath = dame.deplacementDameGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("R")){
+                    echecMath = roi.deplacementRoiGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("T")){
+                    echecMath = tour.deplacementTourGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }else if (BordPieceTest[i].equals("C")){
+                    echecMath = cavalier.deplacementCavalierGuest(BordPieceTest,i,colorP);
+                    if (RechercheAttauqueHost() == true)
+                        toucher.add(i);
+                }
+                echecMath.clear();
+            }
+        }
+        return toucher;
+    }
+
+    private void RechecheHostP(){
+        for (int i=0;i<63;i++){
+            if (!BordPiece[i].equals("") && colorP[i].equals("B")){
+                if (BordPiece[i].equals("P"))
+                    Posibiliter.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
+                if (BordPiece[i].equals("F"))
+                    Posibiliter.addAll(foue.deplacementFoueHost(BordPiece,i,colorP));
+                if (BordPiece[i].equals("D"))
+                    Posibiliter.addAll(dame.deplacementDameHost(BordPiece,i,colorP));
+                if (BordPiece[i].equals("R"))
+                    Posibiliter.addAll(roi.deplacementRoiHost(BordPiece,i,colorP));
+                if (BordPiece[i].equals("T"))
+                    Posibiliter.addAll(tour.deplacementTourHost(BordPiece,i,colorP));
+                if (BordPiece[i].equals("C"))
+                    Posibiliter.addAll(cavalier.deplacementCavalierHost(BordPiece,i,colorP));
+            }
+        }
+    }
+    private void RechecheGuestP(){
+        for (int i=0;i<63;i++){
+            if (!BordPiece[i].equals("") && colorP[i].equals("N")){
+                if (BordPiece[i].equals("P"))
+                    Posibiliter.addAll(pion.deplacementGuestPion(BordPiece,i,colorP));
+                if (BordPiece[i].equals("F"))
+                    Posibiliter.addAll(foue.deplacementFoueGuest(BordPiece,i,colorP));
+                if (BordPiece[i].equals("D"))
+                    Posibiliter.addAll(dame.deplacementDameGuest(BordPiece,i,colorP));
+                if (BordPiece[i].equals("R"))
+                    Posibiliter.addAll(roi.deplacementRoiGuest(BordPiece,i,colorP));
+                if (BordPiece[i].equals("T"))
+                    Posibiliter.addAll(tour.deplacementTourGuest(BordPiece,i,colorP));
+                if (BordPiece[i].equals("C"))
+                    Posibiliter.addAll(cavalier.deplacementCavalierGuest(BordPiece,i,colorP));
+            }
+        }
+    }
+
+
+    private Boolean RechercheAttauqueGuest(){
+        Integer[] coordonner = new Integer[echecMath.size()];
+        String[] Lettre = new String[echecMath.size()];
+        for (int i=0;i<echecMath.size();i++){
+            coordonner[i] = Integer.parseInt(echecMath.get(i).substring(echecMath.get(i).indexOf(":")+1,echecMath.get(i).length()));
+            Lettre[i] = echecMath.get(i).substring(0,echecMath.get(i).indexOf(":"));
+            if (Lettre[i].equals("A") && BordPiece[coordonner[i]].equals("R") && colorP[coordonner[i]].equals("B")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean RechercheAttauqueHost(){
+        Integer[] coordonner = new Integer[echecMath.size()];
+        String[] Lettre = new String[echecMath.size()];
+        for (int i=0;i<echecMath.size();i++){
+            coordonner[i] = Integer.parseInt(echecMath.get(i).substring(echecMath.get(i).indexOf(":")+1,echecMath.get(i).length()));
+            Lettre[i] = echecMath.get(i).substring(0,echecMath.get(i).indexOf(":"));
+            if (Lettre[i].equals("A") && BordPiece[coordonner[i]].equals("R") && colorP[coordonner[i]].equals("N")){
+                return true;
+            }
+        }
+        return false;
+    }
+    private void trouverLesdeplacementAttaquer(int i){
+        echecMath.clear();
+        if (BordPiece[i].equals("P")){
+            if (role.equals("host"))
+                echecMath.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
+            else
+                echecMath.addAll(pion.deplacementGuestPion(BordPiece,i,colorP));
+        }
+        else if (BordPiece[i].equals("T")){
+            if (role.equals("host"))
+                echecMath.addAll(tour.deplacementTourHost(BordPiece,i,colorP));
+            else
+                echecMath.addAll(tour.deplacementTourGuest(BordPiece,i,colorP));
+        }else if(BordPiece[i].equals("C")){
+            if (role.equals("host"))
+                echecMath.addAll(cavalier.deplacementCavalierHost(BordPiece,i,colorP));
+            else
+                echecMath.addAll(cavalier.deplacementCavalierGuest(BordPiece,i,colorP));
+        }else if (BordPiece[i].equals("F")){
+            if (role.equals("host"))
+                echecMath.addAll(foue.deplacementFoueHost(BordPiece,i,colorP));
+            else
+                echecMath.addAll(foue.deplacementFoueGuest(BordPiece,i,colorP));
+        }else if (BordPiece[i].equals("D")){
+            if (role.equals("host"))
+                echecMath.addAll(dame.deplacementDameHost(BordPiece,i,colorP));
+            else
+                echecMath.addAll(dame.deplacementDameGuest(BordPiece,i,colorP));
+        }else if (BordPiece[i].equals("R")){
+            if (role.equals("host"))
+                echecMath.addAll(roi.deplacementRoiHost(BordPiece,i,colorP));
+            else
+                echecMath.addAll( roi.deplacementRoiGuest(BordPiece,i,colorP));
+        }
+    }
+
 }

@@ -15,21 +15,24 @@ public class PetitePion {
         int début= coordoner,premier=0,bordBase=4;
         coordoner +=7;
             for (int i = 0; i < 3; i++) {
-                if (i == 0 || i == 2 ) {
-                    if (!Echiquier[coordoner].equals("") && color[coordoner].equals("N")) {
-                        déplacement.add("A:" + coordoner);
+                if (coordoner<63 && coordoner>0){
+                    if (i == 0 || i == 2 ) {
+                        if (!Echiquier[coordoner].equals("") && color[coordoner].equals("N")) {
+                            déplacement.add("A:" + coordoner);
+                        } else {
+                            déplacement.add("R:" + coordoner);
+                        }
                     } else {
-                        déplacement.add("R:" + coordoner);
-                    }
-                } else {
-                    if (Echiquier[coordoner].equals("")) {
-                        déplacement.add("D:" + coordoner);
-                        premier = 1;
-                    } else {
-                        déplacement.add("O:" + coordoner);
-                        premier = 0;
+                        if (Echiquier[coordoner].equals("")) {
+                            déplacement.add("D:" + coordoner);
+                            premier = 1;
+                        } else {
+                            déplacement.add("O:" + coordoner);
+                            premier = 0;
+                        }
                     }
                 }
+
                 coordoner++;
             }
         if (début<=15){
@@ -40,7 +43,6 @@ public class PetitePion {
                 déplacement.add("O:"+coordoner);
             }
         }
-
         return déplacement;
     }
 
@@ -51,7 +53,8 @@ public class PetitePion {
         //test tout les endroi ou peux marcher un pion et ou il peux manger
         coordoner -=7;
         for (int i=0;i<3;i++){
-            if (i == 0 || i==2){
+            if (coordoner<63 && coordoner>0){
+                if (i == 0 || i==2){
                 if(!Echiquier[coordoner].equals("") && color[coordoner].equals("B"))
                     déplacement.add("A:"+coordoner);
                 else
@@ -64,6 +67,7 @@ public class PetitePion {
                     déplacement.add("O:"+coordoner);
                     premier =0;
                 }
+            }
             }
             coordoner--;
         }

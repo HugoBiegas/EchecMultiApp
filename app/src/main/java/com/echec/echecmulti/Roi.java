@@ -1,11 +1,13 @@
 package com.echec.echecmulti;
 
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class Roi {
     private  int bougRoi=0,host=0,guest=0;
+
     public int GetbougRoi(){
         return bougRoi;
     }
@@ -14,6 +16,7 @@ public class Roi {
         int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
         int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};
         int ecart,bor=0;
+
 
         for (int i=0;i<8;i++){
             if (borderD[i]==coordoner)
