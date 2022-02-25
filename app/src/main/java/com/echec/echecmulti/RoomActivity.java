@@ -51,13 +51,14 @@ public class RoomActivity extends AppCompatActivity {
         CréationRoom();
         ItemCliquer();
         addRoomsEventListener();
+
     }
+
 
     private void ItemCliquer(){
         //si une personne clique sur un itéme de la liste des room
         listView.setOnItemClickListener(Itemcréjoueur2());
     }
-
     private AdapterView.OnItemClickListener Itemcréjoueur2(){
         return new AdapterView.OnItemClickListener() {
             @Override

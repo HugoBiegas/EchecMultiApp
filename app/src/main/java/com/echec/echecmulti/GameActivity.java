@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 public class GameActivity extends AppCompatActivity {
 
     GridView gridView;
+    int cpt=0;
     ArrayList<String> colorActionPion = new ArrayList<>();
     ArrayList<String> echecMath = new ArrayList<>();
     ArrayList<String> Posibiliter = new ArrayList<>();
@@ -427,7 +429,6 @@ public class GameActivity extends AppCompatActivity {
                                         couleurNb = 4;
                                         PositionValble.add(coordonner[i]);
                                     }
-
                                  }
                         }
                         if(couleurNb == 2 )
@@ -477,25 +478,48 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                messageRef = database.getReference("rooms/"+roomName+"/close");//crée le message de la BDD
-                messageRef.setValue("close");//change l'informatiosn dans la BDD
+                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                startActivity(ActivityB);
                 finish();
-                startActivity(new Intent(getApplicationContext(), RoomActivity.class));
+                messageRef.setValue("deco");
                 //bouton pour quiter l'applications
             }
         });
     }
 
-
-
     private void message(){
+        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
+        messageRef.setValue("co");
         messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
         messageRef.setValue(role+":1:1");//change l'informatiosn dans la BDD
         addRoomEventListener();
     }
 
     private void addRoomEventListener(){
+        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
+        messageRef.addValueEventListener(addRoomEventClose());
+        messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
         messageRef.addValueEventListener(addRoomEvent());
+
+
+    }
+    private ValueEventListener addRoomEventClose(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                 if (snapshot.getValue().toString().contains("deco")){
+                    Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                    startActivity(ActivityB);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
     }
 
     private ValueEventListener addRoomEvent(){
@@ -504,10 +528,6 @@ public class GameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
-                    if (snapshot.getValue().toString().contains("close")){
-                        finish();
-                        startActivity(new Intent(getApplicationContext(),RoomActivity.class));
-                    }
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
                         //est affiche un message
