@@ -30,6 +30,7 @@ public class GameActivity extends AppCompatActivity {
 
     GridView gridView;
     ArrayList<String> colorActionPion = new ArrayList<>();
+    ArrayList<String> echecMath = new ArrayList<>();
     ArrayList<Integer> PositionValble =new ArrayList<>();
     PetitePion pion = new PetitePion();//créer les pion
     Tour tour = new Tour();//créer les tour
@@ -108,49 +109,78 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void deplacement(){
-        String déplace;
+        String déplace="";
         if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
-            déplace = BordPiece[positiondepart];
-            BordPiece[positiondepart]="";
+            déplace=BordDepDepart(déplace);
             BordPiece[2]=déplace;
-            déplace = BordPiece[positionarriver];
-            BordPiece[positionarriver]="";
+            déplace=ColorDepDepart(déplace);
+            colorP[2]= déplace;
+
+            déplace=BordDepArriver(déplace);
             BordPiece[3]=déplace;
+            déplace=ColorDepArriver(déplace);
+            colorP[3]= déplace;
         }else if (positionarriver==7 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2)){
-            déplace = BordPiece[positiondepart];
-            BordPiece[positiondepart]="";
+            déplace=BordDepDepart(déplace);
             BordPiece[6]=déplace;
-            déplace = BordPiece[positionarriver];
-            BordPiece[positionarriver]="";
+            déplace=ColorDepDepart(déplace);
+            colorP[6]= déplace;
+
+            déplace=BordDepArriver(déplace);
             BordPiece[5]=déplace;
+            déplace=ColorDepArriver(déplace);
+            colorP[5]= déplace;
         }
         else if (positionarriver==56 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1)){
-            déplace = BordPiece[positiondepart];
-            BordPiece[positiondepart]="";
+            déplace=BordDepDepart(déplace);
             BordPiece[58]=déplace;
-            déplace = BordPiece[positionarriver];
-            BordPiece[positionarriver]="";
+            déplace=ColorDepDepart(déplace);
+            colorP[58]= déplace;
+
+            déplace=BordDepArriver(déplace);
             BordPiece[59]=déplace;
+            déplace=ColorDepArriver(déplace);
+            colorP[59]= déplace;
         }
         else if (positionarriver==63 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1))
         {
-            déplace = BordPiece[positiondepart];
-            BordPiece[positiondepart]="";
+            déplace=BordDepDepart(déplace);
             BordPiece[62]=déplace;
-            déplace = BordPiece[positionarriver];
-            BordPiece[positionarriver]="";
-            BordPiece[61]=déplace;
-        }else{
-            déplace = BordPiece[positiondepart];
-            BordPiece[positiondepart]="";
-            BordPiece[positionarriver]=déplace;
+            déplace=ColorDepDepart(déplace);
+            colorP[62]= déplace;
 
-            déplace = colorP[positiondepart];
-            colorP[positiondepart] ="";
+            déplace=BordDepArriver(déplace);
+            BordPiece[61]=déplace;
+            déplace=ColorDepArriver(déplace);
+            colorP[61]= déplace;
+        }else{
+            déplace=BordDepDepart(déplace);
+            BordPiece[positionarriver]=déplace;
+            déplace=ColorDepDepart(déplace);
             colorP[positionarriver]= déplace;
         }
         piecedeplacement();
 
+    }
+    private String BordDepDepart(String déplace){
+        déplace = BordPiece[positiondepart];
+        BordPiece[positiondepart]="";
+        return déplace;
+    }
+    private String BordDepArriver(String déplace){
+        déplace = BordPiece[positionarriver];
+        BordPiece[positionarriver]="";
+        return déplace;
+    }
+    private String ColorDepDepart(String déplace){
+        déplace = colorP[positiondepart];
+        colorP[positiondepart] ="";
+        return déplace;
+    }
+    private String ColorDepArriver(String déplace){
+        déplace = colorP[positionarriver];
+        colorP[positionarriver] ="";
+        return déplace;
     }
 
     private void piecedeplacement(){
@@ -296,6 +326,7 @@ public class GameActivity extends AppCompatActivity {
         Toast.makeText(GameActivity.this, "imposible", Toast.LENGTH_SHORT).show();
     }
     private void caseValide(int i){
+        Echec();
         positiondepart = selectionner;
         positionarriver = i;
         deplacement();
@@ -311,9 +342,9 @@ public class GameActivity extends AppCompatActivity {
         PositionValble.clear();
         if (BordPiece[i].equals("P")){
             if (role.equals("host"))
-                colorActionPion.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
+                colorActionPion = pion.deplacementHostPion(BordPiece,i,colorP);
             else
-                colorActionPion.addAll(pion.deplacementGuestPion(BordPiece,i,colorP));
+                colorActionPion = pion.deplacementGuestPion(BordPiece,i,colorP);
         }
         else if (BordPiece[i].equals("T")){
             if (role.equals("host"))
@@ -387,7 +418,7 @@ public class GameActivity extends AppCompatActivity {
                         else if(couleurNb == 3)
                             color = Color.RED;
                         else if (couleurNb == 4)
-                            color = Color.rgb(51,102,0);
+                            color = Color.rgb(51,102,0);//vert claire
                         view.setBackgroundColor(color);
                         return view;
                     }
@@ -410,7 +441,7 @@ public class GameActivity extends AppCompatActivity {
         return color;
     }
 
-        private void extragerer(){
+    private void extragerer(){
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null){
             roomName = extra.getString("roomName");;//récupére la valeur envoiller
@@ -483,5 +514,24 @@ public class GameActivity extends AppCompatActivity {
         positiondepart = Integer.parseInt(séparaeur.substring(0,séparaeur.indexOf(":")));
         positionarriver = Integer.parseInt(séparaeur.substring(séparaeur.indexOf(":")+1,séparaeur.length()));
         deplacement();
+    }
+
+    private void Echec(){
+        if (role.equals("host")){
+            echecMath.clear();
+            for (int i=0;i<63;i++){
+                if (!BordPiece[i].equals("") && colorP[i].equals("N")){
+                    if (BordPiece[i].equals("T"))
+                        echecMath.addAll(tour.deplacementTourHost(BordPiece,i,colorP));
+                    if (BordPiece[i].equals("C"))
+                        echecMath.addAll(cavalier.deplacementCavalierHost(BordPiece,i,colorP));
+                }
+            }
+            Toast.makeText(this, echecMath.toString(), Toast.LENGTH_SHORT).show();
+            echecMath.clear();
+
+        }else{
+
+        }
     }
 }
