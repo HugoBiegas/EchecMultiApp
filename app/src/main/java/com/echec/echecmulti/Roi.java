@@ -16,7 +16,7 @@ public class Roi {
         deplacement =hostroi(Echiquier,coordoner,color);
         return deplacement;
     }
-    private ArrayList<String> hostroi(String[] Echiquier, int coordoner, String[] color){
+    public ArrayList<String> hostroi(String[] Echiquier, int coordoner, String[] color){
         ArrayList<String> deplacement = new ArrayList<>();
         int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
         int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};
@@ -145,7 +145,7 @@ public class Roi {
         return deplacement;
     }
 
-    private ArrayList<String > guestRoi(String[] Echiquier, int coordoner, String[] color){
+    public ArrayList<String > guestRoi(String[] Echiquier, int coordoner, String[] color){
         ArrayList<String> deplacement = new ArrayList<>();
         int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
         int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};

@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -111,7 +114,7 @@ public class GameActivity extends AppCompatActivity {
 
     private void echecini(){
         initialisationsEchiquier();
-        piecedeplacement();
+        gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
     }
 
     private void deplacement(){
@@ -165,8 +168,7 @@ public class GameActivity extends AppCompatActivity {
             déplace=ColorDepDepart(déplace);
             colorP[positionarriver]= déplace;
         }
-        piecedeplacement();
-
+        gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
     }
     private String BordDepDepart(String déplace){
         déplace = BordPiece[positiondepart];
@@ -188,25 +190,6 @@ public class GameActivity extends AppCompatActivity {
         colorP[positionarriver] ="";
         return déplace;
     }
-
-    private void piecedeplacement(){
-        //permet de mettre la couleur et de remettre le tableaux
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BordPiece) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        View view = super.getView(position, convertView, parent);
-                        int color;
-                        couleur=0;
-                        color = coloration(position);
-                        view.setBackgroundColor(color);
-                        //couleur
-                        return view;
-                    }
-                };
-        gridView.setAdapter(adapter);
-    }
-
     private void initialisationsEchiquier(){
         for(int i = 0 ; i<BordPiece.length;i++){//pour intégrer tout les case
             if(i==0||i==7){
@@ -297,26 +280,46 @@ public class GameActivity extends AppCompatActivity {
             }
         };
     }
-    private void trouverPositionCorecte(int i){
+    private void trouverPositionCorecte(int position){
+        int fin=0;
+        String[] Lettre = new String[colorActionPion.size()];
+        Integer[] coordonner = new Integer[colorActionPion.size()];
+        for (int i=0;i<colorActionPion.size();i++){
+            coordonner[i] = Integer.parseInt(colorActionPion.get(i).substring(colorActionPion.get(i).indexOf(":")+1,colorActionPion.get(i).length()));
+            Lettre[i] = colorActionPion.get(i).substring(0,colorActionPion.get(i).indexOf(":"));
+
+            if(position == coordonner[i]){
+                if (Lettre[i].equals("O"))
+                    fin=1;
+                else if (Lettre[i].equals("A"))
+                    PositionValble.add(coordonner[i]);
+                else if (Lettre[i].equals("D") && fin == 0)
+                    PositionValble.add(coordonner[i]);
+                else if (Lettre[i].equals("R1"))
+                    PositionValble.add(coordonner[i]);
+                else if (Lettre[i].equals("R2"))
+                    PositionValble.add(coordonner[i]);
+            }
+        }
         int posible=0;
         for (int j = 0; j < PositionValble.size(); j++) {
-            if (PositionValble.get(j) == i) {
+            if (PositionValble.get(j) == position) {
                 posible = 1;
             }
         }
         PositionValble.clear();//nétoiller le tableaux
         if (BordPiece[selectionner].equals("P"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
         else if (BordPiece[selectionner].equals("T"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
         else if(BordPiece[selectionner].equals("C"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
         else if (BordPiece[selectionner].equals("F"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
         else if (BordPiece[selectionner].equals("D"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
         else if (BordPiece[selectionner].equals("R"))
-            posibiliter(posible,i);
+            posibiliter(posible,position);
     }
 
     private void posibiliter(int posible,int i){
@@ -329,7 +332,7 @@ public class GameActivity extends AppCompatActivity {
     private void caseNonValide(){
         positiondepart = -1;
         coup--;
-        piecedeplacement();
+        gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
         Toast.makeText(GameActivity.this, "imposible", Toast.LENGTH_SHORT).show();
     }
     private void caseValide(int i){
@@ -337,12 +340,12 @@ public class GameActivity extends AppCompatActivity {
         positionarriver = i;
         if(Echec() == 1){
             Toast.makeText(GameActivity.this, "votre roi est toucher", Toast.LENGTH_SHORT).show();
-            piecedeplacement();
+            gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
             positiondepart = -1;
             coup--;
         }else if(Echec() == 2){
             Toast.makeText(GameActivity.this, "Echec et mat", Toast.LENGTH_SHORT).show();
-            piecedeplacement();
+            gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
             positiondepart = -1;
             coup--;
         }
@@ -391,72 +394,9 @@ public class GameActivity extends AppCompatActivity {
             else
                 colorActionPion = roi.deplacementRoiGuest(BordPiece,i,colorP);
         }
-        piéceColorDeplacement();
+        gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
         coup++;
         selectionner = i;
-    }
-
-    private void piéceColorDeplacement() {
-        //permet de mettre la couleur et de remettre le tableaux car il passe tout le temps
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, BordPiece) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        View view = super.getView(position, convertView, parent);
-                        int color,couleurNb=0,fin=0;
-                        couleur=0;
-                        color = coloration(position);
-                        String[] Lettre = new String[colorActionPion.size()];
-                        Integer[] coordonner = new Integer[colorActionPion.size()];
-                        for (int i=0;i<colorActionPion.size();i++){
-                            coordonner[i] = Integer.parseInt(colorActionPion.get(i).substring(colorActionPion.get(i).indexOf(":")+1,colorActionPion.get(i).length()));
-                            Lettre[i] = colorActionPion.get(i).substring(0,colorActionPion.get(i).indexOf(":"));
-
-                                if(position == coordonner[i]){
-                                    if (Lettre[i].equals("O")){
-                                        fin=1;
-                                    } else if (Lettre[i].equals("A")){
-                                         couleurNb = 3;
-                                         PositionValble.add(coordonner[i]);
-                                     }
-                                     else if (Lettre[i].equals("D") && fin == 0){
-                                         couleurNb = 2;
-                                         PositionValble.add(coordonner[i]);
-                                     }else if (Lettre[i].equals("R1")){
-                                        couleurNb = 4;
-                                        PositionValble.add(coordonner[i]);
-                                    }else if (Lettre[i].equals("R2")){
-                                        couleurNb = 4;
-                                        PositionValble.add(coordonner[i]);
-                                    }
-                                 }
-                        }
-                        if(couleurNb == 2 )
-                            color = Color.GREEN;
-                        else if(couleurNb == 3)
-                            color = Color.RED;
-                        else if (couleurNb == 4)
-                            color = Color.rgb(51,102,0);//vert claire
-                        view.setBackgroundColor(color);
-                        return view;
-                    }
-                };
-        gridView.setAdapter(adapter);
-    }
-
-    private int coloration(int position){
-        int color;
-
-        int[] positionColor = new int[]{1, 3, 5, 7, 8, 10, 12, 14, 17, 19, 21, 23, 24, 26, 28, 30, 33, 35, 37, 39, 40, 42, 44, 46, 49, 51, 53, 55, 56, 58, 60, 62};
-        for(int i=0;i<32;i++){
-            if(position == positionColor[i])
-                couleur =1;
-        }
-        if (couleur == 1)
-            color = Color.DKGRAY; // noir
-        else
-            color = Color.LTGRAY; // blanc
-        return color;
     }
 
     private void extragerer(){
