@@ -23,10 +23,25 @@
 
     <GridView
         android:id="@+id/grid_echec"
-        android:layout_width="1050px"
-        android:layout_height="1700px"
-        android:layout_marginHorizontal="10px"
-        android:layout_marginVertical="250px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:columnWidth="1000px"
+        android:numColumns="8"
+        android:scrollbars="none" />
+    <GridView
+        android:id="@+id/grid_echec_mort_N"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="150px"
+        android:columnWidth="1000px"
+        android:numColumns="8"
+        android:scrollbars="none" />
+    <GridView
+        android:id="@+id/grid_echec_mort_B"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="1300px"
         android:columnWidth="1000px"
         android:numColumns="8"
         android:scrollbars="none" />

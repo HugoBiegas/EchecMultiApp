@@ -35,6 +35,10 @@ import java.util.List;
 public class GameActivity extends AppCompatActivity {
 
     GridView gridView;
+    GridView gridViewMortN;
+    GridView gridViewMortB;
+    ArrayList<String> MortB = new ArrayList<>();
+    ArrayList<String> MortN = new ArrayList<>();
     int cpt=0;
     ArrayList<String> colorActionPion = new ArrayList<>();
     ArrayList<String> echecMath = new ArrayList<>();
@@ -101,6 +105,8 @@ public class GameActivity extends AppCompatActivity {
         gridView = findViewById(R.id.grid_echec);
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
         gridView = findViewById(R.id.grid_echec);
+        gridViewMortN = findViewById(R.id.grid_echec_mort_N);
+        gridViewMortB = findViewById(R.id.grid_echec_mort_B);
         textView = findViewById(R.id.NomJoueur);
 
         gridView.setEnabled(false);
@@ -119,6 +125,15 @@ public class GameActivity extends AppCompatActivity {
 
     private void deplacement(){
         String déplace="";
+        if (colorP[positionarriver].equals("N")){
+            MortB.add(BordPiece[positionarriver]);
+            gridViewMortN.setAdapter(new adapterMortNoir(getApplicationContext(),MortB));
+        }
+        else if (colorP[positionarriver].equals("B")){
+            MortN.add(BordPiece[positionarriver]);
+            gridViewMortB.setAdapter(new adapterMortBlanc(getApplicationContext(),MortN));
+        }
+
         if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2) && positiondepart == 4 && BordPiece[0].equals("T")){
             déplace=BordDepDepart(déplace);
             BordPiece[2]=déplace;
@@ -432,7 +447,7 @@ public class GameActivity extends AppCompatActivity {
         messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
         messageRef.setValue("co");
         messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
-        messageRef.setValue(role+":1:1");//change l'informatiosn dans la BDD
+        messageRef.setValue(role+":20:20");//change l'informatiosn dans la BDD
         addRoomEventListener();
     }
 
