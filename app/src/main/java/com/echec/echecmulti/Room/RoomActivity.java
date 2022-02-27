@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +42,8 @@ public class RoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(SafetyNetAppCheckProviderFactory.getInstance());
         initialisation();
         CréationRoom();
         ItemCliquer();
@@ -133,7 +138,6 @@ public class RoomActivity extends AppCompatActivity {
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
                 Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-
                     if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
                         roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList

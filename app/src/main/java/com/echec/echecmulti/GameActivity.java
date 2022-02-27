@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -25,6 +26,9 @@ import com.echec.echecmulti.Room.RoomActivity;
 import com.echec.echecmulti.adapter.adapterGrild;
 import com.echec.echecmulti.adapter.adapterMortBlanc;
 import com.echec.echecmulti.adapter.adapterMortNoir;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,12 +71,12 @@ public class GameActivity extends AppCompatActivity {
     Button buttonqui;
     FirebaseDatabase database;//pour se connecter as la BDD
     DatabaseReference messageRef;//pour faire référence as la BDD
+    DatabaseReference suprestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
         //tout les méthode que nous allons utiliser
         initialistions();
         echecini();
@@ -81,6 +85,7 @@ public class GameActivity extends AppCompatActivity {
         itemaction();
         quiterBTN();
     }
+
     private void initialisationshost(){
         messageRef = database.getReference("rooms/"+roomName);
         messageRef.addListenerForSingleValueEvent(unjoueuroudeux());
@@ -423,7 +428,6 @@ public class GameActivity extends AppCompatActivity {
                 role = "host";
             else
                 role = "guest";
-
         }
 
     }
