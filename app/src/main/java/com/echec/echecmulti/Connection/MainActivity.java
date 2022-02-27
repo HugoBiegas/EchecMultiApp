@@ -1,4 +1,4 @@
-package com.echec.echecmulti;
+package com.echec.echecmulti.Connection;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,10 +9,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echec.echecmulti.R;
+import com.echec.echecmulti.Room.RoomActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();//permet de changer la valeur contenut dans preferences
                 editor.putString("playerName", playerName);//remplace le nom du joueur par le vraix nom du joueur
                 editor.apply();//applique le changement de nom de joueur
-                startActivity(new Intent(getApplicationContext(),RoomActivity.class));//on lance l'activiter RooomActivity
+                startActivity(new Intent(getApplicationContext(), RoomActivity.class));//on lance l'activiter RooomActivity
                 finish();//on arréte la tache actuelle
             }
 

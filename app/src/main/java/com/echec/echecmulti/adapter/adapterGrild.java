@@ -1,4 +1,4 @@
-package com.echec.echecmulti;
+package com.echec.echecmulti.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.echec.echecmulti.R;
 
 import java.util.ArrayList;
 import java.util.List;

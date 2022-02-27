@@ -1,4 +1,4 @@
-package com.echec.echecmulti;
+package com.echec.echecmulti.Pion;
 
 import android.widget.EditText;
 import android.widget.Toast;

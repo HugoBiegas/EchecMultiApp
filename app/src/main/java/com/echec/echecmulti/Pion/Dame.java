@@ -1,4 +1,4 @@
-package com.echec.echecmulti;
+package com.echec.echecmulti.Pion;
 
 import java.util.ArrayList;
 

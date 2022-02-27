@@ -4,25 +4,27 @@ package com.echec.echecmulti;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.android.gms.dynamic.IFragmentWrapper;
+import com.echec.echecmulti.Pion.Cavalier;
+import com.echec.echecmulti.Pion.Dame;
+import com.echec.echecmulti.Pion.Foue;
+import com.echec.echecmulti.Pion.PetitePion;
+import com.echec.echecmulti.Pion.Roi;
+import com.echec.echecmulti.Pion.Tour;
+import com.echec.echecmulti.Room.RoomActivity;
+import com.echec.echecmulti.adapter.adapterGrild;
+import com.echec.echecmulti.adapter.adapterMortBlanc;
+import com.echec.echecmulti.adapter.adapterMortNoir;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -52,7 +53,6 @@ public class GameActivity extends AppCompatActivity {
     Roi roi = new Roi();//créer les roi
     int selectionner=-1;//emplacement celectionner par la personne, initialiser a -1 car nes pas sur le plataux
     int coup=0;//nombre de coup jouer par la personne
-    int couleur=0;
     TextView textView;
     Integer positiondepart=0;
     Integer positionarriver=0;
@@ -423,6 +423,7 @@ public class GameActivity extends AppCompatActivity {
                 role = "host";
             else
                 role = "guest";
+
         }
 
     }

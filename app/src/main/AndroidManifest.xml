@@ -12,25 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EchecMulti">
         <activity
-            android:name=".connexiontest"
+            android:name=".Connection.connexiontest"
             android:exported="true" />
         <activity
-            android:name=".Login"
+            android:name=".Connection.Login"
             android:exported="true" />
         <activity
-            android:name=".Register"
+            android:name=".Connection.Register"
             android:exported="true" />
         <activity
-            android:name=".CreaRoom"
+            android:name=".Room.CreaRoom"
             android:exported="true" />
         <activity
             android:name=".GameActivity"
             android:exported="false" />
         <activity
-            android:name=".RoomActivity"
+            android:name=".Room.RoomActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Connection.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
