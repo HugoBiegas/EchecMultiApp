@@ -37,7 +37,7 @@ public class Roi {
             deplacement.add("R2:"+7);
 
         //pour le haut
-        if (bor==1){
+        if (bor==2){
             ecart = coordoner +8;
             for (int i=0;i<2;i++){
                 if (ecart<63 && ecart>0){
@@ -49,7 +49,7 @@ public class Roi {
                 }
                 ecart++;
             }
-        }else if (bor==2){
+        }else if (bor==1){
             ecart = coordoner +7;
             for (int i=0;i<2;i++){
                 if (ecart<63 && ecart>0){
@@ -167,7 +167,7 @@ public class Roi {
 
 
         //pour le haut
-        if (bor==1){
+        if (bor==2){
             ecart = coordoner +8;
             for (int i=0;i<2;i++){
                 if (ecart<63 && ecart>0){
@@ -179,7 +179,7 @@ public class Roi {
                 }
                 ecart++;
             }
-        }else if (bor==2){
+        }else if (bor==1){
             ecart = coordoner +7;
             for (int i=0;i<2;i++){
                 if (ecart<63 && ecart>0){
