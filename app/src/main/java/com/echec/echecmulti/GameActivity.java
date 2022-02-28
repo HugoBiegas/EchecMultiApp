@@ -44,7 +44,6 @@ public class GameActivity extends AppCompatActivity {
     GridView gridViewMortB;
     ArrayList<String> MortB = new ArrayList<>();
     ArrayList<String> MortN = new ArrayList<>();
-    int cpt=0;
     ArrayList<String> colorActionPion = new ArrayList<>();
     ArrayList<String> echecMath = new ArrayList<>();
     ArrayList<String> Posibiliter = new ArrayList<>();
