@@ -13,6 +13,13 @@
         android:layout_marginVertical="300px"
         android:layout_marginHorizontal="350px"
         android:text="Créations room" />
+    <Button
+        android:id="@+id/quiter"
+        android:layout_width="250px"
+        android:layout_height="100px"
+        android:layout_marginVertical="10px"
+        android:layout_marginHorizontal="10px"
+        android:text="retour" />
 
     <EditText
         android:id="@+id/nomRoom"

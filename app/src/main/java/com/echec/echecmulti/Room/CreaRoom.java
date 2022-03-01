@@ -30,6 +30,7 @@ public class CreaRoom extends AppCompatActivity {
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
     Button button;//bouton de créations de room
+    Button buttonQuite;
 
 
     @Override
@@ -38,7 +39,17 @@ public class CreaRoom extends AppCompatActivity {
         setContentView(R.layout.activity_crea_room);
         initialisations();
         créationderoom();
+        quiter();
 
+    }
+    private void quiter(){
+        buttonQuite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+            }
+        });
     }
     private void créationderoom(){
         button.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +93,7 @@ public class CreaRoom extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("PREFS",0);
         playerName = preferences.getString("playerName","");
         database = FirebaseDatabase.getInstance();
+        buttonQuite = findViewById(R.id.quiter);
     }
     private void addRoomEventListener(){
         roomRef.addValueEventListener(addRoom());
