@@ -33,7 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 public class MainActivity extends AppCompatActivity {
 
     //initialisation des variables
-    TextView user, email;
+    TextView user, email, victories, loses;
     Button mCheckRoom;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
@@ -50,16 +50,13 @@ public class MainActivity extends AppCompatActivity {
         //recherche par ID sur le layout main
         user = findViewById(R.id.ProfileUser);
         email = findViewById(R.id.ProfileEmail);
+        victories = findViewById(R.id.victories);
+        loses = findViewById(R.id.loses);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         //recherche de l'id du joueur connecté
         userId = fAuth.getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();//créations de l'instance
-
-        //Vérification de la connexion
-        if(fAuth.getCurrentUser() == null){
-            startActivity(new Intent(getApplicationContext(), Register.class));
-        }
 
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
@@ -68,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 user.setText(value.getString("username"));
                 email.setText(value.getString("email"));
+                victories.setText(value.getString("victories"));
+                loses.setText(value.getString("loses"));
             }
         });
 
