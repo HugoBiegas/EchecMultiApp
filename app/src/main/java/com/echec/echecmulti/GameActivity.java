@@ -275,11 +275,11 @@ public class GameActivity extends AppCompatActivity {
                     if(coup==1)//si la piéce et vide ou que ces le deusiéme coup
                         if (selectionner == i){
                             caseNonValide();
-                            colorActionPion.clear();
+                            colorActionPion.clear();//on suprimse les couleur
                         }
                         else{
                             trouverPositionCorecte(i);
-                            colorActionPion.clear();
+                            colorActionPion.clear();//on suprimse les couleur
                         }
                     else
                         trouverLesdeplacement(i);
@@ -287,11 +287,11 @@ public class GameActivity extends AppCompatActivity {
                     if(coup==1)//si la piéce et vide ou que ces le deusiéme coup
                         if (selectionner == i){
                             caseNonValide();
-                            colorActionPion.clear();
+                            colorActionPion.clear();//on suprimse les couleur
                         }
                         else{
                             trouverPositionCorecte(i);
-                            colorActionPion.clear();
+                            colorActionPion.clear();//on suprimse les couleur
                         }
                     else
                         trouverLesdeplacement(i);
