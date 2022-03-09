@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.echec.echecmulti.Connection.MainActivity;
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
 import com.google.firebase.FirebaseApp;
@@ -30,6 +31,7 @@ import java.util.List;
 public class RoomActivity extends AppCompatActivity {
     ListView listView;//liste des View
     Button button;//bouton de créations de room
+    Button profile;
     List<String> roomList = new ArrayList<>();//liste des room
     String playerName="";//nom du joueur
     String roomName="";//nom de la room
@@ -46,7 +48,7 @@ public class RoomActivity extends AppCompatActivity {
         CréationRoom();
         ItemCliquer();
         addRoomsEventListener();
-
+        retourProfile();
     }
 
 
@@ -81,7 +83,21 @@ public class RoomActivity extends AppCompatActivity {
                 button.setEnabled(false);
                 finish();
                 startActivity(new Intent(getApplicationContext(),CreaRoom.class));//on lance l'activiter RooomActivity
+            }
+        };
+    }
 
+    private void retourProfile(){
+        //si le bouton de créations de room est cliquer
+        profile.setOnClickListener(cliqueProfile());
+    }
+
+    private View.OnClickListener cliqueProfile(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));//on lance l'activiter RooomActivity
             }
         };
     }
@@ -93,6 +109,7 @@ public class RoomActivity extends AppCompatActivity {
         playerName = preferences.getString("playerName","");
         listView = findViewById(R.id.listRoom);//affectations de la liste des room
         button = findViewById(R.id.buttonCreateRoom);//affectations du bonton
+        profile = findViewById(R.id.buttonViewProfile);
     }
 
     private void addRoomEventListener(){

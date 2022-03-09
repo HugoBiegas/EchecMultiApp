@@ -17,10 +17,20 @@
 
     <Button
         android:id="@+id/buttonCreateRoom"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="32px"
         android:text="Creer une room" />
+
+    <Button
+        android:id="@+id/buttonViewProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="32px"
+        android:layout_alignParentBottom="true"
+        android:text="Voir profil" />
 
 </RelativeLayout>
