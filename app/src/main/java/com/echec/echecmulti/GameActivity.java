@@ -72,7 +72,6 @@ public class GameActivity extends AppCompatActivity {
     Button buttonqui;
     FirebaseDatabase database;//pour se connecter as la BDD
     DatabaseReference messageRef;//pour faire référence as la BDD
-    DatabaseReference suprestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -554,7 +553,7 @@ public class GameActivity extends AppCompatActivity {
 
     private int Echec(){
         echecMath.clear();
-        ArrayList<Integer> toucher = new ArrayList<Integer>();
+        ArrayList<Integer> toucher = new ArrayList<>();
         toucher.clear();
         int AttaqueR=0;
         for (int i=0;i<BordPiece.length;i++){
@@ -574,7 +573,6 @@ public class GameActivity extends AppCompatActivity {
                 for (int i=0;i<toucher.size();i++){
                     trouverLesdeplacementAttaquer(toucher.get(i));
                 }
-                Toast.makeText(this, echecMath.toString(), Toast.LENGTH_SHORT).show();
                 Integer[] coordonnerEM = new Integer[echecMath.size()];
                 Integer[] coordonnerP = new Integer[PosibiliterH.size()];
                 String[] LettreP = new String[PosibiliterH.size()];
@@ -584,10 +582,9 @@ public class GameActivity extends AppCompatActivity {
                         for (int k=0;k<PosibiliterH.size();k++) {
                             coordonnerP[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":") + 1, PosibiliterH.get(k).length()));
                             LettreP[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
-                            if(LettreP.equals("A") && coordonnerP[k] == toucher.get(i)){
-                                AttaqueR=1;
-                            }else if (coordonnerEM[j] == coordonnerP[k] && LettreP[k].equals("D")){
-                                AttaqueR=1;
+                             if (coordonnerEM[j] == coordonnerP[k] && LettreP[k].equals("D")){
+                                 Toast.makeText(this, coordonnerEM[j].toString()+" "+coordonnerP[k].toString()+" "+LettreP[k].equals("D"), Toast.LENGTH_SHORT).show();
+                                 AttaqueR=1;
                             }
                        }
                     }
@@ -717,6 +714,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //retourne vrais si le roi et toucher par la piéce donnée du guest
     private Boolean RechercheAttauqueGuest(){
         Integer[] coordonner = new Integer[echecMath.size()];
         String[] Lettre = new String[echecMath.size()];
@@ -730,6 +728,7 @@ public class GameActivity extends AppCompatActivity {
         return false;
     }
 
+    //retourne vrais si le roi et toucher par la piéce donnée du host
     private Boolean RechercheAttauqueHost(){
         Integer[] coordonner = new Integer[echecMath.size()];
         String[] Lettre = new String[echecMath.size()];
@@ -742,6 +741,7 @@ public class GameActivity extends AppCompatActivity {
         }
         return false;
     }
+
     private void trouverLesdeplacementAttaquer(int i){
         if (BordPiece[i].equals("P")){
             if (colorP[i].equals("B"))
