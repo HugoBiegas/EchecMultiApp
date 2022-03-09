@@ -81,11 +81,23 @@ public class GameActivity extends AppCompatActivity {
         initialistions();
         echecini();
         initialisationshost();
+        echecEtMath();
         extragerer();
         itemaction();
         quiterBTN();
     }
-
+    private void echecEtMath(){
+        ArrayList<String> teste = new ArrayList<>();
+        for (int i=0;i<64;i++){
+            if (BordPiece[i].equals("R") && colorP[i].equals("B")){
+                teste =roi.deplacementRoiGuest(BordPiece,i,colorP);
+                Toast.makeText(this, teste.toString(), Toast.LENGTH_SHORT).show();
+            }else if (BordPiece[i].equals("R") && colorP[i].equals("N")){
+                teste = roi.deplacementRoiHost(BordPiece,i,colorP);
+                Toast.makeText(this, teste.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private void initialisationshost(){
         messageRef = database.getReference("rooms/"+roomName);
         messageRef.addListenerForSingleValueEvent(unjoueuroudeux());
