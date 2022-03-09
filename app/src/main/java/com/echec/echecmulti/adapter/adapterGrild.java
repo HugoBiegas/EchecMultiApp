@@ -33,7 +33,7 @@ public class adapterGrild extends BaseAdapter {
     @Override
     public int getCount() {// demande le nombre d'itéme sur lécran
         return Bord.length;
-    }
+    } // nombre de foie ou il passe
 
     @Override
     public Object getItem(int i) {
@@ -63,6 +63,9 @@ public class adapterGrild extends BaseAdapter {
 
     return view;
     }
+
+
+
     private String piécePose(int i){
         String resourceName="";
         if (Bord[i].equals("T") && color[i].equals("B"))

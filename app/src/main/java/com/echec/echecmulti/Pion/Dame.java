@@ -3,13 +3,14 @@ package com.echec.echecmulti.Pion;
 import java.util.ArrayList;
 
 public class Dame {
+    ArrayList<String> deplacement = new ArrayList<>();
+    int[] border = new int[]{0, 8, 16, 24, 32, 40, 48, 56,7, 15, 23, 31, 39, 47, 55, 63};
+    int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
+    int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};
+    int ecart,dup=0;
+    int bordBase=4;
     public ArrayList<String> deplacementDameHost(String[] Echiquier, int coordoner, String[] color) {
-        ArrayList<String> deplacement = new ArrayList<>();
-        int[] border = new int[]{0, 8, 16, 24, 32, 40, 48, 56,7, 15, 23, 31, 39, 47, 55, 63};
-        int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
-        int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};
-        int ecart = coordoner + 7,dup=0;
-        int bordBase=4;
+        ecart = coordoner + 7;
         for (int i=0;i<7;i++){
             if (coordoner == 0 || coordoner == 63)
                 bordBase = 0;
@@ -245,12 +246,8 @@ public class Dame {
     
     
     public ArrayList<String> deplacementDameGuest(String[] Echiquier, int coordoner, String[] color) {
-        ArrayList<String> deplacement = new ArrayList<>();
-        int[] border = new int[]{0, 8, 16, 24, 32, 40, 48, 56,7, 15, 23, 31, 39, 47, 55, 63};
-        int[] borderD = new int[]{ 7, 15, 23, 31, 39, 47, 55, 63};
-        int[] borderG = new int[]{0, 8, 16, 24, 32, 40, 48, 56};
-        int ecart = coordoner + 7,dup=0;
-        int bordBase=4;
+        ecart = coordoner + 7;
+
         for (int i=0;i<7;i++){
             if (coordoner == 0 || coordoner == 63)
                 bordBase = 0;
@@ -259,6 +256,34 @@ public class Dame {
             else if (coordoner == borderG[i])
                 bordBase = 2;
         }
+        deplFouNoirBasdroit(coordoner,Echiquier,color);
+        dup=0;
+        ecart = coordoner + 9;
+        deplFouNoirHautdroit(coordoner,Echiquier,color);
+        dup=0;
+        ecart = coordoner -7;
+        deplFouNoirBasGauche(coordoner,Echiquier,color);
+        dup=0;
+        ecart = coordoner -9;
+        deplFouNoirHautGauche(coordoner,Echiquier,color);
+
+        ecart = coordoner+8;
+        deplTourNoirDroit(coordoner,Echiquier,color);
+
+        ecart = coordoner-8;
+        deplTourNoirBas(coordoner,Echiquier,color);
+
+        ecart = coordoner+1;
+        //tour pour manger sur la droit
+        deplTourNoirGauch(coordoner,Echiquier,color);
+
+        ecart = coordoner-1;
+        //tour pour manger sur la gauche
+        deplTourNoirHaut(coordoner,Echiquier,color);
+
+        return deplacement;
+    }
+    private void deplFouNoirBasdroit(int coordoner,String[] Echiquier,String[] color){
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner-7) && bordBase == 1||bordBase == 2 && ecart == (coordoner+7))
                 dup=1;
@@ -287,9 +312,8 @@ public class Dame {
             }
             ecart +=7;
         }
-
-        dup=0;
-        ecart = coordoner + 9;
+    }
+    private void deplFouNoirBasGauche(int coordoner,String[] Echiquier,String[] color) {
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
                 dup=1;
@@ -319,9 +343,8 @@ public class Dame {
 
             ecart +=9;
         }
-
-        dup=0;
-        ecart = coordoner -7;
+    }
+    private void deplFouNoirHautdroit(int coordoner,String[] Echiquier,String[] color) {
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner-7) && bordBase == 1||bordBase == 2 && ecart == (coordoner+7))
                 dup=1;
@@ -350,10 +373,8 @@ public class Dame {
             }
             ecart -=7;
         }
-
-
-        dup=0;
-        ecart = coordoner -9;
+    }
+    private void deplFouNoirHautGauche(int coordoner,String[] Echiquier,String[] color) {
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
                 dup=1;
@@ -382,8 +403,8 @@ public class Dame {
             }
             ecart -=9;
         }
-
-        ecart = coordoner+8;
+    }
+    private void deplTourNoirDroit(int coordoner,String[] Echiquier,String[] color){
         int non = 0;
         //tour pour manger ver le haut
         for(int i=0;i<8;i++){
@@ -400,25 +421,9 @@ public class Dame {
                 i=8;//sortire de la boucle
             ecart+=8;
         }
-        non=0;
-        ecart = coordoner-8;
-        //tour pour manger ver le bat
-        for (int i=0;i<8;i++){
-            if (non ==0 && ecart>=0){
-                if(Echiquier[ecart].equals(""))
-                    deplacement.add("D:"+ecart);
-                else if (color[ecart].equals("B")){
-                    deplacement.add("A:"+ecart);
-                    non =1;
-                }else
-                    non=1;
-            }else
-                i=8;
-            ecart-=8;
-        }
-        non=0;
-        ecart = coordoner+1;
-        //tour pour manger sur la droit
+    }
+    private void deplTourNoirGauch(int coordoner,String[] Echiquier,String[] color){
+        int non=0;
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
                 non=1;
@@ -447,9 +452,9 @@ public class Dame {
                 i=8;
             ecart++;
         }
-        non=0;
-        ecart = coordoner-1;
-        //tour pour manger sur la gauche
+    }
+    private void deplTourNoirHaut(int coordoner,String[] Echiquier,String[] color){
+        int non=0;
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
                 non=1;
@@ -478,8 +483,23 @@ public class Dame {
                 i=8;
             ecart--;
         }
-
-
-        return deplacement;
     }
+    private void deplTourNoirBas(int coordoner,String[] Echiquier,String[] color){
+        int non=0;
+        //tour pour manger ver le bat
+        for (int i=0;i<8;i++){
+            if (non ==0 && ecart>=0){
+                if(Echiquier[ecart].equals(""))
+                    deplacement.add("D:"+ecart);
+                else if (color[ecart].equals("B")){
+                    deplacement.add("A:"+ecart);
+                    non =1;
+                }else
+                    non=1;
+            }else
+                i=8;
+            ecart-=8;
+        }
+    }
+
 }
