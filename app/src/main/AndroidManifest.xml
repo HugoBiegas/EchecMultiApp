@@ -15,7 +15,7 @@
             android:name=".Connection.connexiontest"
             android:exported="true" />
         <activity
-            android:name=".Connection.Login"
+            android:name=".Connection.Profile"
             android:exported="true" />
         <activity
             android:name=".Connection.Register"

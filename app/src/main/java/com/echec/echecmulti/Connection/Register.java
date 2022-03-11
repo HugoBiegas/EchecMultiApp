@@ -18,9 +18,6 @@ import com.echec.echecmulti.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -60,7 +57,7 @@ public class Register extends AppCompatActivity {
         //Si il n'y a pas d'utilisateur connecté en arrivant sur Register on va logout pour etre sur et renvoyé sur Login
         if(fAuth.getCurrentUser() != null){
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(),Login.class));
+            startActivity(new Intent(getApplicationContext(), Profile.class));
             finish();
         }
 
@@ -136,7 +133,7 @@ public class Register extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Login.class));
+                startActivity(new Intent(getApplicationContext(), Profile.class));
             }
         });
     }

@@ -3,13 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_connexiontest.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_crea_room.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_game.xml" value="0.22" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_login.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_main.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_register.xml" value="0.14722222222222223" />
-        <entry key="..\:/Users/hbiegas/Documents/GitHub/EchecMultiApp/app/src/main/res/layout/activity_room.xml" value="0.14722222222222223" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/drawable/ic_launcher_background.xml" value="0.24" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_connexiontest.xml" value="0.22010869565217392" />
         <entry key="..\:/Users/hugob/AndroidStudioProjects/EchecMulti/app/src/main/res/layout/activity_crea_room.xml" value="0.2265193370165746" />
@@ -28,8 +21,11 @@
         <entry key="..\:/Users/vince/AndroidStudioProjects/EchecMultiApp/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/EchecMultiApp/app/src/main/res/layout/activity_register.xml" value="0.29981884057971014" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/EchecMultiApp/app/src/main/res/layout/activity_room.xml" value="0.29981884057971014" />
+        <entry key="..\:/Users/vvann/Desktop/EchecMultiApp/app/src/main/res/layout/activity_connexiontest.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/vvann/Desktop/EchecMultiApp/app/src/main/res/layout/activity_game.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/vvann/Desktop/EchecMultiApp/app/src/main/res/layout/activity_main.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/vvann/Desktop/EchecMultiApp/app/src/main/res/layout/activity_room.xml" value="0.33" />
+        <entry key="..\:/Users/vvann/Desktop/EchecMultiApp/app/src/main/res/layout/adapter_layout.xml" value="0.24909420289855072" />
       </map>
     </option>
   </component>

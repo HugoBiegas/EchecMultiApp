@@ -1,120 +1,150 @@
+
+
 package com.echec.echecmulti.Connection;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echec.echecmulti.R;
-import com.echec.echecmulti.Room.RoomActivity;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
 
 public class MainActivity extends AppCompatActivity {
 
-    //initialisation des variables
-    TextView user, email, victories, loses;
-    Button mCheckRoom;
-    FirebaseFirestore fStore;
+    // Initialisation des variables
+    EditText mEmail, mPassword;
+    Button mLoginBtn;
+    TextView mCreateBtn, forgotTextLink;
     FirebaseAuth fAuth;
-    String userId;
-    String playerName="";   //le nom du joueur
-    FirebaseDatabase database; // connections as la BDD
-    DatabaseReference playerRef;// référence de la BD
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //recherche par ID sur le layout main
-        user = findViewById(R.id.ProfileUser);
-        email = findViewById(R.id.ProfileEmail);
-        victories = findViewById(R.id.victories);
-        loses = findViewById(R.id.loses);
+        setContentView(R.layout.activity_login);
+        //Recherche sur le layout activity_login
+        mEmail = findViewById(R.id.editTextEmail);
+        mPassword = findViewById(R.id.editTextPassword);
+        mLoginBtn = findViewById(R.id.buttonLogin);
+        progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-        //recherche de l'id du joueur connecté
-        userId = fAuth.getCurrentUser().getUid();
-        database = FirebaseDatabase.getInstance();//créations de l'instance
+        mCreateBtn = findViewById(R.id.createText);
+        forgotTextLink = findViewById(R.id.forgotTextLink);
 
-        //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                user.setText(value.getString("username"));
-                email.setText(value.getString("email"));
-                victories.setText(value.getString("victories"));
-                loses.setText(value.getString("loses"));
-            }
-        });
+        if(fAuth.getCurrentUser() != null){
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), Profile.class));
+            finish();
+        }
 
-        //Go dans le layout Room (Jouer!)
-        mCheckRoom = findViewById(R.id.checkRoom);
-        mCheckRoom.setOnClickListener(new View.OnClickListener() {
+        //Vérification des champs avant d'appuyer sur le bouton
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playerName = user.getText().toString();//récupérations du nom de l'utilisateur
-                if(!playerName.equals("")){//on vérifie bien que l'utilisateur as sési un truque
-                    mCheckRoom.setText("connections en cours ...");//changement du bouton connections en connections en cours
-                    mCheckRoom.setEnabled(false);//pour que le bouton ne soit pas clicable une dexiéme foi
-                    playerRef = database.getReference("players/" + playerName);//créations de players avec une sous catégori avec le nom du joueur
-                    addEventListener();//appelle de fonctions
-                    playerRef.setValue("");//on mais la référence du joueur a ""(on pourat mettre d'autre info)
+                String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email)){
+                    mEmail.setError("Email requis");
+                    return;
                 }
+
+                if(TextUtils.isEmpty(password)){
+                    mPassword.setError("Mot de passe requis");
+                    return;
+                }
+
+                if(password.length() < 6){
+                    mPassword.setError("Mot de passe trop faible");
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+
+
+                // Authentification de l'utilisateur
+                fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(MainActivity.this,"Connexion réussi", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), Profile.class));
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this,"Erreur! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
+        //Bouton switch layout Creer compte
+        mCreateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Register.class));
+            }
+        });
+
+
+        //Partie qui va suivre va concerner le reset de mdp
+        //Popup quand on va appuyer sur le TextView forgotTextLink du layout login
+        forgotTextLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText resetMail = new EditText(v.getContext());
+                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Changer de mot de passe ?");
+                passwordResetDialog.setMessage("Entrer votre email.");
+                passwordResetDialog.setView(resetMail);
+
+                //Si appuie sur Oui, on vérifie que le mot de passe existe dans la bd
+                passwordResetDialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String mail = resetMail.getText().toString();
+                        fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(MainActivity.this,"Lien envoyé sur votre email.", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, "Echec d'envoie du lien",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+                //Si appuie sur Non, on ferme la popup
+                passwordResetDialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                passwordResetDialog.create().show();
             }
         });
     }
 
-    public void addEventListener(){
-        playerRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //succer - continue sur le prochain écran et sauvegarde le nom du joueur
-                SharedPreferences preferences = getSharedPreferences("PREFS",0);//permet de modifier un ensemble particulier
-                SharedPreferences.Editor editor = preferences.edit();//permet de changer la valeur contenut dans preferences
-                editor.putString("playerName", playerName);//remplace le nom du joueur par le vraix nom du joueur
-                editor.apply();//applique le changement de nom de joueur
-                startActivity(new Intent(getApplicationContext(), RoomActivity.class));//on lance l'activiter RooomActivity
-                finish();//on arréte la tache actuelle
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //erreur
-                mCheckRoom.setText("connections");//change le texte du bouton
-                mCheckRoom.setEnabled(true);//rend visible le bouton
-                Toast.makeText(MainActivity.this,"erreur!",Toast.LENGTH_SHORT).show();//affiche un message d'erreur
-            }
-        });
-    }
-
-    //Déconnexion
-    public void logout(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), Login.class));
-        finish();
-    }
 }
