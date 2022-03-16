@@ -18,9 +18,6 @@ import com.echec.echecmulti.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -60,7 +57,7 @@ public class Register extends AppCompatActivity {
         //Si il n'y a pas d'utilisateur connecté en arrivant sur Register on va logout pour etre sur et renvoyé sur Login
         if(fAuth.getCurrentUser() != null){
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(),Login.class));
+            startActivity(new Intent(getApplicationContext(), Profile.class));
             finish();
         }
 
@@ -72,6 +69,8 @@ public class Register extends AppCompatActivity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String username = mUser.getText().toString().trim();
+                Integer victories = 0;
+                Integer loses = 0;
 
                 //Controle d'erreurs
                 if(TextUtils.isEmpty(email)){
@@ -110,6 +109,8 @@ public class Register extends AppCompatActivity {
                             Map<String,Object> user = new HashMap<>();
                             user.put("username", username);
                             user.put("email", email);
+                            user.put("victories", victories);
+                            user.put("loses", loses);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -132,7 +133,7 @@ public class Register extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Login.class));
+                startActivity(new Intent(getApplicationContext(), Profile.class));
             }
         });
     }

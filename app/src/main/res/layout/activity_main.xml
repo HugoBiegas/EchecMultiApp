@@ -73,10 +73,10 @@
         app:layout_constraintVertical_bias="0.819" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/victories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Défaite : 0"
+        android:text="TEST"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.637"
@@ -85,10 +85,10 @@
         app:layout_constraintVertical_bias="0.587" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/loses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Victore : 0"
+        android:text="TEST"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.387"
