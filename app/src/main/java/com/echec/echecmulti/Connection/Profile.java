@@ -62,6 +62,8 @@ public class Profile extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 user.setText(value.getString("username"));
                 email.setText(value.getString("email"));
+                victories.setText("Victoires : " + value.getLong("victories").intValue());
+                loses.setText("Défaites : " + value.getLong("loses").intValue());
             }
         });
 
@@ -72,7 +74,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View v) {
                 playerName = user.getText().toString();//récupérations du nom de l'utilisateur
                 if(!playerName.equals("")){//on vérifie bien que l'utilisateur as sési un truque
-                    mCheckRoom.setText("connections en cours ...");//changement du bouton connections en connections en cours
+                    mCheckRoom.setText("Connexion...");//changement du bouton connections en connections en cours
                     mCheckRoom.setEnabled(false);//pour que le bouton ne soit pas clicable une dexiéme foi
                     playerRef = database.getReference("players/" + playerName);//créations de players avec une sous catégori avec le nom du joueur
                     addEventListener();//appelle de fonctions
@@ -109,7 +111,7 @@ public class Profile extends AppCompatActivity {
     //Déconnexion
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), Profile.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         finish();
     }
 }

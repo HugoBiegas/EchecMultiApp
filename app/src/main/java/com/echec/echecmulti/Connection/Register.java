@@ -32,8 +32,8 @@ public class Register extends AppCompatActivity {
     EditText mEmail, mUser, mPassword, mCPassword;
     Button mRegisterBtn;
     TextView mLoginBtn;
-    FirebaseAuth fAuth;
     ProgressBar progressBar;
+    FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
 

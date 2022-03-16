@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         forgotTextLink = findViewById(R.id.forgotTextLink);
 
         if(fAuth.getCurrentUser() != null){
-            FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), Profile.class));
             finish();
         }

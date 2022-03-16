@@ -50,11 +50,14 @@ public class adapterGrild extends BaseAdapter {
         view = inflater.inflate(R.layout.adapter_layout,null);
         ImageView image = view.findViewById(R.id.item_icon);
         String resourceName=piécePose(i);
+
+        //Chercher et générer l'image d'une pièce
         if (!Bord[i].equals("")){
             int resId = context.getResources().getIdentifier(resourceName, "drawable",context.getPackageName());
             image.setImageResource(resId);
         }
 
+        //Générer les couleurs du Board
         int color;
         color = couleur(i);
         if (piéceColorDeplacement(i) !=0)
