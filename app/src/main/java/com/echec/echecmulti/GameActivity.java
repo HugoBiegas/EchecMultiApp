@@ -133,8 +133,47 @@ public class GameActivity extends AppCompatActivity {
 
             }else if (BordPiece[i].equals("R") && colorP[i].equals("N")){
                 teste = roi.deplacementRoiHost(BordPiece,i,colorP);
+                PosibiliterH.clear();
+                RechecheHostP();
+                //créations de la récupérations des coordoner et lettre
+                Integer[] coordonner = new Integer[teste.size()];
+                String[] Lettre = new String[teste.size()];
+                Integer[] coordonnerDep = new Integer[PosibiliterH.size()];
+                String[] LettreDep = new String[PosibiliterH.size()];
+                Boolean echec=false;
+                //boucler pour voir si le roi et toucher
                 for (int j = 0; j < teste.size(); j++) {
-
+                    coordonner[j] = Integer.parseInt(teste.get(j).substring(teste.get(j).indexOf(":")+1,teste.get(j).length()));
+                    Lettre[j] = teste.get(j).substring(0,teste.get(j).indexOf(":"));
+                    for (int k = 0; k < PosibiliterH.size(); k++) {
+                        coordonnerDep[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
+                        LettreDep[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
+                        if (i == coordonnerDep[k])
+                            echec=true;
+                    }
+                }
+                PosibiliterH.clear();
+                //si il y as échec alors on regarde si le roi peux rien faire
+                if (echec == true){
+                    for (int j = 0; j < Lettre.length; j++) {
+                        //on regarde si ces déplacement sont bon
+                        if (Lettre[j].equals("A") && colorP[coordonner[j]].equals("B")){
+                            teste.remove(0);
+                        }
+                        for (int k = 0; k < coordonnerDep.length; k++) {
+                            //on regarde si les coordonner d'attaque son égale aux rois
+                            if (coordonner[j] == coordonnerDep[k]){
+                                teste.remove(0);
+                            }
+                        }
+                    }
+                    //on regarde si il reste des emplacement
+                    if(teste.isEmpty()){
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                        messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                        messageRef.setValue("deco");
+                    }
                 }
 
             }
