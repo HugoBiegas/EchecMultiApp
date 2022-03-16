@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -26,9 +25,6 @@ import com.echec.echecmulti.Room.RoomActivity;
 import com.echec.echecmulti.adapter.adapterGrild;
 import com.echec.echecmulti.adapter.adapterMortBlanc;
 import com.echec.echecmulti.adapter.adapterMortNoir;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,20 +77,66 @@ public class GameActivity extends AppCompatActivity {
         initialistions();
         echecini();
         initialisationshost();
-        echecEtMath();
         extragerer();
         itemaction();
         quiterBTN();
     }
+
     private void echecEtMath(){
-        ArrayList<String> teste = new ArrayList<>();
+        ArrayList<String> teste;
         for (int i=0;i<64;i++){
             if (BordPiece[i].equals("R") && colorP[i].equals("B")){
                 teste =roi.deplacementRoiGuest(BordPiece,i,colorP);
-                Toast.makeText(this, teste.toString(), Toast.LENGTH_SHORT).show();
+                //récupérer les déplacement des noir
+                PosibiliterG.clear();
+                RechecheGuestP();
+                //créations de la récupérations des coordoner et lettre
+                Integer[] coordonner = new Integer[teste.size()];
+                String[] Lettre = new String[teste.size()];
+                Integer[] coordonnerDep = new Integer[PosibiliterG.size()];
+                String[] LettreDep = new String[PosibiliterG.size()];
+                Boolean echec=false;
+                //boucler pour voir si le roi et toucher
+                for (int j = 0; j < teste.size(); j++) {
+                    coordonner[j] = Integer.parseInt(teste.get(j).substring(teste.get(j).indexOf(":")+1,teste.get(j).length()));
+                    Lettre[j] = teste.get(j).substring(0,teste.get(j).indexOf(":"));
+                    for (int k = 0; k < PosibiliterG.size(); k++) {
+                        coordonnerDep[k] = Integer.parseInt(PosibiliterG.get(k).substring(PosibiliterG.get(k).indexOf(":")+1,PosibiliterG.get(k).length()));
+                        LettreDep[k] = PosibiliterG.get(k).substring(0,PosibiliterG.get(k).indexOf(":"));
+                        if (i == coordonnerDep[k])
+                            echec=true;
+                    }
+                }
+                PosibiliterG.clear();
+                //si il y as échec alors on regarde si le roi peux rien faire
+                if (echec == true){
+                    for (int j = 0; j < Lettre.length; j++) {
+                        //on regarde si ces déplacement sont bon
+                        if (Lettre[j].equals("A") && colorP[coordonner[j]].equals("B")){
+                            teste.remove(0);
+                        }
+                        for (int k = 0; k < coordonnerDep.length; k++) {
+                            //on regarde si les coordonner d'attaque son égale aux rois
+                            if (coordonner[j] == coordonnerDep[k]){
+                                teste.remove(0);
+                            }
+                        }
+                    }
+                    //on regarde si il reste des emplacement
+                    if(teste.isEmpty()){
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                        messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                        messageRef.setValue("deco");
+                    }
+                }
+
             }else if (BordPiece[i].equals("R") && colorP[i].equals("N")){
                 teste = roi.deplacementRoiHost(BordPiece,i,colorP);
-                Toast.makeText(this, teste.toString(), Toast.LENGTH_SHORT).show();
+                for (int j = 0; j < teste.size(); j++) {
+
+                }
+
             }
         }
     }
@@ -531,12 +573,14 @@ public class GameActivity extends AppCompatActivity {
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
+                        echecEtMath();
                         //est affiche un message
                         Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
                         action(snapshot);
+                        echecEtMath();
                         //est affiche un message
                         Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
 
@@ -595,7 +639,6 @@ public class GameActivity extends AppCompatActivity {
                             coordonnerP[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":") + 1, PosibiliterH.get(k).length()));
                             LettreP[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
                              if (coordonnerEM[j] == coordonnerP[k] && LettreP[k].equals("D")){
-                                 Toast.makeText(this, coordonnerEM[j].toString()+" "+coordonnerP[k].toString()+" "+LettreP[k].equals("D"), Toast.LENGTH_SHORT).show();
                                  AttaqueR=1;
                             }
                        }
@@ -603,10 +646,10 @@ public class GameActivity extends AppCompatActivity {
                 }
                 //echec et mat
                 if (AttaqueR == 1){
-                    Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
                     AttaqueR = 1;
                 }else if (AttaqueR ==0){
-                    Toast.makeText(this, "echec et math", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "echec et math", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     AttaqueR = 2;
