@@ -528,10 +528,7 @@ public class GameActivity extends AppCompatActivity {
                         LettreDep[k] = PosibiliterG.get(k).substring(0, PosibiliterG.get(k).indexOf(":"));
                     }
                 }
-                PosibiliterG.clear();
                 //si il y as échec alors on regarde si le roi peux rien faire
-                    Toast.makeText(this, colorActionPion.toString(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(this,  PosibiliterG.toString(), Toast.LENGTH_SHORT).show();
                     for (int j = 0; j < Lettre.length; j++) {
                         //on regarde si ces déplacement sont bon
                         if (Lettre[j].equals("A") && colorP[coordonner[j]].equals("B")) {
@@ -544,21 +541,36 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
                     }
-
-                Toast.makeText(this, colorActionPion.toString(), Toast.LENGTH_SHORT).show();
                 PosibiliterG.clear();
             }else{
                 colorActionPion = roi.deplacementRoiGuest(BordPiece,i,colorP);
+//récupérer les déplacement des noir
+                PosibiliterH.clear();
                 RechecheHostP();
-                Integer[] coordonnerCa = new Integer[colorActionPion.size()];
-                Integer[] coordonnerP = new Integer[PosibiliterH.size()];
-                for (int j=0;j<colorActionPion.size();j++){
-                    coordonnerCa[j] = Integer.parseInt(colorActionPion.get(j).substring(colorActionPion.get(j).indexOf(":")+1,colorActionPion.get(j).length()));
-                    for (int d=0;d<PosibiliterH.size();d++){
-                        coordonnerP[d] = Integer.parseInt(PosibiliterH.get(d).substring(PosibiliterH.get(d).indexOf(":")+1,PosibiliterH.get(d).length()));
-                        if (coordonnerCa[j] == coordonnerP[d]){
-                            colorActionPion.remove(j);
-                            d= PosibiliterH.size();
+                //créations de la récupérations des coordoner et lettre
+                Integer[] coordonner = new Integer[colorActionPion.size()];
+                String[] Lettre = new String[colorActionPion.size()];
+                Integer[] coordonnerDep = new Integer[PosibiliterH.size()];
+                String[] LettreDep = new String[PosibiliterH.size()];
+                //boucler pour voir si le roi et toucher
+                for (int j = 0; j < colorActionPion.size(); j++) {
+                    coordonner[j] = Integer.parseInt(colorActionPion.get(j).substring(colorActionPion.get(j).indexOf(":") + 1, colorActionPion.get(j).length()));
+                    Lettre[j] = colorActionPion.get(j).substring(0, colorActionPion.get(j).indexOf(":"));
+                    for (int k = 0; k < PosibiliterH.size(); k++) {
+                        coordonnerDep[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":") + 1, PosibiliterH.get(k).length()));
+                        LettreDep[k] = PosibiliterH.get(k).substring(0, PosibiliterH.get(k).indexOf(":"));
+                    }
+                }
+                //si il y as échec alors on regarde si le roi peux rien faire
+                for (int j = 0; j < Lettre.length; j++) {
+                    //on regarde si ces déplacement sont bon
+                    if (Lettre[j].equals("A") && colorP[coordonner[j]].equals("B")) {
+                        colorActionPion.remove(Lettre[j] + ":" + coordonner[j]);
+                    }
+                    for (int k = 0; k < coordonnerDep.length; k++) {
+                        //on regarde si les coordonner d'attaque son égale aux rois
+                        if (coordonner[j] == coordonnerDep[k]) {
+                            colorActionPion.remove(Lettre[j] + ":" + coordonner[j]);
                         }
                     }
                 }
