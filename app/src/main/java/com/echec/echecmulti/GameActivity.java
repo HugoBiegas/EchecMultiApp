@@ -2,11 +2,13 @@ package com.echec.echecmulti;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,13 +27,23 @@ import com.echec.echecmulti.Room.RoomActivity;
 import com.echec.echecmulti.adapter.adapterGrild;
 import com.echec.echecmulti.adapter.adapterMortBlanc;
 import com.echec.echecmulti.adapter.adapterMortNoir;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -68,6 +80,10 @@ public class GameActivity extends AppCompatActivity {
     Button buttonqui;
     FirebaseDatabase database;//pour se connecter as la BDD
     DatabaseReference messageRef;//pour faire référence as la BDD
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userId;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +224,10 @@ public class GameActivity extends AppCompatActivity {
         gridViewMortN = findViewById(R.id.grid_echec_mort_N);
         gridViewMortB = findViewById(R.id.grid_echec_mort_B);
         textView = findViewById(R.id.NomJoueur);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
 
         gridView.setEnabled(false);
         database = FirebaseDatabase.getInstance();//créer une instance
@@ -597,17 +617,37 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void quiterBTN(){
-
-        buttonqui.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                startActivity(ActivityB);
-                finish();
-                messageRef.setValue("deco");
-                //bouton pour quiter l'applications
+        //Recherche dans la collection users de la BD à l'aide de de la variable userId
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+            if(documentSnapshot.exists())
+            {
+                Integer victories = documentSnapshot.getLong("victories").intValue();
+                Integer loses = documentSnapshot.getLong("loses").intValue();
+                String email = documentSnapshot.getString("email");
+                buttonqui.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Map<String,Object> edited = new HashMap<>();
+                                edited.put("loses", loses+1);
+                                documentReference.update(edited);
+                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                                startActivity(ActivityB);
+                                finish();
+                                messageRef.setValue("deco");
+                                //bouton pour quiter l'applications
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                Log.d("tag", "onEvent: LOL !");
             }
         });
     }

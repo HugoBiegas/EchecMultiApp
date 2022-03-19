@@ -30,8 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 public class Profile extends AppCompatActivity {
 
     //initialisation des variables
-    TextView user, email, victories, loses;
-    Button mCheckRoom;
+    TextView user, email, victories, loses, winrate;
+    Button mCheckRoom, buttonLogout;
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
     String userId;
@@ -49,6 +49,7 @@ public class Profile extends AppCompatActivity {
         email = findViewById(R.id.ProfileEmail);
         victories = findViewById(R.id.victories);
         loses = findViewById(R.id.loses);
+        winrate = findViewById(R.id.winrate);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         //recherche de l'id du joueur connecté
@@ -60,10 +61,20 @@ public class Profile extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                Integer nbvic = value.getLong("victories").intValue();
+                Integer nblos = value.getLong("loses").intValue();
+                Integer pourcentage = 0;
+
+                if(nbvic != 0)
+                {
+                    pourcentage = ((nbvic/nbvic+nblos)*10);
+                }
+
                 user.setText(value.getString("username"));
                 email.setText(value.getString("email"));
-                victories.setText("Victoires : " + value.getLong("victories").intValue());
-                loses.setText("Défaites : " + value.getLong("loses").intValue());
+                victories.setText("Victoires : " + nbvic);
+                loses.setText("Défaites : " + nblos);
+                winrate.setText("Winrate : " + pourcentage + "%");
             }
         });
 
@@ -80,6 +91,16 @@ public class Profile extends AppCompatActivity {
                     addEventListener();//appelle de fonctions
                     playerRef.setValue("");//on mais la référence du joueur a ""(on pourat mettre d'autre info)
                 }
+            }
+        });
+
+        buttonLogout = findViewById(R.id.buttonLogout);
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fAuth.signOut();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
             }
         });
     }
@@ -106,12 +127,5 @@ public class Profile extends AppCompatActivity {
                 Toast.makeText(Profile.this,"erreur!",Toast.LENGTH_SHORT).show();//affiche un message d'erreur
             }
         });
-    }
-
-    //Déconnexion
-    public void logout(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
     }
 }
