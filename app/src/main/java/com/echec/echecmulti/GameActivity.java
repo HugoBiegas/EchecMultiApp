@@ -198,29 +198,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    //
-    private void initialisationshost(){
-        messageRef = database.getReference("rooms/"+roomName);
-        messageRef.addListenerForSingleValueEvent(unjoueuroudeux());
-    }
-
-    private ValueEventListener unjoueuroudeux(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(GameActivity.this, snapshot.toString(), Toast.LENGTH_LONG).show();
-                if(snapshot.getValue().toString().contains("player1")){
-                    message();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-    }
-
     private void initialistions(){
         gridView = findViewById(R.id.grid_echec);
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
@@ -238,8 +215,157 @@ public class GameActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("PREFS",0);
         playerName = preferences.getString("playerName","");
-        textView.setText("joueur : " + playerName);
+        textView.setText("joueur : " + playerName); //Récupérer en Extra depuis CreaRoom ou RoomActivity si guest
 
+    }
+
+    //Récupére les données de rooms/roomName roomName qui a été envoyé en putExtra de CreRoom
+    private void initialisationshost(){
+        messageRef = database.getReference("rooms/"+roomName);
+        //addListenerForSingleValueEvent a une changement de valeur apres roomName on execute unjoueuroudeux
+        messageRef.addListenerForSingleValueEvent(unjoueuroudeux());
+    }
+
+
+    private ValueEventListener unjoueuroudeux(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue().toString().contains("player1")){
+                    message();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+    }
+
+    private void message(){
+        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//Créer une ref playerRoom dans la RealtimeBD dans rooms
+        messageRef.setValue("co");//Avec la ref récupérer d'en haut on met "co" comme valeur de situation
+        messageRef = database.getReference("rooms/"+roomName+"/message");//Créer une ref message dans la RealtimeBD dans rooms
+        messageRef.setValue(role+":20:20");//Dans la room on sait qui vient de jouer avec le role et la position départ et arrivé on met 20:20 de base
+        //On va ensuite tester si un joueur a quitter dans addRoomEventLister qui ferme ou ouvre une room
+        addRoomEventListener();
+    }
+
+    private void addRoomEventListener(){
+        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
+        messageRef.addValueEventListener(addRoomEventClose());//depuis la ref d'en haut on execute addRoomClose();
+        //Si addRoomEventClose ne donne rien on passe a addRoomEvent
+        messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
+        messageRef.addValueEventListener(addRoomEvent());
+    }
+
+    //Cette méthode permet de savoir si la situation playerRoom a été mis a "déco" si oui on quitte
+    //déco est entré si un joueur a cliquer sur le bouton quitter
+    private ValueEventListener addRoomEventClose(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue().toString().contains("deco")){
+                    Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                    startActivity(ActivityB);
+                    finish();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+    }
+
+    //Si depuis addRoomEventListener messageRef est host alors il peut jouer et l'echecetmath est de son coté
+    private ValueEventListener addRoomEvent(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //message recu
+                if(role.equals("host")){//teste si le joueur est l'host ou pas
+                    if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
+                        action(snapshot);
+                        echecEtMath();
+                        //est affiche un message
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
+                        action(snapshot);
+                        echecEtMath();
+                        //est affiche un message
+                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //erreur retenter
+                messageRef.setValue(message);
+            }
+        };
+    }
+
+    private void quiterBTN(){
+        //Recherche dans la collection users de la BD à l'aide de de la variable userId
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+            if(documentSnapshot.exists())
+            {
+                Integer victories = documentSnapshot.getLong("victories").intValue();
+                Integer loses = documentSnapshot.getLong("loses").intValue();
+                String email = documentSnapshot.getString("email");
+                buttonqui.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                messageRef = database.getReference("rooms/"+roomName);//crée le message de la BDD
+                                    if(messageRef.toString().contains("player2")) {
+                                        Map<String, Object> edited = new HashMap<>();
+                                        edited.put("loses", loses + 1);
+                                        documentReference.update(edited);
+                                    }
+
+                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                                startActivity(ActivityB);
+                                finish();
+                                messageRef.setValue("deco");
+                                //bouton pour quiter l'applications
+                            }
+                        });
+                    }
+                });
+            }
+            else
+            {
+                Log.d("tag", "onEvent: LOL !");
+            }
+        });
+    }
+
+    private ValueEventListener Seulincrement(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue().toString().contains("deco")){
+                    Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                    startActivity(ActivityB);
+                    finish();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
     }
 
     private void echecini(){
@@ -622,106 +748,6 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    private void quiterBTN(){
-        //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
-            if(documentSnapshot.exists())
-            {
-                Integer victories = documentSnapshot.getLong("victories").intValue();
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                String email = documentSnapshot.getString("email");
-                buttonqui.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Map<String,Object> edited = new HashMap<>();
-                                edited.put("loses", loses+1);
-                                documentReference.update(edited);
-                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                                startActivity(ActivityB);
-                                finish();
-                                messageRef.setValue("deco");
-                                //bouton pour quiter l'applications
-                            }
-                        });
-                    }
-                });
-            }
-            else
-            {
-                Log.d("tag", "onEvent: LOL !");
-            }
-        });
-    }
-
-    private void message(){
-        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
-        messageRef.setValue("co");
-        messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
-        messageRef.setValue(role+":20:20");//change l'informatiosn dans la BDD
-        addRoomEventListener();
-    }
-
-    private void addRoomEventListener(){
-        messageRef = database.getReference("rooms/"+roomName+"/playerRoom");//crée le message de la BDD
-        messageRef.addValueEventListener(addRoomEventClose());
-        messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
-        messageRef.addValueEventListener(addRoomEvent());
-
-
-    }
-    private ValueEventListener addRoomEventClose(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                 if (snapshot.getValue().toString().contains("deco")){
-                    Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                    startActivity(ActivityB);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-    }
-
-    private ValueEventListener addRoomEvent(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //message recu
-                if(role.equals("host")){//teste si le joueur est l'host ou pas
-                    if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
-                        action(snapshot);
-                        echecEtMath();
-                        //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
-                        action(snapshot);
-                        echecEtMath();
-                        //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //erreur retenter
-                messageRef.setValue(message);
-            }
-        };
-    }
     private void action(DataSnapshot snapshot){
         gridView.setEnabled(true);
         séparateur(snapshot.getValue().toString());
