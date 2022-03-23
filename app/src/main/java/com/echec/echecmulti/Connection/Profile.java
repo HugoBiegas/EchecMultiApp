@@ -61,20 +61,20 @@ public class Profile extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Integer nbvic = value.getLong("victories").intValue();
-                Integer nblos = value.getLong("loses").intValue();
-                Integer pourcentage = 0;
+                Double nbvic = value.getLong("victories").doubleValue();
+                Double nblos = value.getLong("loses").doubleValue();
+                Double pourcentage = 0.0;
 
-                if(nbvic != 0)
+                if(nbvic != 0.0)
                 {
-                    pourcentage = ((nbvic/nbvic+nblos)*10);
+                    pourcentage = (nbvic/(nbvic+nblos))*100;
                 }
 
                 user.setText(value.getString("username"));
                 email.setText(value.getString("email"));
-                victories.setText("Victoires : " + nbvic);
-                loses.setText("Défaites : " + nblos);
-                winrate.setText("Winrate : " + pourcentage + "%");
+                victories.setText("Victoires : " + String.format("%.0f",nbvic));
+                loses.setText("Défaites : " + String.format("%.0f",nblos));
+                winrate.setText("Winrate : " + String.format("%.0f",pourcentage) + "%");
             }
         });
 
