@@ -12,7 +12,7 @@ public class Roi {
         return bougRoi;
     }
     public ArrayList<String> deplacementRoiHost(String[] Echiquier, int coordoner, String[] color) {
-        ArrayList<String> deplacement = new ArrayList<>();
+        ArrayList<String> deplacement;
         deplacement =hostroi(Echiquier,coordoner,color);
         return deplacement;
     }
