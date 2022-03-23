@@ -197,14 +197,18 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
+
+    //
     private void initialisationshost(){
         messageRef = database.getReference("rooms/"+roomName);
         messageRef.addListenerForSingleValueEvent(unjoueuroudeux());
     }
+
     private ValueEventListener unjoueuroudeux(){
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Toast.makeText(GameActivity.this, snapshot.toString(), Toast.LENGTH_LONG).show();
                 if(snapshot.getValue().toString().contains("player1")){
                     message();
                 }
@@ -330,6 +334,8 @@ public class GameActivity extends AppCompatActivity {
         colorP[positionarriver] ="";
         return déplace;
     }
+
+    //tableau d'echec allant de 0 a 63, on place une piece avec des condition si ()
     private void initialisationsEchiquier(){
         for(int i = 0 ; i<BordPiece.length;i++){//pour intégrer tout les case
             if(i==0||i==7){
