@@ -93,8 +93,7 @@ public class Cavalier {
                     }else if (color[ecart].equals("N")){
                         déplacement.add("A:"+ecart);
                     }
-                }else
-                    i=2;
+                }
             ecart =coordoner-10;//-12 pour décendre en bat a gauche
         }
         ecart = coordoner +10;//+10pour mionter en haut as droit
@@ -106,8 +105,7 @@ public class Cavalier {
                 }else if (color[ecart].equals("N")){
                     déplacement.add("A:"+ecart);
                 }
-            }else
-                i=2;
+            }
             ecart =coordoner-6;//-6 pour décendre en bat a droit
         }
         return déplacement;
@@ -203,8 +201,7 @@ public class Cavalier {
                 }else if (color[ecart].equals("B")){
                     déplacement.add("A:"+ecart);
                 }
-            }else
-                i=2;
+            }
             ecart =coordoner-10;//-12 pour décendre en bat a gauche
         }
         ecart = coordoner +10;//+10pour mionter en haut as droit
@@ -216,8 +213,7 @@ public class Cavalier {
                 }else if (color[ecart].equals("B")){
                     déplacement.add("A:"+ecart);
                 }
-            }else
-                i=2;
+            }
             ecart =coordoner-6;//-6 pour décendre en bat a droit
         }
         return déplacement;
