@@ -84,4 +84,42 @@ public class PetitePion {
     private void GrandRemplacement(){
 
     }
+
+    public ArrayList<String> AttaqueGuestPion(String[] Echiquier,int coordoner,String[] color){
+        ArrayList<String> déplacement = new ArrayList<>();
+        int debut=coordoner,premier=0;
+
+        //test tout les endroi ou peux marcher un pion et ou il peux manger
+        coordoner -=7;
+        for (int i=0;i<3;i++){
+            if (coordoner<63 && coordoner>0){
+                if (i == 0 || i==2){
+                    if(!Echiquier[coordoner].equals("") && color[coordoner].equals("B"))
+                        déplacement.add("A:"+coordoner);
+                    else
+                        déplacement.add("R:"+coordoner);
+                }
+            }
+            coordoner--;
+        }
+        return déplacement;
+    }
+    public ArrayList<String> AttaqueHostPion(String[] Echiquier, int coordoner, String[] color){
+        ArrayList<String> déplacement = new ArrayList<>();
+        int début= coordoner,premier=0,bordBase=4;
+        coordoner +=7;
+        for (int i = 0; i < 3; i++) {
+            if (coordoner<63 && coordoner>0){
+                if (i == 0 || i == 2 ) {
+                    if (!Echiquier[coordoner].equals("") && color[coordoner].equals("N")) {
+                        déplacement.add("A:" + coordoner);
+                    } else {
+                        déplacement.add("R:" + coordoner);
+                    }
+                }
+            }
+            coordoner++;
+        }
+        return déplacement;
+    }
 }

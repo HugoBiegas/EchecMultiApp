@@ -24,7 +24,7 @@ public class Dame {
         dup=0;
         ecart = coordoner + 9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
+            if (bordBase ==0 ||bordBase == 1)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -55,7 +55,7 @@ public class Dame {
         dup=0;
         ecart = coordoner + 7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
+            if (bordBase ==0 ||bordBase == 2 )
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -87,7 +87,7 @@ public class Dame {
         dup=0;
         ecart = coordoner -7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner-7) && bordBase == 1||bordBase == 2 && ecart == (coordoner+7))
+            if (bordBase ==0 || bordBase == 1)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -119,7 +119,7 @@ public class Dame {
         dup=0;
         ecart = coordoner -9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
+            if (bordBase ==0 ||bordBase == 2)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -258,19 +258,21 @@ public class Dame {
         ecart = coordoner + 7;
 
         for (int i=0;i<7;i++){
-            if (coordoner == 0 || coordoner == 63)
+            if (coordoner == 0 )
                 bordBase = 0;
+            else if(coordoner == 63)
+                bordBase=-1;
             else if (coordoner == borderD[i])
                 bordBase = 1;
             else if (coordoner == borderG[i])
                 bordBase = 2;
         }
+        //les diagonals
 
         dup=0;
         ecart = coordoner + 9;
-
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
+            if (bordBase ==0 ||bordBase == 1)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -298,11 +300,42 @@ public class Dame {
 
             ecart +=9;
         }
+        dup=0;
+        ecart = coordoner + 7;
+        for (int i=0;i<8;i++){
+            if (bordBase ==0 ||bordBase == 2)
+                dup=1;
+            else
+            if (ecart<64 && ecart>0){
+                for (int j=0;j<15;j++){
+                    if (border[j] == ecart){
+                        if (Echiquier[ecart].equals(""))
+                            deplacement.add("D:"+ecart);
+                        else if (color[ecart].equals("B")){
+                            deplacement.add("A:"+ecart);
+                        }
+                        dup=1;
+                    }
+                }
+                if (dup==0){
+                    if (Echiquier[ecart].equals(""))
+                        deplacement.add("D:"+ecart);
+                    else if (color[ecart].equals("B")){
+                        deplacement.add("A:"+ecart);
+                        i=8;
+                    }else
+                        i=8;
+                }else
+                    i=12;
+            }
+
+            ecart +=7;
+        }
 
         dup=0;
         ecart = coordoner -7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner-7) && bordBase == 1||bordBase == 2 && ecart == (coordoner+7))
+            if (bordBase ==0 ||bordBase == 1)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -334,7 +367,7 @@ public class Dame {
         dup=0;
         ecart = coordoner -9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+9) && bordBase == 1||bordBase == 2 && ecart == (coordoner-9))
+            if (bordBase ==0 ||bordBase == 2)
                 dup=1;
             else
             if (ecart<64 && ecart>0){
@@ -362,6 +395,9 @@ public class Dame {
             ecart -=9;
         }
 
+
+        //les lignes
+
         ecart = coordoner+8;
         int non = 0;
         //tour pour manger ver le haut
@@ -372,9 +408,8 @@ public class Dame {
                 else if (color[ecart].equals("B")){
                     deplacement.add("A:"+ecart);
                     non =1;
-                }else{
+                }else
                     non =1;
-                }
             }else
                 i=8;//sortire de la boucle
             ecart+=8;
@@ -399,7 +434,7 @@ public class Dame {
         ecart = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (bordBase ==-1 || bordBase == 1)
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
@@ -426,11 +461,12 @@ public class Dame {
                 i=8;
             ecart++;
         }
+
         non=0;
         ecart = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (bordBase ==0 ||bordBase == 2)
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
@@ -457,8 +493,6 @@ public class Dame {
                 i=8;
             ecart--;
         }
-
-
         return deplacement;
     }
 }
