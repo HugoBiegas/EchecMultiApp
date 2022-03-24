@@ -98,16 +98,19 @@ public class GameActivity extends AppCompatActivity {
         quiterBTN();
     }
 
-    private void echecEtMath(){
+    private boolean echecEtMath(){
         ArrayList<String> teste;
+        boolean fin=false;
         for (int i=0;i<64;i++){
             if (BordPiece[i].equals("R") && colorP[i].equals("B"))
-                EchecRoitHost(i);
+                fin =EchecRoitHost(i);
             else if (BordPiece[i].equals("R") && colorP[i].equals("N"))
-                EchecRoitGuest(i);
+                fin =EchecRoitGuest(i);
         }
+        return fin;
     }
-    private void EchecRoitHost(int i){
+    private boolean EchecRoitHost(int i){
+        boolean fin=false;
         ArrayList<String> teste;
         teste =roi.deplacementRoiHost(BordPiece,i,colorP);
         PosibiliterG.clear();
@@ -169,6 +172,7 @@ public class GameActivity extends AppCompatActivity {
             }
             //on regarde si il reste des emplacement
             if(teste.isEmpty()){
+                fin=true;
                 //teste si les piéce de l'host peuve blocker l'attaque
                 Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                 finish();
@@ -177,8 +181,10 @@ public class GameActivity extends AppCompatActivity {
                 messageRef.setValue("deco");
             }
         }
+        return fin;
     }
-    private void EchecRoitGuest(int i){
+    private boolean EchecRoitGuest(int i){
+        boolean fin=false;
         ArrayList<String> teste;
         teste =roi.deplacementRoiGuest(BordPiece,i,colorP);
         PosibiliterH.clear();
@@ -240,6 +246,7 @@ public class GameActivity extends AppCompatActivity {
             }
             //on regarde si il reste des emplacement
             if(teste.isEmpty()){
+                fin=true;
                 //teste si les piéce de l'guest peuve blocker l'attaque
                 Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                 finish();
@@ -248,6 +255,7 @@ public class GameActivity extends AppCompatActivity {
                 messageRef.setValue("deco");
             }
         }
+        return fin;
     }
 
     private void initialistions(){
@@ -340,16 +348,16 @@ public class GameActivity extends AppCompatActivity {
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
-                        echecEtMath();
-                        //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+                        //affiche le message que si il est pas échec est math
+                        if(echecEtMath()==false)
+                            Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
                         action(snapshot);
-                        echecEtMath();
-                        //est affiche un message
-                        Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
+                        //affiche le message que si il est pas échec est math
+                        if(echecEtMath()==false)
+                            Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
 
                     }
                 }
