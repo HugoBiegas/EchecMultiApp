@@ -378,6 +378,7 @@ public class GameActivity extends AppCompatActivity {
                         user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                buttonqui.setEnabled(false);
                                 messageRef = database.getReference("rooms/"+roomName);//crée le message de la BDD
                                     if(messageRef.toString().contains("player2")) {
                                         Map<String, Object> edited = new HashMap<>();

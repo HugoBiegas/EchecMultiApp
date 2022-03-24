@@ -46,6 +46,7 @@ public class CreaRoom extends AppCompatActivity {
         buttonQuite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonQuite.setEnabled(false);
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
             }
