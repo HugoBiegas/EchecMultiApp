@@ -77,6 +77,10 @@ public class Register extends AppCompatActivity {
                     mEmail.setError("Email requis");
                     return;
                 }
+                if (username.contains("victoir") || username.contains("defaite")|| username.equals("")){
+                    mUser.setError("nom incorecte");
+                    return;
+                }
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Mot de passe requis");
