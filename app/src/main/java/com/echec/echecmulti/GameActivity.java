@@ -138,7 +138,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         PosibiliterG.clear();
-        //si il y as échec alors on regarde si le roi peux rien faire
+        //si il y as échec alors on regarde si le roi peux bouger
         if (attaque !=-1) {
             for (int j = 0; j < coordonner.length; j++) {
                 if (attaque-14 == coordonner[j])
@@ -172,13 +172,39 @@ public class GameActivity extends AppCompatActivity {
             }
             //on regarde si il reste des emplacement
             if(teste.isEmpty()){
-                fin=true;
                 //teste si les piéce de l'host peuve blocker l'attaque
-                Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
-                finish();
-                startActivity(new Intent(getApplicationContext(),RoomActivity.class));
-                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco");
+                echecMath.clear();
+                PosibiliterH.clear();
+                //récupérer les endroit attaquer
+                ArrayList<Integer> toucher = new ArrayList<>();
+                toucher.clear();
+                toucher.addAll(RechecheGuesttoucherHost(BordPiece));
+                for (int j = 0; j < toucher.size(); j++) {
+                    trouverLesdeplacementAttaquer(toucher.get(j));
+                }
+                RechecheHostP(3);//3 pour ne pas prendre les déplacement du roi
+                Integer[] coordonnerDepAttaque = new Integer[echecMath.size()];
+                Integer[] coordonnerDepHost = new Integer[PosibiliterH.size()];
+                boolean finParti=true;
+                for (int j = 0; j < echecMath.size(); j++) {
+                    coordonnerDepAttaque[j] = Integer.parseInt(echecMath.get(j).substring(echecMath.get(j).indexOf(":")+1,echecMath.get(j).length()));
+                    for (int k = 0; k < PosibiliterH.size(); k++) {
+                        coordonnerDepHost[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
+                        if(coordonnerDepAttaque[j] == coordonnerDepHost[k] || coordonnerDepHost[k] == attaque)
+                            finParti=false;
+                    }
+                }
+                //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
+                if (finParti == true){
+                    fin=true;
+                    Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                    messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                    messageRef.setValue("deco");
+                }else
+                    //si non ces que ces piéce peuve se défendre donc juste echec
+                    Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
             }
         }
         return fin;
@@ -246,13 +272,39 @@ public class GameActivity extends AppCompatActivity {
             }
             //on regarde si il reste des emplacement
             if(teste.isEmpty()){
-                fin=true;
-                //teste si les piéce de l'guest peuve blocker l'attaque
-                Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
-                finish();
-                startActivity(new Intent(getApplicationContext(),RoomActivity.class));
-                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco");
+                //teste si les piéce de l'host peuve blocker l'attaque
+                echecMath.clear();
+                PosibiliterH.clear();
+                //récupérer les endroit attaquer
+                ArrayList<Integer> toucher = new ArrayList<>();
+                toucher.clear();
+                toucher.addAll(RechecheGuesttoucherHost(BordPiece));
+                for (int j = 0; j < toucher.size(); j++) {
+                    trouverLesdeplacementAttaquer(toucher.get(j));
+                }
+                RechecheHostP(3);//3 pour ne pas prendre les déplacement du roi
+                Integer[] coordonnerDepAttaque = new Integer[echecMath.size()];
+                Integer[] coordonnerDepHost = new Integer[PosibiliterH.size()];
+                boolean finParti=true;
+                for (int j = 0; j < echecMath.size(); j++) {
+                    coordonnerDepAttaque[j] = Integer.parseInt(echecMath.get(j).substring(echecMath.get(j).indexOf(":")+1,echecMath.get(j).length()));
+                    for (int k = 0; k < PosibiliterH.size(); k++) {
+                        coordonnerDepHost[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
+                        if(coordonnerDepAttaque[j] == coordonnerDepHost[k] || coordonnerDepHost[k] == attaque)
+                            finParti=false;
+                    }
+                }
+                //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
+                if (finParti == true){
+                    fin=true;
+                    Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                    messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                    messageRef.setValue("deco");
+                }else
+                    //si non ces que ces piéce peuve se défendre donc juste echec
+                    Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
             }
         }
         return fin;
@@ -899,7 +951,7 @@ public class GameActivity extends AppCompatActivity {
 
         if (role.equals("host")){
             toucher.clear();
-            toucher.addAll(RechecheGuesttoucherHost());
+            toucher.addAll(RechecheGuesttoucherHost(BordPieceTest));
             if (toucher.size() != 0){
                 PosibiliterH.clear();
                 //récupérations des déplacement des pion B
@@ -930,7 +982,7 @@ public class GameActivity extends AppCompatActivity {
             //rien le roi nes pas toucher
         }else{
             toucher.clear();
-            toucher.addAll(RechechehosttoucherGuest());
+            toucher.addAll(RechechehosttoucherGuest(BordPieceTest));
             PosibiliterG.clear();
             RechecheGuestP(0);
             echecMath.clear();
@@ -956,32 +1008,32 @@ public class GameActivity extends AppCompatActivity {
         return AttaqueR;
     }
 
-    private ArrayList<Integer> RechecheGuesttoucherHost(){
+    private ArrayList<Integer> RechecheGuesttoucherHost(String[] bord){
         ArrayList<Integer> toucher = new ArrayList<>();
         for (int i=0;i<63;i++){
-            if (!BordPieceTest[i].equals("") && colorP[i].equals("N")){
-                if (BordPieceTest[i].equals("P")){
-                    echecMath.addAll(pion.deplacementGuestPion(BordPieceTest,i,colorP));
+            if (!bord[i].equals("") && colorP[i].equals("N")){
+                if (bord[i].equals("P")){
+                    echecMath.addAll(pion.deplacementGuestPion(bord,i,colorP));
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("F")){
-                    echecMath.addAll(foue.deplacementFoueGuest(BordPieceTest,i,colorP)) ;
+                }else if (bord[i].equals("F")){
+                    echecMath.addAll(foue.deplacementFoueGuest(bord,i,colorP)) ;
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("D")){
-                    echecMath.addAll(dame.deplacementDameGuest(BordPieceTest,i,colorP)) ;
+                }else if (bord[i].equals("D")){
+                    echecMath.addAll(dame.deplacementDameGuest(bord,i,colorP)) ;
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("R")){
-                    echecMath.addAll(roi.deplacementRoiGuest(BordPieceTest,i,colorP)) ;
+                }else if (bord[i].equals("R")){
+                    echecMath.addAll(roi.deplacementRoiGuest(bord,i,colorP)) ;
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("T")){
-                    echecMath.addAll(tour.deplacementTourGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("T")){
+                    echecMath.addAll(tour.deplacementTourGuest(bord,i,colorP));
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("C")){
-                    echecMath.addAll(cavalier.deplacementCavalierGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("C")){
+                    echecMath.addAll(cavalier.deplacementCavalierGuest(bord,i,colorP));
                     if (RechercheAttauqueGuest() == true)
                         toucher.add(i);
                 }
@@ -991,33 +1043,33 @@ public class GameActivity extends AppCompatActivity {
         return toucher;
     }
 
-    private ArrayList<Integer> RechechehosttoucherGuest(){
+    private ArrayList<Integer> RechechehosttoucherGuest(String[] bord){
         ArrayList<Integer> toucher = new ArrayList<>();
         for (int i=0;i<63;i++){
             echecMath.clear();
-            if (!BordPieceTest[i].equals("") && colorP[i].equals("B")){
-                if (BordPieceTest[i].equals("P")){
-                    echecMath.addAll( pion.deplacementGuestPion(BordPieceTest,i,colorP));
+            if (!bord[i].equals("") && colorP[i].equals("B")){
+                if (bord[i].equals("P")){
+                    echecMath.addAll( pion.deplacementGuestPion(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("F")){
-                    echecMath.addAll(foue.deplacementFoueGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("F")){
+                    echecMath.addAll(foue.deplacementFoueGuest(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("D")){
-                    echecMath.addAll( dame.deplacementDameGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("D")){
+                    echecMath.addAll( dame.deplacementDameGuest(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("R")){
-                    echecMath.addAll( roi.deplacementRoiGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("R")){
+                    echecMath.addAll( roi.deplacementRoiGuest(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("T")){
-                    echecMath.addAll(tour.deplacementTourGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("T")){
+                    echecMath.addAll(tour.deplacementTourGuest(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
-                }else if (BordPieceTest[i].equals("C")){
-                    echecMath.addAll(cavalier.deplacementCavalierGuest(BordPieceTest,i,colorP));
+                }else if (bord[i].equals("C")){
+                    echecMath.addAll(cavalier.deplacementCavalierGuest(bord,i,colorP));
                     if (RechercheAttauqueHost() == true)
                         toucher.add(i);
                 }
@@ -1035,15 +1087,15 @@ public class GameActivity extends AppCompatActivity {
                     else
                         PosibiliterH.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
                 }
-                if (BordPiece[i].equals("F"))
+                else if (BordPiece[i].equals("F"))
                     PosibiliterH.addAll(foue.deplacementFoueHost(BordPiece,i,colorP));
-                if (BordPiece[i].equals("D"))
+                else if (BordPiece[i].equals("D"))
                     PosibiliterH.addAll(dame.deplacementDameHost(BordPiece,i,colorP));
-                if (BordPiece[i].equals("T"))
+                else if (BordPiece[i].equals("T"))
                     PosibiliterH.addAll(tour.deplacementTourHost(BordPiece,i,colorP));
-                if (BordPiece[i].equals("R"))
+                else if (BordPiece[i].equals("R") && enlever !=3)
                     PosibiliterH.addAll(roi.deplacementRoiHost(BordPiece,i,colorP));
-                if (BordPiece[i].equals("C"))
+                else if (BordPiece[i].equals("C"))
                     PosibiliterH.addAll(cavalier.deplacementCavalierHost(BordPiece,i,colorP));
             }
         }
@@ -1057,15 +1109,15 @@ public class GameActivity extends AppCompatActivity {
                     else
                         PosibiliterG.addAll(pion.deplacementGuestPion(BordPiece, i, colorP));
                 }
-                if (BordPiece[i].equals("F"))
+                else if (BordPiece[i].equals("F"))
                     PosibiliterG.addAll(foue.deplacementFoueGuest(BordPiece,i,colorP));
-                if (BordPiece[i].equals("D"))
+                else if (BordPiece[i].equals("D"))
                     PosibiliterG.addAll(dame.deplacementDameGuest(BordPiece,i,colorP));
-                if (BordPiece[i].equals("R"))
+                else if (BordPiece[i].equals("R")&& enlever !=3)
                     PosibiliterG.addAll(roi.deplacementRoiGuest(BordPiece,i,colorP));
-                if (BordPiece[i].equals("T"))
+                else if (BordPiece[i].equals("T"))
                     PosibiliterG.addAll(tour.deplacementTourGuest(BordPiece,i,colorP));
-                if (BordPiece[i].equals("C"))
+                else if (BordPiece[i].equals("C"))
                     PosibiliterG.addAll(cavalier.deplacementCavalierGuest(BordPiece,i,colorP));
             }
         }
