@@ -183,15 +183,17 @@ public class RoomActivity extends AppCompatActivity {
                 boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
                     if(nomPlayer.get(i).contains("Defaite")){//verifie si il y as deux joueur
-
-                            addDefeat();
-
+                            if (ff==true){
+                                addDefeat();
+                                ff=false;
+                            }
                         DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }else if (nomPlayer.get(i).contains("Victoir")){
-
+                        if (ff==true){
                             addVictory();
-
+                            ff=false;
+                        }
                         DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }
@@ -217,7 +219,11 @@ public class RoomActivity extends AppCompatActivity {
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
                 Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-                    if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
+                    if(!snapshot1.getValue().toString().contains("player2") && snapshot1.getValue().toString().contains("deco:")){
+                        DatabaseReference d = database.getReference("rooms/"+snapshot1.getKey());
+                        d.removeValue();
+                    }
+                    else if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
                         roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
                         listView.setAdapter(adapter);//ajoute un élément dans la liste
