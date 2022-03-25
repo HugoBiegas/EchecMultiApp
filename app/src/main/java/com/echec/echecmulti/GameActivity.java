@@ -149,7 +149,7 @@ public class GameActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco");
+                messageRef.setValue("deco:"+playerName);
             }else
                 PosibiliterH.clear();
         }
@@ -295,7 +295,7 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                    messageRef.setValue("deco");
+                    messageRef.setValue("deco:"+playerName);
                 }else
                     Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
                     //si non ces que ces piéce peuve se défendre donc juste echec
@@ -343,7 +343,7 @@ public class GameActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco");
+                messageRef.setValue("deco:"+playerName);
             }else
                 PosibiliterG.clear();
         }
@@ -491,7 +491,7 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                    messageRef.setValue("deco");
+                    messageRef.setValue("deco:"+playerName);
                 }else
                     Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
             }
