@@ -165,18 +165,16 @@ public class RoomActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //controle de la liste des room
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
-                Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
-                for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-                    if(snapshot1.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
+                    if(snapshot.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
                         addDefeat();
-                        DatabaseReference PlayerRef = database.getReference("players/"+snapshot1.getKey());
+                        DatabaseReference PlayerRef = database.getReference("players/"+snapshot.getKey());
                         PlayerRef.setValue("");
-                    }else if (snapshot1.getValue().toString().contains("Victoir")){
+                    }else if (snapshot.getValue().toString().contains("Victoir")){
                         addVictory();
-                        DatabaseReference PlayerRef = database.getReference("players/" + snapshot1.getKey());
+                        DatabaseReference PlayerRef = database.getReference("players/" + snapshot.getKey());
                         PlayerRef.setValue("");
                     }
-                }
+
             }
 
             @Override
