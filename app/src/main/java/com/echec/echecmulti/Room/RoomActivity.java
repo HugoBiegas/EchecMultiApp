@@ -170,7 +170,7 @@ public class RoomActivity extends AppCompatActivity {
                 nomPlayer.add(snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(",")));
                 boolean cpt=true;
                 while (cpt==true){
-                    chaine = chaine.substring(1,chaine.length());
+                    chaine = chaine.substring(2,chaine.length());
                     if (!chaine.contains(",")){
                         nomPlayer.add(chaine.substring(0,chaine.indexOf("}")));
                         cpt=false;
@@ -180,13 +180,18 @@ public class RoomActivity extends AppCompatActivity {
                     }
 
                 }
+                boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
                     if(nomPlayer.get(i).contains("Defaite")){//verifie si il y as deux joueur
-                        addDefeat();
+
+                            addDefeat();
+
                         DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }else if (nomPlayer.get(i).contains("Victoir")){
-                        addVictory();
+
+                            addVictory();
+
                         DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }
