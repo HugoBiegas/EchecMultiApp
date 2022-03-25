@@ -95,6 +95,7 @@ public class Register extends AppCompatActivity {
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
+                mRegisterBtn.setEnabled(false);
 
                 fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

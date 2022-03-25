@@ -99,6 +99,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fAuth.signOut();
+                buttonLogout.setEnabled(false);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
