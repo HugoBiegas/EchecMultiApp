@@ -235,17 +235,11 @@ public class RoomActivity extends AppCompatActivity {
     private void addDefeat() {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
             Integer loses = documentSnapshot.getLong("loses").intValue();
-            String email = documentSnapshot.getString("email");
-            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Map<String, Object> edited = new HashMap<>();
-                    edited.put("loses", loses + 1);
-                    documentReference.update(edited);
-                }
-            });
+            Map<String, Object> edited = new HashMap<>();
+            edited.put("loses", loses + 1);
+            documentReference.update(edited);
         });
     }
 
@@ -253,17 +247,11 @@ public class RoomActivity extends AppCompatActivity {
     {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
             Integer victories = documentSnapshot.getLong("victories").intValue();
-            String email = documentSnapshot.getString("email");
-            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Map<String, Object> edited = new HashMap<>();
-                    edited.put("victories", victories + 1);
-                    documentReference.update(edited);
-                }
-            });
+            Map<String, Object> edited = new HashMap<>();
+            edited.put("victories", victories + 1);
+            documentReference.update(edited);
         });
     }
 }
