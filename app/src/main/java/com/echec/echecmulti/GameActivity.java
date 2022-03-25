@@ -149,7 +149,7 @@ public class GameActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco:"+playerName);
+                messageRef.setValue("deco:"+playerName+":DP");
             }else
                 PosibiliterH.clear();
         }
@@ -295,7 +295,7 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                    messageRef.setValue("deco:"+playerName);
+                    messageRef.setValue("deco:"+playerName+":D");
                 }else
                     Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
                     //si non ces que ces piéce peuve se défendre donc juste echec
@@ -343,7 +343,7 @@ public class GameActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                messageRef.setValue("deco:"+playerName);
+                messageRef.setValue("deco:"+playerName+":DP");
             }else
                 PosibiliterG.clear();
         }
@@ -491,7 +491,7 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                    messageRef.setValue("deco:"+playerName);
+                    messageRef.setValue("deco:"+playerName+":D");
                 }else
                     Toast.makeText(this, "echec", Toast.LENGTH_SHORT).show();
             }
@@ -569,6 +569,11 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco") && !snapshot.getValue().toString().contains(playerName)) {
+                    messageRef = database.getReference("players/"+playerName);
+                    if (snapshot.getValue().toString().contains("DP"))
+                        messageRef.setValue("D");
+                    else
+                        messageRef.setValue("V");
                     messageRef = database.getReference("rooms/"+roomName);
                     messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
@@ -641,7 +646,7 @@ public class GameActivity extends AppCompatActivity {
                                         documentReference.update(edited);
                                     }
                                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                                messageRef.setValue("deco:"+playerName);
+                                messageRef.setValue("deco:"+playerName+":D");
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
