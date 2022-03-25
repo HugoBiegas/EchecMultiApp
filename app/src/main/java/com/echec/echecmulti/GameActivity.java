@@ -627,7 +627,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         messageRef =database.getReference("players/"+playerName);
-                        messageRef.setValue("D");
+                        messageRef.setValue("Defaite");
                                 buttonqui.setEnabled(false);
                                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                                 messageRef.setValue("deco:"+playerName+":D");

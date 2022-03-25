@@ -169,9 +169,11 @@ public class RoomActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
                     if(snapshot1.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
                         addDefeat();
+                        roomsRef = database.getReference("players/"+snapshot1.getKey());
                         roomsRef.setValue("");
                     }else if (snapshot1.getValue().toString().contains("Victoir")){
                         addVictory();
+                        roomsRef = database.getReference("players/"+snapshot1.getKey());
                         roomsRef.setValue("");
                     }
                 }
