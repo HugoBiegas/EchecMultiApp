@@ -183,17 +183,11 @@ public class RoomActivity extends AppCompatActivity {
                 boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
                     if(nomPlayer.get(i).contains("Defaite")){//verifie si il y as deux joueur
-                            if (ff==true){
                                 addDefeat();
-                                ff=false;
-                            }
                         DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }else if (nomPlayer.get(i).contains("Victoir")){
-                        if (ff==true){
                             addVictory();
-                            ff=false;
-                        }
                         DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }
