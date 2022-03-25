@@ -639,13 +639,12 @@ public class GameActivity extends AppCompatActivity {
                                         edited.put("loses", loses + 1);
                                         documentReference.update(edited);
                                     }
-
-                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                                 messageRef = database.getReference("players/"+playerName);
                                 messageRef.setValue("D");
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
+                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                                 messageRef.setValue("deco");
                                 //bouton pour quiter l'applications
                             }
