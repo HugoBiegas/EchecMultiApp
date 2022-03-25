@@ -165,7 +165,6 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //controle de la liste des room
-                roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
                 Toast.makeText(RoomActivity.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 String cc = snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(","));
                     if(cc.contains("Defaite")){//verifie si il y as deux joueur
