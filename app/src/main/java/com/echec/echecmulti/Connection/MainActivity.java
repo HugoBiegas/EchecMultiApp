@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoginBtn.setEnabled(false);
                 progressBar.setVisibility(View.VISIBLE);
 
 
