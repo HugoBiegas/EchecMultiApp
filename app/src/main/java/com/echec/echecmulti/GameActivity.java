@@ -568,7 +568,7 @@ public class GameActivity extends AppCompatActivity {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue().toString().contains("deco")) {
+                if (snapshot.getValue().toString().contains("deco") && !snapshot.getValue().toString().contains(playerName)) {
                     messageRef = database.getReference("rooms/"+roomName);
                     messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
@@ -641,9 +641,7 @@ public class GameActivity extends AppCompatActivity {
                                         documentReference.update(edited);
                                     }
                                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                                messageRef.setValue("deco");
-                                messageRef =database.getReference("rooms/"+roomName);
-                                messageRef.removeValue();
+                                messageRef.setValue("deco:"+playerName);
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
