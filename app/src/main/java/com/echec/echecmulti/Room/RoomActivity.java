@@ -165,19 +165,32 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //controle de la liste des room
-                roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
-                Toast.makeText(RoomActivity.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-                String cc = snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(","));
-                    if(cc.contains("Defaite")){//verifie si il y as deux joueur
-                        addDefeat();
-                        DatabaseReference PlayerRef = database.getReference("players/"+cc.substring(0,cc.indexOf("=")));
-                        PlayerRef.setValue("");
-                    }else if (cc.contains("Victoir")){
-                        addVictory();
-                        DatabaseReference PlayerRef = database.getReference("players/" + cc.substring(0,cc.indexOf("=")));
-                        PlayerRef.setValue("");
+                ArrayList<String> nomPlayer =  new ArrayList<>();
+                String chaine = snapshot.getValue().toString().substring(snapshot.getValue().toString().indexOf(","),snapshot.getValue().toString().length());
+                nomPlayer.add(snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(",")));
+                boolean cpt=true;
+                while (cpt==true){
+                    chaine = chaine.substring(1,chaine.length());
+                    if (!chaine.contains(",")){
+                        nomPlayer.add(chaine.substring(0,chaine.indexOf("}")));
+                        cpt=false;
+                    }else{
+                        nomPlayer.add(chaine.substring(0,chaine.indexOf(",")));
+                        chaine = chaine.substring(chaine.indexOf(","),chaine.length());
                     }
 
+                }
+                for (int i = 0; i < nomPlayer.size(); i++) {
+                    if(nomPlayer.get(i).contains("Defaite")){//verifie si il y as deux joueur
+                        addDefeat();
+                        DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
+                        PlayerRef.setValue("");
+                    }else if (nomPlayer.get(i).contains("Victoir")){
+                        addVictory();
+                        DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
+                        PlayerRef.setValue("");
+                    }
+                }
             }
 
             @Override
@@ -217,11 +230,17 @@ public class RoomActivity extends AppCompatActivity {
     private void addDefeat() {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
             Integer loses = documentSnapshot.getLong("loses").intValue();
+            String email = documentSnapshot.getString("email");
+            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("loses", loses + 1);
                     documentReference.update(edited);
+                }
+            });
         });
     }
 
@@ -229,11 +248,17 @@ public class RoomActivity extends AppCompatActivity {
     {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
             Integer victories = documentSnapshot.getLong("victories").intValue();
+            String email = documentSnapshot.getString("email");
+            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("victories", victories + 1);
                     documentReference.update(edited);
+                }
+            });
         });
     }
 }
