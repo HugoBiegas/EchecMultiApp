@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.echec.echecmulti.Connection.MainActivity;
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
@@ -211,27 +212,38 @@ public class RoomActivity extends AppCompatActivity {
         };
     }
 
-    private void addDefeat()
-    {
+    private void addDefeat() {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
-                    Integer loses = documentSnapshot.getLong("loses").intValue();
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+            Integer loses = documentSnapshot.getLong("loses").intValue();
+            String email = documentSnapshot.getString("email");
+            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("loses", loses + 1);
                     documentReference.update(edited);
-                });
-            }
+                }
+            });
+        });
+    }
 
-            private void addVictory()
-            {
-                //Recherche dans la collection users de la BD à l'aide de de la variable userId
-                DocumentReference documentReference = fStore.collection("users").document(userId);
-                documentReference.addSnapshotListener((documentSnapshot, e) -> {
-                    Integer victories = documentSnapshot.getLong("victories").intValue();
+    private void addVictory()
+    {
+        //Recherche dans la collection users de la BD à l'aide de de la variable userId
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+            Integer victories = documentSnapshot.getLong("victories").intValue();
+            String email = documentSnapshot.getString("email");
+            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("victories", victories + 1);
                     documentReference.update(edited);
-                });
-            }
+                }
+            });
+        });
+    }
 }
