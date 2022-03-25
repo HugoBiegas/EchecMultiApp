@@ -217,7 +217,7 @@ public class RoomActivity extends AppCompatActivity {
     private void addDefeat() {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
             Integer loses = documentSnapshot.getLong("loses").intValue();
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("loses", loses + 1);
@@ -229,7 +229,7 @@ public class RoomActivity extends AppCompatActivity {
     {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
             Integer victories = documentSnapshot.getLong("victories").intValue();
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("victories", victories + 1);
