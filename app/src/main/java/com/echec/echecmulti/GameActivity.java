@@ -196,65 +196,73 @@ public class GameActivity extends AppCompatActivity {
                 int cpt=0,dep=attaque;
                 if ((i+1) == attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                          dep++;
                     }
                 }
                 else if ((i-1)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep--;
                     }
                 }
                 else if ((i+7)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep+=7;
                     }
                 }
                 else if ((i+8)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep+=8;
                     }
                 }
                 else if ((i+9)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep+=9;
                     }
                 }
                 else if ((i-7)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep-=7;
                     }
                 }
                 else if ((i-8)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep-=8;
                     }
                 }
                 else if ((i-9)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep-=9;
                     }
                 }
@@ -269,8 +277,7 @@ public class GameActivity extends AppCompatActivity {
                     for (int k = 0; k < PosibiliterH.size(); k++) {
                         LettreHost[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
                         coordonnerDepHost[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
-                        if((coordonnerDepAttaque[j] == coordonnerDepHost[k] && LettreHost[k].equals("D") )  || (coordonnerDepHost[k] == attaque && LettreHost[k].equals("A"))){
-                            Toast.makeText(this, coordonnerDepAttaque[j].toString(), Toast.LENGTH_SHORT).show();
+                        if((coordonnerDepAttaque[j] == coordonnerDepHost[k] && LettreHost[k].equals("D") )  || (coordonnerDepHost[k] == toucher.get(0) && LettreHost[k].equals("A"))){
                             finParti=false;
                         }
 
@@ -374,7 +381,7 @@ public class GameActivity extends AppCompatActivity {
                 ArrayList<Integer> toucher = new ArrayList<>();
                 toucher.clear();
                 toucher.addAll(RechechehosttoucherGuest(BordPiece,colorP));
-                //attaque et toucher et i roi
+                //permet de récupérer les emplacement
                 ArrayList<String> depAttaquent = new ArrayList<>();
                 int cpt=0,dep=attaque;
                 if ((i+1) == attaque){
@@ -397,7 +404,6 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else if ((i+7)== attaque){
                     while (cpt == 0){
-
                         if (dep == toucher.get(0))
                             cpt++;
                         else
@@ -407,7 +413,6 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else if ((i+8)== attaque){
                     while (cpt == 0){
-
                         if (dep == toucher.get(0))
                             cpt++;
                         else
@@ -426,23 +431,24 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else if ((i-7)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep-=7;
                     }
                 }
                 else if ((i-8)== attaque){
                     while (cpt == 0){
-                        depAttaquent.add("D:"+dep);
                         if (dep == toucher.get(0))
                             cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
                         dep-=8;
                     }
                 }
                 else if ((i-9)== attaque){
                     while (cpt == 0){
-
                         if (dep == toucher.get(0))
                             cpt++;
                         else
@@ -460,9 +466,9 @@ public class GameActivity extends AppCompatActivity {
                 for (int j = 0; j < depAttaquent.size()-1; j++) {
                     coordonnerDepAttaque[j] = Integer.parseInt(depAttaquent.get(j).substring(depAttaquent.get(j).indexOf(":")+1,depAttaquent.get(j).length()));
                     for (int k = 0; k < PosibiliterH.size(); k++) {
-                        LettreGuest[k] = PosibiliterH.get(j).substring(0,PosibiliterH.get(k).indexOf(":"));
+                        LettreGuest[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
                         coordonnerDepGuest[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
-                        if((coordonnerDepAttaque[j] == coordonnerDepGuest[k] && LettreGuest[k].equals("D") )  || (coordonnerDepGuest[k] == attaque && LettreGuest[k].equals("A"))){
+                        if((coordonnerDepAttaque[j] == coordonnerDepGuest[k] && LettreGuest[k].equals("D") )  || (coordonnerDepGuest[k] == toucher.get(0) && LettreGuest[k].equals("A"))){
                             Toast.makeText(this, coordonnerDepAttaque[j].toString(), Toast.LENGTH_SHORT).show();
                             finParti=false;
                         }
