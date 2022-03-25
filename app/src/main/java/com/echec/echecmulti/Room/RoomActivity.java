@@ -240,17 +240,17 @@ public class RoomActivity extends AppCompatActivity {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
                 Integer loses = documentSnapshot.getLong("loses").intValue();
                 String email = documentSnapshot.getString("email");
-                        user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Map<String,Object> edited = new HashMap<>();
-                                edited.put("loses", loses+1);
-                                documentReference.update(edited);
-                                //bouton pour quiter l'applications
-                            }
-                        });
+                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Map<String,Object> edited = new HashMap<>();
+                        edited.put("loses", loses+1);
+                        documentReference.update(edited);
+                        //bouton pour quiter l'applications
                     }
                 });
+            }
+        });
     }
 
     private void addVictory()
