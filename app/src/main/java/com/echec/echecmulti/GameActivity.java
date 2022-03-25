@@ -575,6 +575,7 @@ public class GameActivity extends AppCompatActivity {
                     else
                         messageRef.setValue("V");
                     messageRef = database.getReference("rooms/"+roomName);
+
                     messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
