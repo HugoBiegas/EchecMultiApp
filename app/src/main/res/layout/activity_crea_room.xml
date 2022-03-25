@@ -8,25 +8,23 @@
 
     <Button
         android:id="@+id/CreaRoom"
-        android:layout_width="400px"
-        android:layout_height="100px"
-        android:layout_marginVertical="300px"
-        android:layout_marginHorizontal="350px"
+        android:layout_width="500px"
+        android:layout_height="150px"
+        android:layout_below="@id/nomRoom"
+        android:layout_centerHorizontal="true"
         android:text="Créations room" />
+
     <Button
         android:id="@+id/quiter"
-        android:layout_width="250px"
-        android:layout_height="100px"
-        android:layout_marginVertical="10px"
-        android:layout_marginHorizontal="10px"
+        android:layout_width="300px"
+        android:layout_height="150px"
         android:text="retour" />
 
     <EditText
         android:id="@+id/nomRoom"
         android:layout_width="800px"
-        android:layout_height="100px"
-        android:layout_marginHorizontal="100px"
-        android:layout_marginVertical="200px"
+        android:layout_height="150px"
+        android:layout_centerInParent="true"
         android:hint="Nom de la room"
         android:inputType="textPersonName" />
 

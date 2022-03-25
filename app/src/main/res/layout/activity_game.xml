@@ -17,8 +17,9 @@
         android:id="@+id/NomJoueur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginVertical="40px"
+        android:layout_marginStart="43dp"
+        android:layout_toEndOf="@+id/quiter"
         android:text="joueur : " />
 
     <GridView
@@ -29,19 +30,23 @@
         android:columnWidth="1000px"
         android:numColumns="8"
         android:scrollbars="none" />
+
     <GridView
         android:id="@+id/grid_echec_mort_N"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="150px"
+        android:layout_above="@id/grid_echec"
+        android:layout_marginVertical="20px"
         android:columnWidth="1000px"
         android:numColumns="8"
         android:scrollbars="none" />
+
     <GridView
         android:id="@+id/grid_echec_mort_B"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="1300px"
+        android:layout_below="@id/grid_echec"
+        android:layout_marginVertical="20px"
         android:columnWidth="1000px"
         android:numColumns="8"
         android:scrollbars="none" />
