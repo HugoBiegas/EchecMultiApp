@@ -574,8 +574,8 @@ public class GameActivity extends AppCompatActivity {
                         messageRef.setValue("Defaite");
                     else
                         messageRef.setValue("Victoir");
-                    messageRef = database.getReference("rooms/"+roomName);
 
+                    messageRef = database.getReference("rooms/"+roomName);
                     messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
