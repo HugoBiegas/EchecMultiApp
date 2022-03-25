@@ -560,31 +560,8 @@ public class GameActivity extends AppCompatActivity {
         messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
         messageRef.addValueEventListener(addRoomEvent());
 
-        messageRef = database.getReference("rooms/"+roomName+"/player1");//crée le message de la BDD
-        messageRef = database.getReference("player/"+messageRef.get().getResult().toString());//crée le message de la BDD
-        messageRef.addValueEventListener(VouD());
-
-        messageRef = database.getReference("rooms/"+roomName+"/player2");//crée le message de la BDD
-        messageRef = database.getReference("player/"+messageRef.get().getResult().toString());//crée le message de la BDD
-        messageRef.addValueEventListener(VouD());
     }
 
-    private ValueEventListener VouD(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageRef = database.getReference("players/"+playerName);
-                if (snapshot.getValue().toString().contains("DP") && !snapshot.getValue().toString().contains(playerName))
-                    messageRef.setValue("D");
-                else if (snapshot.getValue().toString().contains("D")&& !snapshot.getValue().toString().contains(playerName))
-                    messageRef.setValue("V");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-    }
     //Cette méthode permet de savoir si la situation playerRoom a été mis a "déco" si oui on quitte
     //déco est entré si un joueur a cliquer sur le bouton quitter
     private ValueEventListener addRoomEventClose(){
