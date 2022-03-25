@@ -48,6 +48,7 @@ public class RoomActivity extends AppCompatActivity {
         CréationRoom();
         ItemCliquer();
         addRoomsEventListener();
+        addplayersEventLisener();
         retourProfile();
     }
 
@@ -136,6 +137,33 @@ public class RoomActivity extends AppCompatActivity {
                 button.setEnabled(true);//changement du bouton pour le rendre non-cliquable
                 Toast.makeText(RoomActivity.this,"erreur!",Toast.LENGTH_SHORT).show();//message d'erreur
 
+            }
+        };
+    }
+
+    private void addplayersEventLisener(){
+        roomsRef = database.getReference("players");//on récupére la référence de rooms
+        roomsRef.addValueEventListener(addPlayersEvent());
+    }
+    private ValueEventListener addPlayersEvent(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //controle de la liste des room
+                roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
+                Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
+                for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
+                    if(snapshot1.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
+                        //mettre la décrémentations
+                    }else if (snapshot1.getValue().toString().contains("Victoir")){
+                        //mettre l'incrémentations
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //erreur rien
             }
         };
     }

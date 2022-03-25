@@ -144,7 +144,7 @@ public class GameActivity extends AppCompatActivity {
             if (PosibiliterH.isEmpty()){
                 fin=true;
                 messageRef = database.getReference("players/"+playerName);
-                messageRef.setValue("DP");
+                messageRef.setValue("Defaite");
                 Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -290,7 +290,7 @@ public class GameActivity extends AppCompatActivity {
                 if (finParti == true){
                     fin=true;
                     messageRef = database.getReference("players/"+playerName);
-                    messageRef.setValue("D");
+                    messageRef.setValue("Defaite");
                     Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -338,7 +338,7 @@ public class GameActivity extends AppCompatActivity {
             if (PosibiliterG.isEmpty()){
                 fin=true;
                 messageRef = database.getReference("players/"+playerName);
-                messageRef.setValue("DP");
+                messageRef.setValue("Defaite");
                 Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -486,7 +486,7 @@ public class GameActivity extends AppCompatActivity {
                 if (finParti == true){
                     fin=true;
                     messageRef = database.getReference("players/"+playerName);
-                    messageRef.setValue("D");
+                    messageRef.setValue("Defaite");
                     Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -571,9 +571,9 @@ public class GameActivity extends AppCompatActivity {
                 if (snapshot.getValue().toString().contains("deco") && !snapshot.getValue().toString().contains(playerName)) {
                     messageRef = database.getReference("players/"+playerName);
                     if (snapshot.getValue().toString().contains("DP"))
-                        messageRef.setValue("D");
+                        messageRef.setValue("Defaite");
                     else
-                        messageRef.setValue("V");
+                        messageRef.setValue("Victoir");
                     messageRef = database.getReference("rooms/"+roomName);
 
                     messageRef.removeValue();
