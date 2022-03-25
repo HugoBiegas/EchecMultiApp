@@ -725,10 +725,18 @@ public class GameActivity extends AppCompatActivity {
                 MortN.add(BordPiece[positionarriver]);
                 gridViewMortB.setAdapter(new adapterMortBlanc(getApplicationContext(),MortN));
             }
-            déplace=BordDepDepart(déplace);
-            BordPiece[positionarriver]=déplace;
-            déplace=ColorDepDepart(déplace);
-            colorP[positionarriver]= déplace;
+
+            if(Echec()==1){
+                gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
+                positiondepart = -1;
+                coup--;
+            }else{
+                déplace=BordDepDepart(déplace);
+                BordPiece[positionarriver]=déplace;
+                déplace=ColorDepDepart(déplace);
+                colorP[positionarriver]= déplace;
+            }
+
         }
         //actualisations du terrin
         gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
