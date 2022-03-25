@@ -568,8 +568,23 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco")){
-                    messageRef = database.getReference("players/"+playerName);
-                    messageRef.setValue("V");
+                    //joueur 2
+                    DatabaseReference messageRef = database.getReference("rooms/"+roomName+"/player2");
+                    messageRef = database.getReference("players/"+ messageRef.get().getResult().toString());
+                    //joueur 1
+                    DatabaseReference messageRef2 = database.getReference("rooms/" + roomName + "/player1");
+                    messageRef2 = database.getReference("players/"+ messageRef2.get().getResult().toString());
+                    //récupérations du joueur actuelle
+                    DatabaseReference messageRefUti = database.getReference("players"+playerName);
+                    if (messageRef.get().getResult().toString().contains("DP") && !messageRef.get().getResult().toString().contains(playerName) )
+                        messageRefUti.setValue("D");
+                    else if(messageRef.get().getResult().toString().contains("D")&& !messageRef.get().getResult().toString().contains(playerName) ){
+                        messageRefUti.setValue("V");
+                    }else if (messageRef2.get().getResult().toString().contains("DP")&& !messageRef2.get().getResult().toString().contains(playerName) ){
+                        messageRefUti.setValue("D");
+                    }else if (messageRef2.get().getResult().toString().contains("D")&& !messageRef2.get().getResult().toString().contains(playerName) ){
+                        messageRefUti.setValue("V");
+                    }
 
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
@@ -629,6 +644,8 @@ public class GameActivity extends AppCompatActivity {
                 buttonqui.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        messageRef =database.getReference("players/"+playerName);
+                        messageRef.setValue("D");
                         user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
@@ -639,13 +656,11 @@ public class GameActivity extends AppCompatActivity {
                                         edited.put("loses", loses + 1);
                                         documentReference.update(edited);
                                     }
-                                messageRef = database.getReference("players/"+playerName);
-                                messageRef.setValue("D");
+                                    messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                                messageRef.setValue("deco");
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
-                                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                                messageRef.setValue("deco");
                                 //bouton pour quiter l'applications
                             }
                         });
