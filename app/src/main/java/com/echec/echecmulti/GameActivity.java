@@ -559,6 +559,8 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco")){
+                    messageRef = database.getReference("rooms/"+roomName);
+                    messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
                     finish();
