@@ -19,14 +19,20 @@ import com.echec.echecmulti.R;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomActivity extends AppCompatActivity {
     ListView listView;//liste des View
@@ -35,6 +41,10 @@ public class RoomActivity extends AppCompatActivity {
     List<String> roomList = new ArrayList<>();//liste des room
     String playerName="";//nom du joueur
     String roomName="";//nom de la room
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userId;
+    FirebaseUser user;
 
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
@@ -111,6 +121,10 @@ public class RoomActivity extends AppCompatActivity {
         listView = findViewById(R.id.listRoom);//affectations de la liste des room
         button = findViewById(R.id.buttonCreateRoom);//affectations du bonton
         profile = findViewById(R.id.buttonViewProfile);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
     }
 
     private void addRoomEventListener(){
@@ -154,9 +168,11 @@ public class RoomActivity extends AppCompatActivity {
                 Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
                     if(snapshot1.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
-                        //mettre la décrémentations
+                        addDefeat();
+                        roomsRef.setValue("");
                     }else if (snapshot1.getValue().toString().contains("Victoir")){
-                        //mettre l'incrémentations
+                        addVictory();
+                        roomsRef.setValue("");
                     }
                 }
             }
@@ -194,4 +210,28 @@ public class RoomActivity extends AppCompatActivity {
             }
         };
     }
+
+    private void addDefeat()
+    {
+        //Recherche dans la collection users de la BD à l'aide de de la variable userId
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+                    Integer loses = documentSnapshot.getLong("loses").intValue();
+                    Map<String, Object> edited = new HashMap<>();
+                    edited.put("loses", loses + 1);
+                    documentReference.update(edited);
+                });
+            }
+
+            private void addVictory()
+            {
+                //Recherche dans la collection users de la BD à l'aide de de la variable userId
+                DocumentReference documentReference = fStore.collection("users").document(userId);
+                documentReference.addSnapshotListener((documentSnapshot, e) -> {
+                    Integer victories = documentSnapshot.getLong("victories").intValue();
+                    Map<String, Object> edited = new HashMap<>();
+                    edited.put("victories", victories + 1);
+                    documentReference.update(edited);
+                });
+            }
 }

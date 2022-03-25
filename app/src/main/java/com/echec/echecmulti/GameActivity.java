@@ -623,29 +623,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void quiterBTN(){
-        //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
-            if(documentSnapshot.exists())
-            {
-                Integer victories = documentSnapshot.getLong("victories").intValue();
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                String email = documentSnapshot.getString("email");
                 buttonqui.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         messageRef =database.getReference("players/"+playerName);
                         messageRef.setValue("D");
-                        user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
                                 buttonqui.setEnabled(false);
-                                messageRef = database.getReference("rooms/"+roomName);//crée le message de la BDD
-                                    if(messageRef.toString().contains("player2")) {
-                                        Map<String, Object> edited = new HashMap<>();
-                                        edited.put("loses", loses + 1);
-                                        documentReference.update(edited);
-                                    }
                                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                                 messageRef.setValue("deco:"+playerName+":D");
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
@@ -654,14 +637,6 @@ public class GameActivity extends AppCompatActivity {
                                 //bouton pour quiter l'applications
                             }
                         });
-                    }
-                });
-            }
-            else
-            {
-                Log.d("tag", "onEvent: LOL !");
-            }
-        });
     }
 
     private void echecini(){
