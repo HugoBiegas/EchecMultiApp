@@ -559,8 +559,32 @@ public class GameActivity extends AppCompatActivity {
         //Si addRoomEventClose ne donne rien on passe a addRoomEvent
         messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
         messageRef.addValueEventListener(addRoomEvent());
+
+        messageRef = database.getReference("rooms/"+roomName+"/player1");//crée le message de la BDD
+        messageRef = database.getReference("player/"+messageRef.get().getResult().toString());//crée le message de la BDD
+        messageRef.addValueEventListener(VouD());
+
+        messageRef = database.getReference("rooms/"+roomName+"/player2");//crée le message de la BDD
+        messageRef = database.getReference("player/"+messageRef.get().getResult().toString());//crée le message de la BDD
+        messageRef.addValueEventListener(VouD());
     }
 
+    private ValueEventListener VouD(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageRef = database.getReference("players/"+playerName);
+                if (snapshot.getValue().toString().contains("DP") && !snapshot.getValue().toString().contains(playerName))
+                    messageRef.setValue("D");
+                else if (snapshot.getValue().toString().contains("D")&& !snapshot.getValue().toString().contains(playerName))
+                    messageRef.setValue("V");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+    }
     //Cette méthode permet de savoir si la situation playerRoom a été mis a "déco" si oui on quitte
     //déco est entré si un joueur a cliquer sur le bouton quitter
     private ValueEventListener addRoomEventClose(){
@@ -568,32 +592,8 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco")) {
-                    //joueur 2
-                    DatabaseReference messageRef1 = database.getReference("rooms/" + roomName + "/player2");
-                    DatabaseReference messageRef = database.getReference("players/" + messageRef1.get().getResult().toString());
-                    //joueur 1
-                    DatabaseReference messageRef3 = database.getReference("rooms/" + roomName + "/player1");
-                    DatabaseReference messageRef2 = database.getReference("players/" + messageRef3.get().getResult().toString());
-                    //récupérations du joueur actuelle
-                    DatabaseReference messageRefUti = database.getReference("players" + playerName);
-                    if (messageRef.get().getResult().toString().contains("DP") && !(messageRef1.get().getResult().toString().contains(playerName))){
-                        messageRefUti.setValue("D");
-                        messageRef = database.getReference("rooms/" + roomName);
-                        messageRef.removeValue();
-                    }else if(messageRef.get().getResult().toString().contains("D")&& !(messageRef1.get().getResult().toString().contains(playerName)) ){
-                        messageRefUti.setValue("V");
-                        messageRef = database.getReference("rooms/"+roomName);
-                        messageRef.removeValue();
-                    }else if (messageRef2.get().getResult().toString().contains("DP")&& !(messageRef3.get().getResult().toString().contains(playerName)) ){
-                        messageRefUti.setValue("D");
-                        messageRef = database.getReference("rooms/"+roomName);
-                        messageRef.removeValue();
-                    }else if (messageRef2.get().getResult().toString().contains("D")&& !(messageRef3.get().getResult().toString().contains(playerName)) ){
-                        messageRefUti.setValue("V");
-                        messageRef = database.getReference("rooms/"+roomName);
-                        messageRef.removeValue();
-                    }
-
+                    messageRef = database.getReference("rooms/"+roomName);
+                    messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
                     finish();
@@ -665,6 +665,8 @@ public class GameActivity extends AppCompatActivity {
                                     }
                                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                                 messageRef.setValue("deco");
+                                messageRef =database.getReference("rooms/"+roomName);
+                                messageRef.removeValue();
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
