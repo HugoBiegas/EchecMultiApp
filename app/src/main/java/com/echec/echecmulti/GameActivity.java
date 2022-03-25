@@ -136,7 +136,20 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
+        //pathe
         PosibiliterG.clear();
+        if (teste.isEmpty()){
+            RechecheHostP(0);
+            if (PosibiliterH.isEmpty()){
+                fin=true;
+                Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                messageRef.setValue("deco");
+            }else
+                PosibiliterH.clear();
+        }
         //si il y as échec alors on regarde si le roi peux bouger
         if (attaque !=-1) {
             for (int j = 0; j < coordonner.length; j++) {
@@ -237,6 +250,19 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         PosibiliterH.clear();
+        //pathe
+        if (teste.isEmpty()){
+            RechecheGuestP(0);
+            if (PosibiliterG.isEmpty()){
+                fin=true;
+                Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(getApplicationContext(),RoomActivity.class));
+                messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                messageRef.setValue("deco");
+            }else
+                PosibiliterG.clear();
+        }
         //si il y as échec alors on regarde si le roi peux rien faire
         if (attaque !=-1) {
             for (int j = 0; j < coordonner.length; j++) {
