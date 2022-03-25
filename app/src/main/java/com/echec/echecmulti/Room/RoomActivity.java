@@ -127,7 +127,6 @@ public class RoomActivity extends AppCompatActivity {
                 intent.putExtra("roomName",roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 intent.putExtra("playerhost","");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter
-
             }
 
             @Override
