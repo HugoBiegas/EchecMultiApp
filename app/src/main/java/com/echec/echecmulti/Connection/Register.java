@@ -124,6 +124,7 @@ public class Register extends AppCompatActivity {
                             //si cela a échoué pour une quelquonque raison
                             Toast.makeText(Register.this,"Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
+                            mRegisterBtn.setEnabled(true);
                         }
                     }
                 });

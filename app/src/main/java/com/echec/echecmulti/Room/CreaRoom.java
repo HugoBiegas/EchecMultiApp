@@ -41,8 +41,8 @@ public class CreaRoom extends AppCompatActivity {
         initialisations();
         créationderoom();
         quiter();
-
     }
+
     private void quiter(){
         buttonQuite.setOnClickListener(new View.OnClickListener() {
             @Override
