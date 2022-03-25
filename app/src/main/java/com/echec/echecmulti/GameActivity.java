@@ -28,6 +28,7 @@ import com.echec.echecmulti.adapter.adapterGrild;
 import com.echec.echecmulti.adapter.adapterMortBlanc;
 import com.echec.echecmulti.adapter.adapterMortNoir;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -142,6 +143,8 @@ public class GameActivity extends AppCompatActivity {
             RechecheHostP(0);
             if (PosibiliterH.isEmpty()){
                 fin=true;
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("DP");
                 Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -286,6 +289,8 @@ public class GameActivity extends AppCompatActivity {
                 //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
                 if (finParti == true){
                     fin=true;
+                    messageRef = database.getReference("players/"+playerName);
+                    messageRef.setValue("D");
                     Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -332,6 +337,8 @@ public class GameActivity extends AppCompatActivity {
             RechecheGuestP(0);
             if (PosibiliterG.isEmpty()){
                 fin=true;
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("DP");
                 Toast.makeText(this, "Egaliter", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -478,6 +485,8 @@ public class GameActivity extends AppCompatActivity {
                 //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
                 if (finParti == true){
                     fin=true;
+                    messageRef = database.getReference("players/"+playerName);
+                    messageRef.setValue("D");
                     Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(getApplicationContext(),RoomActivity.class));
@@ -559,11 +568,14 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco")){
-                    messageRef = database.getReference("rooms/"+roomName);
-                    messageRef.removeValue();
+                    messageRef = database.getReference("players/"+playerName);
+                    messageRef.setValue("V");
+
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
                     finish();
+                    messageRef = database.getReference("rooms/"+roomName);
+                    messageRef.removeValue();
                 }
             }
             @Override
@@ -629,6 +641,8 @@ public class GameActivity extends AppCompatActivity {
                                     }
 
                                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                                messageRef = database.getReference("players/"+playerName);
+                                messageRef.setValue("D");
                                 Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                                 startActivity(ActivityB);
                                 finish();
