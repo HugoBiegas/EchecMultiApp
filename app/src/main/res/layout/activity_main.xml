@@ -7,39 +7,31 @@
     android:orientation="vertical"
     tools:context=".Connection.MainActivity">
 
+
     <ImageView
         android:id="@+id/ProfileImage"
         android:layout_width="160dp"
         android:layout_height="156dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="127dp"
-        android:layout_marginBottom="360dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/profiledab" />
-
 
     <TextView
         android:id="@+id/ProfileUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="158dp"
-        android:layout_marginBottom="309dp"
+        android:layout_below="@id/ProfileImage"
+        android:layout_centerInParent="true"
         android:text="loading..."
-        android:textSize="32dp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/ProfileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="157dp"
-        android:layout_marginBottom="283dp"
+        android:layout_below="@id/ProfileImage"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="70px"
         android:text="loading..." />
 
     <Button
@@ -68,35 +60,27 @@
         android:id="@+id/victories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="240dp"
-        android:layout_marginBottom="243dp"
+        android:layout_below="@id/ProfileImage"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="140px"
         android:text="loading..." />
 
     <TextView
         android:id="@+id/loses"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="109dp"
-        android:layout_marginBottom="243dp"
+        android:layout_below="@id/ProfileImage"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="210px"
         android:text="loading..." />
 
     <TextView
         android:id="@+id/winrate"
-
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="177dp"
-        android:layout_marginBottom="208dp"
+        android:layout_below="@id/ProfileImage"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="280px"
         android:text="loading..." />
 
 

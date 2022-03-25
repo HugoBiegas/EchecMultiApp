@@ -178,7 +178,6 @@ public class RoomActivity extends AppCompatActivity {
                         nomPlayer.add(chaine.substring(0,chaine.indexOf(",")));
                         chaine = chaine.substring(chaine.indexOf(","),chaine.length());
                     }
-
                 }
                 boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
