@@ -569,26 +569,26 @@ public class GameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue().toString().contains("deco")) {
                     //joueur 2
-                    DatabaseReference messageRef = database.getReference("rooms/" + roomName + "/player2");
-                    messageRef = database.getReference("players/" + messageRef.get().getResult().toString());
+                    DatabaseReference messageRef1 = database.getReference("rooms/" + roomName + "/player2");
+                    DatabaseReference messageRef = database.getReference("players/" + messageRef1.get().getResult().toString());
                     //joueur 1
-                    DatabaseReference messageRef2 = database.getReference("rooms/" + roomName + "/player1");
-                    messageRef2 = database.getReference("players/" + messageRef2.get().getResult().toString());
+                    DatabaseReference messageRef3 = database.getReference("rooms/" + roomName + "/player1");
+                    DatabaseReference messageRef2 = database.getReference("players/" + messageRef3.get().getResult().toString());
                     //récupérations du joueur actuelle
                     DatabaseReference messageRefUti = database.getReference("players" + playerName);
-                    if (messageRef.get().getResult().toString().contains("DP") && !messageRef.get().getResult().toString().contains(playerName)){
+                    if (messageRef.get().getResult().toString().contains("DP") && !(messageRef1.get().getResult().toString().contains(playerName))){
                         messageRefUti.setValue("D");
                         messageRef = database.getReference("rooms/" + roomName);
                         messageRef.removeValue();
-                    }else if(messageRef.get().getResult().toString().contains("D")&& !messageRef.get().getResult().toString().contains(playerName) ){
+                    }else if(messageRef.get().getResult().toString().contains("D")&& !(messageRef1.get().getResult().toString().contains(playerName)) ){
                         messageRefUti.setValue("V");
                         messageRef = database.getReference("rooms/"+roomName);
                         messageRef.removeValue();
-                    }else if (messageRef2.get().getResult().toString().contains("DP")&& !messageRef2.get().getResult().toString().contains(playerName) ){
+                    }else if (messageRef2.get().getResult().toString().contains("DP")&& !(messageRef3.get().getResult().toString().contains(playerName)) ){
                         messageRefUti.setValue("D");
                         messageRef = database.getReference("rooms/"+roomName);
                         messageRef.removeValue();
-                    }else if (messageRef2.get().getResult().toString().contains("D")&& !messageRef2.get().getResult().toString().contains(playerName) ){
+                    }else if (messageRef2.get().getResult().toString().contains("D")&& !(messageRef3.get().getResult().toString().contains(playerName)) ){
                         messageRefUti.setValue("V");
                         messageRef = database.getReference("rooms/"+roomName);
                         messageRef.removeValue();
