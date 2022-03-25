@@ -31,6 +31,7 @@ public class CreaRoom extends AppCompatActivity {
     DatabaseReference roomRef;//référence as la base de donnée pour une room
     Button button;//bouton de créations de room
     Button buttonQuite;
+    boolean ff=false;
 
 
     @Override
@@ -105,12 +106,17 @@ public class CreaRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //rejoidre une room
-                button.setText("crations de room");//changement du bouton
-                button.setEnabled(false);//changement du bouton pour le rendre non-cliquable
-                Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
-                intent.putExtra("roomName",roomName);
-                intent.putExtra("playerhost", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                startActivity(intent);//on lance l'activiter
+                if(ff==false){
+                    button.setText("crations de room");//changement du bouton
+                    button.setEnabled(false);//changement du bouton pour le rendre non-cliquable
+                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
+                    intent.putExtra("roomName",roomName);
+                    intent.putExtra("playerhost", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    startActivity(intent);//on lance l'activiter
+                    finish();
+                    ff=true;
+                }
+
 
             }
 
