@@ -219,15 +219,9 @@ public class RoomActivity extends AppCompatActivity {
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
             Integer loses = documentSnapshot.getLong("loses").intValue();
-            String email = documentSnapshot.getString("email");
-            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("loses", loses + 1);
                     documentReference.update(edited);
-                }
-            });
         });
     }
 
@@ -237,15 +231,9 @@ public class RoomActivity extends AppCompatActivity {
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
             Integer victories = documentSnapshot.getLong("victories").intValue();
-            String email = documentSnapshot.getString("email");
-            user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
                     Map<String, Object> edited = new HashMap<>();
                     edited.put("victories", victories + 1);
                     documentReference.update(edited);
-                }
-            });
         });
     }
 }
