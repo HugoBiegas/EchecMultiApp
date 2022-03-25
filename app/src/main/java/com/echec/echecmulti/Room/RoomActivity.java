@@ -166,13 +166,15 @@ public class RoomActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //controle de la liste des room
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
-                    if(snapshot.getValue().toString().contains("Defaite")){//verifie si il y as deux joueur
+                Toast.makeText(RoomActivity.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                String cc = snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(","));
+                    if(cc.contains("Defaite")){//verifie si il y as deux joueur
                         addDefeat();
-                        DatabaseReference PlayerRef = database.getReference("players/"+snapshot.getKey());
+                        DatabaseReference PlayerRef = database.getReference("players/"+cc.substring(0,cc.indexOf("=")));
                         PlayerRef.setValue("");
-                    }else if (snapshot.getValue().toString().contains("Victoir")){
+                    }else if (cc.contains("Victoir")){
                         addVictory();
-                        DatabaseReference PlayerRef = database.getReference("players/" + snapshot.getKey());
+                        DatabaseReference PlayerRef = database.getReference("players/" + cc.substring(0,cc.indexOf("=")));
                         PlayerRef.setValue("");
                     }
 
