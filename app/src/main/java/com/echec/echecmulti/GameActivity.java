@@ -191,19 +191,89 @@ public class GameActivity extends AppCompatActivity {
                 ArrayList<Integer> toucher = new ArrayList<>();
                 toucher.clear();
                 toucher.addAll(RechecheGuesttoucherHost(BordPiece,colorP));
-                for (int j = 0; j < toucher.size(); j++) {
-                    trouverLesdeplacementAttaquer(toucher.get(j));
+                //attaque et toucher et i roi
+                ArrayList<String> depAttaquent = new ArrayList<>();
+                int cpt=0,dep=attaque;
+                if ((i+1) == attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                         dep++;
+                    }
                 }
+                else if ((i-1)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep--;
+                    }
+                }
+                else if ((i+7)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep+=7;
+                    }
+                }
+                else if ((i+8)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep+=8;
+                    }
+                }
+                else if ((i+9)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep+=9;
+                    }
+                }
+                else if ((i-7)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep-=7;
+                    }
+                }
+                else if ((i-8)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep-=8;
+                    }
+                }
+                else if ((i-9)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep-=9;
+                    }
+                }
+                Toast.makeText(this, depAttaquent.toString(), Toast.LENGTH_SHORT).show();
                 RechecheHostP(3);//3 pour ne pas prendre les déplacement du roi
-                Integer[] coordonnerDepAttaque = new Integer[echecMath.size()];
+                Integer[] coordonnerDepAttaque = new Integer[depAttaquent.size()];
                 Integer[] coordonnerDepHost = new Integer[PosibiliterH.size()];
+                String[] LettreHost = new String[PosibiliterH.size()];
                 boolean finParti=true;
-                for (int j = 0; j < echecMath.size(); j++) {
-                    coordonnerDepAttaque[j] = Integer.parseInt(echecMath.get(j).substring(echecMath.get(j).indexOf(":")+1,echecMath.get(j).length()));
+                for (int j = 0; j < depAttaquent.size()-1; j++) {
+                    coordonnerDepAttaque[j] = Integer.parseInt(depAttaquent.get(j).substring(depAttaquent.get(j).indexOf(":")+1,depAttaquent.get(j).length()));
                     for (int k = 0; k < PosibiliterH.size(); k++) {
+                        LettreHost[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
                         coordonnerDepHost[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
-                        if(coordonnerDepAttaque[j] == coordonnerDepHost[k] || coordonnerDepHost[k] == attaque)
+                        if((coordonnerDepAttaque[j] == coordonnerDepHost[k] && LettreHost[k].equals("D") )  || (coordonnerDepHost[k] == attaque && LettreHost[k].equals("A"))){
+                            Toast.makeText(this, coordonnerDepAttaque[j].toString(), Toast.LENGTH_SHORT).show();
                             finParti=false;
+                        }
+
                     }
                 }
                 //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
@@ -299,24 +369,104 @@ public class GameActivity extends AppCompatActivity {
             if(teste.isEmpty()){
                 //teste si les piéce de l'host peuve blocker l'attaque
                 echecMath.clear();
-                PosibiliterH.clear();
+                PosibiliterG.clear();
                 //récupérer les endroit attaquer
                 ArrayList<Integer> toucher = new ArrayList<>();
                 toucher.clear();
-                toucher.addAll(RechecheGuesttoucherHost(BordPiece,colorP));
-                for (int j = 0; j < toucher.size(); j++) {
-                    trouverLesdeplacementAttaquer(toucher.get(j));
+                toucher.addAll(RechechehosttoucherGuest(BordPiece,colorP));
+                //attaque et toucher et i roi
+                ArrayList<String> depAttaquent = new ArrayList<>();
+                int cpt=0,dep=attaque;
+                if ((i+1) == attaque){
+                    while (cpt == 0){
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep++;
+                    }
                 }
-                RechecheHostP(3);//3 pour ne pas prendre les déplacement du roi
-                Integer[] coordonnerDepAttaque = new Integer[echecMath.size()];
-                Integer[] coordonnerDepHost = new Integer[PosibiliterH.size()];
+                else if ((i-1)== attaque){
+                    while (cpt == 0){
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep--;
+                    }
+                }
+                else if ((i+7)== attaque){
+                    while (cpt == 0){
+
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep+=7;
+                    }
+                }
+                else if ((i+8)== attaque){
+                    while (cpt == 0){
+
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep+=8;
+                    }
+                }
+                else if ((i+9)== attaque){
+                    while (cpt == 0){
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep+=9;
+                    }
+                }
+                else if ((i-7)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep-=7;
+                    }
+                }
+                else if ((i-8)== attaque){
+                    while (cpt == 0){
+                        depAttaquent.add("D:"+dep);
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        dep-=8;
+                    }
+                }
+                else if ((i-9)== attaque){
+                    while (cpt == 0){
+
+                        if (dep == toucher.get(0))
+                            cpt++;
+                        else
+                            depAttaquent.add("D:"+dep);
+                        dep-=9;
+                    }
+                }
+                //rajouter l'androit qui attaque (pour pouvoir la manger)
+                depAttaquent.add("D:"+toucher.get(0));
+                RechecheGuestP(3);//3 pour ne pas prendre les déplacement du roi
+                Integer[] coordonnerDepAttaque = new Integer[depAttaquent.size()];
+                Integer[] coordonnerDepGuest = new Integer[PosibiliterH.size()];
+                String[] LettreGuest = new String[PosibiliterH.size()];
                 boolean finParti=true;
-                for (int j = 0; j < echecMath.size(); j++) {
-                    coordonnerDepAttaque[j] = Integer.parseInt(echecMath.get(j).substring(echecMath.get(j).indexOf(":")+1,echecMath.get(j).length()));
+                for (int j = 0; j < depAttaquent.size()-1; j++) {
+                    coordonnerDepAttaque[j] = Integer.parseInt(depAttaquent.get(j).substring(depAttaquent.get(j).indexOf(":")+1,depAttaquent.get(j).length()));
                     for (int k = 0; k < PosibiliterH.size(); k++) {
-                        coordonnerDepHost[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
-                        if(coordonnerDepAttaque[j] == coordonnerDepHost[k] || coordonnerDepHost[k] == attaque)
+                        LettreGuest[k] = PosibiliterH.get(j).substring(0,PosibiliterH.get(k).indexOf(":"));
+                        coordonnerDepGuest[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
+                        if((coordonnerDepAttaque[j] == coordonnerDepGuest[k] && LettreGuest[k].equals("D") )  || (coordonnerDepGuest[k] == attaque && LettreGuest[k].equals("A"))){
+                            Toast.makeText(this, coordonnerDepAttaque[j].toString(), Toast.LENGTH_SHORT).show();
                             finParti=false;
+                        }
+
                     }
                 }
                 //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
