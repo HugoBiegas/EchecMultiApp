@@ -31,9 +31,9 @@ public class Roi {
             bougRoi += 1;
             host=1;
         }
-        if (Echiquier[1].equals("") && Echiquier[2].equals("") && Echiquier[3].equals("") && (bougRoi==0 || bougRoi == 2)){
+        if ( Echiquier[0].equals("T") && color[0].equals("B") && Echiquier[1].equals("") && Echiquier[2].equals("") && Echiquier[3].equals("") && (bougRoi==0 || bougRoi == 2)){
             deplacement.add("R1:"+0);
-        }else if (Echiquier[5].equals("") && Echiquier[6].equals("") && (bougRoi==0 || bougRoi == 2) )
+        }else if (Echiquier[7].equals("T") && color[7].equals("B") && Echiquier[5].equals("") && Echiquier[6].equals("") && (bougRoi==0 || bougRoi == 2) )
             deplacement.add("R2:"+7);
 
         //pour le haut
@@ -160,9 +160,9 @@ public class Roi {
             bougRoi +=2;
             guest =1;
         }
-        if (Echiquier[57].equals("") && Echiquier[58].equals("") && Echiquier[59].equals("") && (bougRoi==0 || bougRoi == 1)){
+        if (Echiquier[56].equals("T") && color[56].equals("N") && Echiquier[57].equals("") && Echiquier[58].equals("") && Echiquier[59].equals("") && (bougRoi==0 || bougRoi == 1)){
             deplacement.add("R1:"+56);
-        }else if (Echiquier[61].equals("") && Echiquier[62].equals("") && (bougRoi==0 || bougRoi == 1) )
+        }else if (Echiquier[63].equals("T") && color[63].equals("N") && Echiquier[61].equals("") && Echiquier[62].equals("") && (bougRoi==0 || bougRoi == 1) )
             deplacement.add("R2:"+63);
 
 

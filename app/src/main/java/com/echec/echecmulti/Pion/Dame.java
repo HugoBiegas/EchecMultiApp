@@ -12,30 +12,32 @@ public class Dame {
         int bordBase=4;
         ecart = coordoner + 7;
         for (int i=0;i<7;i++){
-            if (coordoner == 0 || coordoner == 63)
+            if (coordoner == 0)
                 bordBase = 0;
+            else if(coordoner == 63)
+                bordBase = -1;
             else if (coordoner == borderD[i])
                 bordBase = 1;
             else if (coordoner == borderG[i])
                 bordBase = 2;
         }
-        //les diagonals
-
+        //les diagonals droit
         dup=0;
         ecart = coordoner + 9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 1)
+            if (bordBase == 1)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
-                    if (border[j] == ecart){
+                    if (border[j] == ecart || bordBase == 0){
                         if (Echiquier[ecart].equals(""))
                             deplacement.add("D:"+ecart);
                         else if (color[ecart].equals("N")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
                 if (dup==0){
@@ -52,13 +54,14 @@ public class Dame {
 
             ecart +=9;
         }
+        //les diagonals gauche
         dup=0;
         ecart = coordoner + 7;
         for (int i=0;i<8;i++){
             if (bordBase ==0 ||bordBase == 2 )
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
                     if (border[j] == ecart){
                         if (Echiquier[ecart].equals(""))
@@ -66,10 +69,11 @@ public class Dame {
                         else if (color[ecart].equals("N")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
-                if (dup==0){
+                if (dup==0 && bordBase!=0){
                     if (Echiquier[ecart].equals(""))
                         deplacement.add("D:"+ecart);
                     else if (color[ecart].equals("N")){
@@ -80,17 +84,16 @@ public class Dame {
                 }else
                     i=12;
             }
-
             ecart +=7;
         }
-
+//haut droit
         dup=0;
         ecart = coordoner -7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 || bordBase == 1)
+            if ( bordBase == 1)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
                     if (border[j] == ecart){
                         if (Echiquier[ecart].equals(""))
@@ -98,10 +101,11 @@ public class Dame {
                         else if (color[ecart].equals("N")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
-                if (dup==0){
+                if (dup==0 && bordBase!=0){
                     if (Echiquier[ecart].equals(""))
                         deplacement.add("D:"+ecart);
                     else if (color[ecart].equals("N")){
@@ -115,22 +119,23 @@ public class Dame {
             ecart -=7;
         }
 
-
+//haut gauche
         dup=0;
         ecart = coordoner -9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 2)
+            if (bordBase == 2)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
-                    if (border[j] == ecart){
+                    if (border[j] == ecart || bordBase == -1){
                         if (Echiquier[ecart].equals(""))
                             deplacement.add("D:"+ecart);
                         else if (color[ecart].equals("N")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase != -1)
+                            dup=1;
                     }
                 }
                 if (dup==0){
@@ -186,12 +191,13 @@ public class Dame {
         ecart = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
-                    if (borderD[j] == ecart || borderG[j] ==ecart){
-                        non=1;
+                    if (borderD[j] == ecart || borderG[j] ==ecart ||bordBase==0){
+                        if (bordBase != 0)
+                            non=1;
                         if (!Echiquier[ecart].equals("") && color[ecart].equals("N"))
                             deplacement.add("A:"+ecart);
                         else if (color[ecart].equals("B"))
@@ -222,8 +228,9 @@ public class Dame {
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
-                    if (borderD[j] == ecart || borderG[j] ==ecart){
-                        non=1;
+                    if (borderD[j] == ecart || borderG[j] ==ecart || bordBase == -1){
+                        if (bordBase != -1)
+                            non=1;
                         if (!Echiquier[ecart].equals("") && color[ecart].equals("N"))
                             deplacement.add("A:"+ecart);
                         else if (color[ecart].equals("B"))
@@ -256,34 +263,33 @@ public class Dame {
         int ecart,dup=0;
         int bordBase=4;
         ecart = coordoner + 7;
-
         for (int i=0;i<7;i++){
-            if (coordoner == 0 )
+            if (coordoner == 0)
                 bordBase = 0;
             else if(coordoner == 63)
-                bordBase=-1;
+                bordBase = -1;
             else if (coordoner == borderD[i])
                 bordBase = 1;
             else if (coordoner == borderG[i])
                 bordBase = 2;
         }
-        //les diagonals
-
+        //les diagonals droit
         dup=0;
         ecart = coordoner + 9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 1)
+            if (bordBase == 1)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
-                    if (border[j] == ecart){
+                    if (border[j] == ecart || bordBase == 0){
                         if (Echiquier[ecart].equals(""))
                             deplacement.add("D:"+ecart);
                         else if (color[ecart].equals("B")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
                 if (dup==0){
@@ -300,13 +306,14 @@ public class Dame {
 
             ecart +=9;
         }
+        //les diagonals gauche
         dup=0;
         ecart = coordoner + 7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 2)
+            if (bordBase ==0 ||bordBase == 2 )
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
                     if (border[j] == ecart){
                         if (Echiquier[ecart].equals(""))
@@ -314,10 +321,11 @@ public class Dame {
                         else if (color[ecart].equals("B")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
-                if (dup==0){
+                if (dup==0 && bordBase!=0){
                     if (Echiquier[ecart].equals(""))
                         deplacement.add("D:"+ecart);
                     else if (color[ecart].equals("B")){
@@ -328,17 +336,16 @@ public class Dame {
                 }else
                     i=12;
             }
-
             ecart +=7;
         }
-
+//haut droit
         dup=0;
         ecart = coordoner -7;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 1)
+            if ( bordBase == 1)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
                     if (border[j] == ecart){
                         if (Echiquier[ecart].equals(""))
@@ -346,10 +353,11 @@ public class Dame {
                         else if (color[ecart].equals("B")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase!=0)
+                            dup=1;
                     }
                 }
-                if (dup==0){
+                if (dup==0 && bordBase!=0){
                     if (Echiquier[ecart].equals(""))
                         deplacement.add("D:"+ecart);
                     else if (color[ecart].equals("B")){
@@ -363,22 +371,23 @@ public class Dame {
             ecart -=7;
         }
 
-
+//haut gauche
         dup=0;
         ecart = coordoner -9;
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 2)
+            if (bordBase == 2)
                 dup=1;
             else
-            if (ecart<64 && ecart>0){
+            if (ecart<64 && ecart>=0){
                 for (int j=0;j<15;j++){
-                    if (border[j] == ecart){
+                    if (border[j] == ecart || bordBase == -1){
                         if (Echiquier[ecart].equals(""))
                             deplacement.add("D:"+ecart);
                         else if (color[ecart].equals("B")){
                             deplacement.add("A:"+ecart);
                         }
-                        dup=1;
+                        if (bordBase != -1)
+                            dup=1;
                     }
                 }
                 if (dup==0){
@@ -434,12 +443,13 @@ public class Dame {
         ecart = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-            if (bordBase ==-1 || bordBase == 1)
+            if (ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
-                    if (borderD[j] == ecart || borderG[j] ==ecart){
-                        non=1;
+                    if (borderD[j] == ecart || borderG[j] ==ecart ||bordBase==0){
+                        if (bordBase != 0)
+                            non=1;
                         if (!Echiquier[ecart].equals("") && color[ecart].equals("B"))
                             deplacement.add("A:"+ecart);
                         else if (color[ecart].equals("N"))
@@ -466,12 +476,13 @@ public class Dame {
         ecart = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||bordBase == 2)
+            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
                 non=1;
             else if (non == 0){
                 for (int j=0;j<7;j++){
-                    if (borderD[j] == ecart || borderG[j] ==ecart){
-                        non=1;
+                    if (borderD[j] == ecart || borderG[j] ==ecart || bordBase == -1){
+                        if (bordBase != -1)
+                            non=1;
                         if (!Echiquier[ecart].equals("") && color[ecart].equals("B"))
                             deplacement.add("A:"+ecart);
                         else if (color[ecart].equals("N"))
@@ -493,6 +504,7 @@ public class Dame {
                 i=8;
             ecart--;
         }
+
         return deplacement;
     }
 }
