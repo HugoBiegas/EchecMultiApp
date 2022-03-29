@@ -44,6 +44,7 @@ public class RoomActivity extends AppCompatActivity {
     String userId;
     FirebaseUser user;
     boolean isPlayer2Existe=false;
+    boolean cpt=false;
 
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
@@ -181,12 +182,13 @@ public class RoomActivity extends AppCompatActivity {
                 }
                 boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
-                    if(nomPlayer.get(i).contains("Defaite")){//verifie si il y as deux joueur
-                                addDefeat();
+                    if(nomPlayer.get(i).contains("Defaite") && nomPlayer.get(i).contains(playerName)){//verifie si il y as deux joueur
+                        //incrémenter défaite
+                        addDefeat();
                         DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
-                    }else if (nomPlayer.get(i).contains("Victoir")){
-                            addVictory();
+                    }else if (nomPlayer.get(i).contains("Victoir") && nomPlayer.get(i).contains(playerName)){
+                        //incrémenter victoir
                         DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }
@@ -231,8 +233,9 @@ public class RoomActivity extends AppCompatActivity {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
-            if(documentSnapshot.exists())
+            if(documentSnapshot.exists() && cpt==false)
             {
+
                 Integer victories = documentSnapshot.getLong("victories").intValue();
                 Integer loses = documentSnapshot.getLong("loses").intValue();
                 String email = documentSnapshot.getString("email");
@@ -245,6 +248,7 @@ public class RoomActivity extends AppCompatActivity {
                         //bouton pour quiter l'applications
                     }
                 });
+                cpt=true;
             }
         });
     }
@@ -254,7 +258,7 @@ public class RoomActivity extends AppCompatActivity {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
-            if(documentSnapshot.exists())
+            if(documentSnapshot.exists() && cpt==false)
             {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
                 Integer loses = documentSnapshot.getLong("loses").intValue();
@@ -268,6 +272,7 @@ public class RoomActivity extends AppCompatActivity {
                         //bouton pour quiter l'applications
                     }
                 });
+                cpt=true;
             }
         });
     }
