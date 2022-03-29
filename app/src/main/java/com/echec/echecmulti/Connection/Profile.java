@@ -12,9 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
 import com.echec.echecmulti.Room.RoomActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -99,7 +101,9 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 buttonLogout.setEnabled(false);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);//créations de la page Game
+                intent.putExtra("deco",1);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);//on lance l'activiter
                 fAuth.signOut();
                 finish();
             }

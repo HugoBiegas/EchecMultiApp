@@ -43,9 +43,20 @@ public class MainActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.editTextPassword);
         mLoginBtn = findViewById(R.id.buttonLogin);
         progressBar = findViewById(R.id.progressBar);
-        fAuth = FirebaseAuth.getInstance();
         mCreateBtn = findViewById(R.id.createText);
+        fAuth = FirebaseAuth.getInstance();
         forgotTextLink = findViewById(R.id.forgotTextLink);
+        Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
+        int deco=0;
+        if(extra != null) {
+            deco = extra.getInt("deco");
+        }
+        if (deco==0){
+            if(fAuth.getCurrentUser() != null){
+                startActivity(new Intent(getApplicationContext(), Profile.class));
+                finish();
+            }
+        }
 
         //Vérification des champs avant d'appuyer sur le bouton
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
