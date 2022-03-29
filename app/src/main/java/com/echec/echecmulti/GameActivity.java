@@ -631,17 +631,18 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         deco=true;
-                        messageRef =database.getReference("players/"+playerName);
-                        messageRef.setValue("Defaite");
                         buttonqui.setEnabled(false);
-                        messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                        messageRef.setValue("deco:"+playerName+":D");
-                        Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                        startActivity(ActivityB);
                         if (isPlayerExiste==false){
                             messageRef =database.getReference("rooms/"+roomName);
                             messageRef.removeValue();
+                        }else{
+                            messageRef =database.getReference("players/"+playerName);
+                            messageRef.setValue("Defaite");
+                            messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                            messageRef.setValue("deco:"+playerName+":D");
                         }
+                        Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                        startActivity(ActivityB);
                         finish();
                             }
                         });

@@ -54,12 +54,6 @@ public class Register extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
-        //Si il n'y a pas d'utilisateur connecté en arrivant sur Register on va logout pour etre sur et renvoyé sur Login
-        if(fAuth.getCurrentUser() != null){
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), Profile.class));
-            finish();
-        }
 
         //Partie enregistrement du compte avec le bouton mRegisterBtn
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +116,7 @@ public class Register extends AppCompatActivity {
                                     Log.d("TAG", "onSuccess: Le profil a été créer pour"+ userID);
                                 }
                             });
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), Profile.class));
                         }
                         else {
                             //si cela a échoué pour une quelquonque raison
@@ -139,7 +133,7 @@ public class Register extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Profile.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
     }

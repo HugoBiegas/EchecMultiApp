@@ -47,11 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mCreateBtn = findViewById(R.id.createText);
         forgotTextLink = findViewById(R.id.forgotTextLink);
 
-        if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), Profile.class));
-            finish();
-        }
-
         //Vérification des champs avant d'appuyer sur le bouton
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

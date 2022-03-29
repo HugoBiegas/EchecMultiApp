@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.echec.echecmulti.Connection.MainActivity;
+import com.echec.echecmulti.Connection.Profile;
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -109,7 +110,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));//on lance l'activiter RooomActivity
+                startActivity(new Intent(getApplicationContext(), Profile.class));//on lance l'activiter RooomActivity
             }
         };
     }
@@ -182,13 +183,14 @@ public class RoomActivity extends AppCompatActivity {
                 }
                 boolean ff=true;
                 for (int i = 0; i < nomPlayer.size(); i++) {
-                    if(nomPlayer.get(i).contains("Defaite") && nomPlayer.get(i).contains(playerName)){//verifie si il y as deux joueur
+                    if(nomPlayer.get(i).contains(playerName+"=Defaite")){//verifie si il y as deux joueur
                         //incrémenter défaite
                         addDefeat();
                         DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
-                    }else if (nomPlayer.get(i).contains("Victoir") && nomPlayer.get(i).contains(playerName)){
+                    }else if (nomPlayer.get(i).contains(playerName+"=Victoir")){
                         //incrémenter victoir
+                        addVictory();
                         DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
                         PlayerRef.setValue("");
                     }
@@ -236,18 +238,8 @@ public class RoomActivity extends AppCompatActivity {
             if(documentSnapshot.exists() && cpt==false)
             {
 
-                Integer victories = documentSnapshot.getLong("victories").intValue();
                 Integer loses = documentSnapshot.getLong("loses").intValue();
-                String email = documentSnapshot.getString("email");
-                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Map<String,Object> edited = new HashMap<>();
-                        edited.put("loses", loses+1);
-                        documentReference.update(edited);
-                        //bouton pour quiter l'applications
-                    }
-                });
+                documentReference.update("loses",loses+1);
                 cpt=true;
             }
         });
@@ -261,17 +253,7 @@ public class RoomActivity extends AppCompatActivity {
             if(documentSnapshot.exists() && cpt==false)
             {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                String email = documentSnapshot.getString("email");
-                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Map<String,Object> edited = new HashMap<>();
-                        edited.put("victories", victories+1);
-                        documentReference.update(edited);
-                        //bouton pour quiter l'applications
-                    }
-                });
+                documentReference.update("victories",victories+1);
                 cpt=true;
             }
         });
