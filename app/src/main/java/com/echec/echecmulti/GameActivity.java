@@ -78,6 +78,9 @@ public class GameActivity extends AppCompatActivity {
     String role = "";
     String message = "";
     Button buttonqui;
+    boolean mathe=false;
+    boolean isPlayerExiste=false;
+    boolean deco=false;
     FirebaseDatabase database;//pour se connecter as la BDD
     DatabaseReference messageRef;//pour faire référence as la BDD
     FirebaseAuth fAuth;
@@ -269,7 +272,6 @@ public class GameActivity extends AppCompatActivity {
                         dep-=9;
                     }
                 }
-                Toast.makeText(this, depAttaquent.toString(), Toast.LENGTH_SHORT).show();
                 RechecheHostP(3);//3 pour ne pas prendre les déplacement du roi
                 Integer[] coordonnerDepAttaque = new Integer[depAttaquent.size()];
                 Integer[] coordonnerDepHost = new Integer[PosibiliterH.size()];
@@ -289,6 +291,7 @@ public class GameActivity extends AppCompatActivity {
                 //si la fin partite est true ces que personne ne peux arréter l'attaquent dont il a perdu
                 if (finParti == true){
                     fin=true;
+                    mathe=true;
                     messageRef = database.getReference("players/"+playerName);
                     messageRef.setValue("Defaite");
                     Toast.makeText(this, "Defaite", Toast.LENGTH_SHORT).show();
@@ -476,7 +479,6 @@ public class GameActivity extends AppCompatActivity {
                         LettreGuest[k] = PosibiliterH.get(k).substring(0,PosibiliterH.get(k).indexOf(":"));
                         coordonnerDepGuest[k] = Integer.parseInt(PosibiliterH.get(k).substring(PosibiliterH.get(k).indexOf(":")+1,PosibiliterH.get(k).length()));
                         if((coordonnerDepAttaque[j] == coordonnerDepGuest[k] && LettreGuest[k].equals("D") )  || (coordonnerDepGuest[k] == toucher.get(0) && LettreGuest[k].equals("A"))){
-                            Toast.makeText(this, coordonnerDepAttaque[j].toString(), Toast.LENGTH_SHORT).show();
                             finParti=false;
                         }
 
@@ -568,17 +570,17 @@ public class GameActivity extends AppCompatActivity {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue().toString().contains("deco") && !snapshot.getValue().toString().contains(playerName)) {
+                if (snapshot.getValue().toString().contains("deco:") && !snapshot.getValue().toString().contains("deco:"+playerName+":D")) {
+                    deco=true;
                     messageRef = database.getReference("players/"+playerName);
                     if (snapshot.getValue().toString().contains("DP"))
                         messageRef.setValue("Defaite");
                     else
                         messageRef.setValue("Victoir");
-
-                    messageRef = database.getReference("rooms/"+roomName);
-                    messageRef.removeValue();
                     Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
                     startActivity(ActivityB);
+                    messageRef = database.getReference("rooms/"+roomName);
+                    messageRef.removeValue();
                     finish();
 
                 }
@@ -600,14 +602,16 @@ public class GameActivity extends AppCompatActivity {
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
                         //affiche le message que si il est pas échec est math
-                        if(echecEtMath()==false)
+                        echecEtMath();
+                        if(mathe==false && deco==false)
                             Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("guest:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
                         action(snapshot);
                         //affiche le message que si il est pas échec est math
-                        if(echecEtMath()==false)
+                        echecEtMath();
+                        if(mathe==false && deco==false)
                             Toast.makeText(GameActivity.this, "" + snapshot.getValue(String.class).replace("host:"+positiondepart+":"+positionarriver,"a toi de jouer"), Toast.LENGTH_SHORT).show();
 
                     }
@@ -626,15 +630,19 @@ public class GameActivity extends AppCompatActivity {
                 buttonqui.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        deco=true;
                         messageRef =database.getReference("players/"+playerName);
                         messageRef.setValue("Defaite");
-                                buttonqui.setEnabled(false);
-                                    messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                                messageRef.setValue("deco:"+playerName+":D");
-                                Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                                startActivity(ActivityB);
-                                finish();
-                                //bouton pour quiter l'applications
+                        buttonqui.setEnabled(false);
+                        messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                        messageRef.setValue("deco:"+playerName+":D");
+                        Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
+                        startActivity(ActivityB);
+                        if (isPlayerExiste==false){
+                            messageRef =database.getReference("rooms/"+roomName);
+                            messageRef.removeValue();
+                        }
+                        finish();
                             }
                         });
     }
@@ -703,19 +711,23 @@ public class GameActivity extends AppCompatActivity {
                 MortN.add(BordPiece[positionarriver]);
                 gridViewMortB.setAdapter(new adapterMortBlanc(getApplicationContext(),MortN));
             }
-
-            if(Echec()==1){
-                gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
-                positiondepart = -1;
-                coup--;
-            }else{
-                déplace=BordDepDepart(déplace);
-                BordPiece[positionarriver]=déplace;
-                déplace=ColorDepDepart(déplace);
-                colorP[positionarriver]= déplace;
-            }
+                déplace = BordDepDepart(déplace);
+                BordPiece[positionarriver] = déplace;
+                déplace = ColorDepDepart(déplace);
+                colorP[positionarriver] = déplace;
 
         }
+        int[] renplacementB = new int[]{ 56,57,58,59,60,61,62,63};
+        int[] renplacementN = new int[]{ 0,1,2,3,4,5,6,7};
+        for (int i = 0; i < renplacementB.length; i++) {
+            if (positionarriver == renplacementB[i] && colorP[positionarriver].equals("B")){
+                BordPiece[positionarriver] = "D";
+
+            }else if (positionarriver == renplacementN[i] && colorP[positionarriver].equals("N")){
+                BordPiece[positionarriver] = "D";
+            }
+        }
+
         //actualisations du terrin
         gridView.setAdapter(new adapterGrild(getApplicationContext(),BordPiece,colorP,colorActionPion));
     }
@@ -1073,13 +1085,16 @@ public class GameActivity extends AppCompatActivity {
 
     private void extragerer(){
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
-        if(extra != null){
-            roomName = extra.getString("roomName");;//récupére la valeur envoiller
+        if(extra != null) {
+            roomName = extra.getString("roomName");
+            ;//récupére la valeur envoiller
             CompartPlayer = extra.getString("playerhost");
-            if(CompartPlayer.equals(playerName))//teste pour savoir si ces le joueur1 ou 2(playerName)
+            isPlayerExiste=extra.getBoolean("isPlayer2Existe");
+            if (CompartPlayer.equals(playerName))//teste pour savoir si ces le joueur1 ou 2(playerName)
                 role = "host";
             else
                 role = "guest";
+
         }
 
     }
@@ -1201,12 +1216,11 @@ public class GameActivity extends AppCompatActivity {
     private void RechecheHostP(int enlever){
         for (int i=0;i<63;i++){
             if (!BordPiece[i].equals("") && colorP[i].equals("B")){
-                if (BordPiece[i].equals("P")){
+                if (BordPiece[i].equals("P"))
                     if (enlever == 1)
                         PosibiliterH.addAll(pion.AttaqueHostPion(BordPiece,i,colorP));
                     else
                         PosibiliterH.addAll(pion.deplacementHostPion(BordPiece,i,colorP));
-                }
                 else if (BordPiece[i].equals("F"))
                     PosibiliterH.addAll(foue.deplacementFoueHost(BordPiece,i,colorP));
                 else if (BordPiece[i].equals("D"))

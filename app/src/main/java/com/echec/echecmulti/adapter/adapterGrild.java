@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +51,6 @@ public class adapterGrild extends BaseAdapter {
         view = inflater.inflate(R.layout.adapter_layout,null);
         ImageView image = view.findViewById(R.id.item_icon);
         String resourceName=piécePose(i);
-
         //Chercher et générer l'image d'une pièce
         if (!Bord[i].equals("")){
             int resId = context.getResources().getIdentifier(resourceName, "drawable",context.getPackageName());
@@ -121,7 +121,6 @@ public class adapterGrild extends BaseAdapter {
         for (int i=0;i<colorActionPion.size();i++){
             coordonner[i] = Integer.parseInt(colorActionPion.get(i).substring(colorActionPion.get(i).indexOf(":")+1,colorActionPion.get(i).length()));
             Lettre[i] = colorActionPion.get(i).substring(0,colorActionPion.get(i).indexOf(":"));
-
             if(position == coordonner[i]){
                 if (Lettre[i].equals("O")){
                     fin=1;

@@ -43,6 +43,7 @@ public class RoomActivity extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userId;
     FirebaseUser user;
+    boolean isPlayer2Existe=false;
 
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
@@ -72,6 +73,7 @@ public class RoomActivity extends AppCompatActivity {
                 //créations du joueur 2
                 roomName = roomList.get(i);//on donne as roomName le nom de l'endroi ou a cliquer la personne
                 roomRef = database.getReference("rooms/" + roomName + "/player2");//on crée le player2 dans la partie
+                isPlayer2Existe=true;
                 addRoomEventListener();//appelle de l'actions pour changer de page
                 roomRef.setValue(playerName);//on mais la valeur de player2 aux nom du joueur
             }
@@ -139,6 +141,7 @@ public class RoomActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);//créations de la page Game
                 intent.putExtra("roomName",roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 intent.putExtra("playerhost","");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("isPlayer2Existe",isPlayer2Existe);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter
             }
 
@@ -209,11 +212,7 @@ public class RoomActivity extends AppCompatActivity {
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
                 Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-                    if(!snapshot1.getValue().toString().contains("player2") && snapshot1.getValue().toString().contains("deco:")){
-                        DatabaseReference d = database.getReference("rooms/"+snapshot1.getKey());
-                        d.removeValue();
-                    }
-                    else if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
+                     if(!snapshot1.getValue().toString().contains("player2")){//verifie si il y as deux joueur
                         roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
                         listView.setAdapter(adapter);//ajoute un élément dans la liste
