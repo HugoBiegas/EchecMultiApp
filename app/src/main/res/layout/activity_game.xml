@@ -19,10 +19,26 @@
         android:id="@+id/NomJoueur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="40px"
-        android:layout_marginStart="43dp"
-        android:layout_toEndOf="@+id/quiter"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/quiter"
         android:text="joueur : " />
+
+    <TextView
+        android:id="@+id/NomRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/quiter"
+        android:layout_marginTop="50px"
+        android:text="Room : " />
+    <TextView
+        android:id="@+id/Aqui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/quiter"
+        android:layout_marginTop="100px"
+        android:text="tour : " />
 
     <GridView
         android:id="@+id/grid_echec"

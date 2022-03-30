@@ -216,7 +216,7 @@ public class RoomActivity extends AppCompatActivity {
                 roomList.clear();//on enléve de la vue de l'utilisteur tout les rooms
                 Iterable<DataSnapshot> rooms = snapshot.getChildren();// on prend l'état des rooms as un moment donner
                 for (DataSnapshot snapshot1 : rooms){// on vas regarder tout les room existante
-                     if(!snapshot1.getValue().toString().contains("player2") && snapshot1.getValue().toString().contains("deco")){//verifie si il y as deux joueur
+                     if(!snapshot1.getValue().toString().contains("player2") && snapshot1.getValue().toString().contains("co") ){//verifie si il y as deux joueur
                         roomList.add(snapshot1.getKey());//on vas rajouter les room une par une dans la liste
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
                         listView.setAdapter(adapter);//ajoute un élément dans la liste

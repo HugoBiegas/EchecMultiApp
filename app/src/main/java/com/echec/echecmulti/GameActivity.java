@@ -68,6 +68,8 @@ public class GameActivity extends AppCompatActivity {
     int selectionner=-1;//emplacement celectionner par la personne, initialiser a -1 car nes pas sur le plataux
     int coup=0;//nombre de coup jouer par la personne
     TextView textView;
+    TextView room;
+    TextView tourAction;
     Integer positiondepart=0;
     Integer positionarriver=0;
     String[] BordPiece = new String[64];
@@ -515,7 +517,8 @@ public class GameActivity extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
-
+        room = findViewById(R.id.NomRoom);
+        tourAction = findViewById(R.id.Aqui);
         gridView.setEnabled(false);
         database = FirebaseDatabase.getInstance();//créer une instance
 
@@ -612,6 +615,7 @@ public class GameActivity extends AppCompatActivity {
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
+                        tourAction.setText("tour :a vous");
                         //affiche le message que si il est pas échec est math
                         echecEtMath();
                         if(mathe==false && deco==false)
@@ -620,6 +624,7 @@ public class GameActivity extends AppCompatActivity {
                 }else{
                     if(snapshot.getValue().toString().contains("host")){//regarde si l'endroit ou les donnée a changer contient host:
                         action(snapshot);
+                        tourAction.setText("tour :a vous");
                         //affiche le message que si il est pas échec est math
                         echecEtMath();
                         if(mathe==false && deco==false)
@@ -926,7 +931,7 @@ public class GameActivity extends AppCompatActivity {
             messageRef.setValue(role + ":" + selectionner + ":" + i);//change l'informatiosn dans la BDD
             coup = 0;
             selectionner = -1;
-            Toast.makeText(GameActivity.this, "a votre adversaire de jouer", Toast.LENGTH_SHORT).show();
+            tourAction.setText("tour : a votre adversaire");
         }
 
     }
@@ -1101,6 +1106,7 @@ public class GameActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null) {
             roomName = extra.getString("roomName");
+            room.setText("room: "+roomName);
             ;//récupére la valeur envoiller
             CompartPlayer = extra.getString("playerhost");
             isPlayerExiste=extra.getBoolean("isPlayer2Existe");
