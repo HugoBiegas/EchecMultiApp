@@ -591,12 +591,7 @@ public class GameActivity extends AppCompatActivity {
                         intent.putExtra("douv","Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         startActivity(intent);//on lance l'activiter
                     }
-                    Intent ActivityB= new Intent(getApplicationContext(), RoomActivity.class);
-                    startActivity(ActivityB);
-                    messageRef = database.getReference("rooms/"+roomName);
-                    messageRef.removeValue();
                     finish();
-
                 }
             }
             @Override
@@ -615,6 +610,7 @@ public class GameActivity extends AppCompatActivity {
                 if(role.equals("host")){//teste si le joueur est l'host ou pas
                     if(snapshot.getValue().toString().contains("guest")){//regarde si l'endroit ou les donnée a changer contient guest
                         action(snapshot);
+                        isPlayerExiste=true;
                         tourAction.setText("tour :a vous");
                         //affiche le message que si il est pas échec est math
                         echecEtMath();
@@ -655,14 +651,14 @@ public class GameActivity extends AppCompatActivity {
                         }else{
                             messageRef =database.getReference("players/"+playerName);
                             messageRef.setValue("Defaite");
+                            messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
+                            messageRef.setValue("deco:"+playerName+":D");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv","Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             startActivity(intent);//on lance l'activiter
-                            messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
-                            messageRef.setValue("deco:"+playerName+":D");
                         }
                         finish();
-                            }
+                    }
                         });
     }
 
