@@ -10,22 +10,36 @@ import android.widget.TextView;
 
 import com.echec.echecmulti.Connection.Profile;
 import com.echec.echecmulti.Room.RoomActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Resultat extends AppCompatActivity {
     TextView textView;
     Button profil;
     Button rooms;
+    DatabaseReference messageRef;//pour faire référence as la BDD
+    FirebaseDatabase database;//pour se connecter as la BDD
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultat);
-        String voud="";
+        String voud="", roomName;
+        boolean sup=false;
         textView = findViewById(R.id.douv);
         profil = findViewById(R.id.profil);
         rooms = findViewById(R.id.Rooms);
+        database = FirebaseDatabase.getInstance();//créer une instance
+
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null) {
             voud = extra.getString("douv");
+            sup = extra.getBoolean("sup");
+            roomName = extra.getString("roomName");
+            if (sup==true){
+                messageRef = database.getReference("rooms/"+roomName);
+                messageRef.removeValue();
+            }
         }
         textView.setText(voud);
         profil.setOnClickListener(new View.OnClickListener() {

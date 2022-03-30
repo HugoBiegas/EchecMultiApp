@@ -152,6 +152,8 @@ public class GameActivity extends AppCompatActivity {
                 messageRef.setValue("Defaite");
                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                 intent.putExtra("douv","Egaliter");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("sup", false);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter
                 finish();
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
@@ -299,6 +301,9 @@ public class GameActivity extends AppCompatActivity {
                     messageRef.setValue("Defaite");
                     Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                     intent.putExtra("douv","Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("sup", false);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
                     startActivity(intent);//on lance l'activiter
                     finish();
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
@@ -348,6 +353,8 @@ public class GameActivity extends AppCompatActivity {
                 messageRef.setValue("Defaite");
                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                 intent.putExtra("douv","Egaliter");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("sup", false);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                 startActivity(intent);//on lance l'activiter                finish();
                 messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
                 messageRef.setValue("deco:"+playerName+":DP");
@@ -495,6 +502,8 @@ public class GameActivity extends AppCompatActivity {
                     messageRef.setValue("Defaite");
                     Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                     intent.putExtra("douv","Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("sup", false);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                     startActivity(intent);//on lance l'activiter
                     finish();
                     messageRef =database.getReference("rooms/"+roomName+"/playerRoom");
@@ -582,11 +591,15 @@ public class GameActivity extends AppCompatActivity {
                             messageRef.setValue("Defaite");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                            intent.putExtra("sup", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                            intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             startActivity(intent);//on lance l'activiter
                         } else {
                             messageRef.setValue("Victoir");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                            intent.putExtra("sup", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                            intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             startActivity(intent);//on lance l'activiter
                         }
                     finish();
@@ -637,20 +650,23 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         buttonqui.setEnabled(false);
-                        if(deco==false) {
                             if (isPlayerExiste == false) {
                                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                                 intent.putExtra("douv", "Game Quiter");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                                intent.putExtra("sup", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
                                 startActivity(intent);//on lance l'activiter
                             } else {
                                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                                 intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                                intent.putExtra("sup", false);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                                 startActivity(intent);//on lance l'activiter
                                 messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
                                 messageRef.setValue("deco:" + playerName + ":D");
                             }
                             finish();
-                        }
                         deco=true;
                     }
                         });
