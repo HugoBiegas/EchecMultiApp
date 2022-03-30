@@ -43,6 +43,7 @@ public class RoomActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
+    DatabaseReference messageRef;//pour faire référence as la BDD
     FirebaseUser user;
     boolean isPlayer2Existe=false;
     boolean cpt=false;
@@ -62,6 +63,7 @@ public class RoomActivity extends AppCompatActivity {
         addplayersEventLisener();
         retourProfile();
     }
+
 
 
     private void ItemCliquer(){
