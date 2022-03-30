@@ -74,6 +74,7 @@ public class Profile extends AppCompatActivity {
 
                 user.setText(value.getString("username"));
                 email.setText(value.getString("email"));
+                mCheckRoom.setEnabled(true);
                 victories.setText("Victoires : " + String.format("%.0f",nbvic));
                 loses.setText("Défaites : " + String.format("%.0f",nblos));
                 winrate.setText("Winrate : " + String.format("%.0f",pourcentage) + "%");

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EchecMulti">
         <activity
+            android:name=".Resultat"
+            android:exported="false" />
+        <activity
             android:name=".Connection.connexiontest"
             android:exported="true" />
         <activity
