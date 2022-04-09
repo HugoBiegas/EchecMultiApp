@@ -17,8 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Resultat extends AppCompatActivity {
     TextView textView;
     Button profil;
-    Button rooms;
-    boolean sup=false;
+    Button Rooms;
     String roomName;
     DatabaseReference messageRef;//pour faire référence as la BDD
     FirebaseDatabase database;//pour se connecter as la BDD
@@ -27,40 +26,41 @@ public class Resultat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultat);
-        String voud="";
-        textView = findViewById(R.id.douv);
-        profil = findViewById(R.id.profil);
-        rooms = findViewById(R.id.Rooms);
+        textView = findViewById(R.id.voud);
+        profil =findViewById(R.id.Profilvoud);
+        Rooms = findViewById(R.id.Roomsvoud);
         database = FirebaseDatabase.getInstance();//créer une instance
+        String douv ="";
+        boolean suprimer=false;
 
         Bundle extra = getIntent().getExtras();//récuper l'extrat envoiller par roomActivity
         if(extra != null) {
-            voud = extra.getString("douv");
-            sup = extra.getBoolean("sup");
-            roomName = extra.getString("roomName");
+            douv = extra.getString("douv");
+             suprimer = extra.getBoolean("sup");
+             roomName = extra.getString("roomName");
         }
-        textView.setText(voud);
+        textView.setText(douv);
+
         profil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Profile.class);//créations de la page Game
-                intent.putExtra("sup", sup);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                startActivity(intent);//on lance l'activiter
+                startActivity(new Intent(getApplicationContext(), Profile.class));
                 finish();
             }
         });
-        rooms.setOnClickListener(new View.OnClickListener() {
+
+        Rooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);//créations de la page Game
-                intent.putExtra("sup", sup);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                startActivity(intent);//on lance l'activiter
+                startActivity(new Intent(getApplicationContext(), RoomActivity.class));
                 finish();
             }
         });
-
+        messageRef =database.getReference("rooms/"+roomName);
+        if (suprimer == true ){
+            Toast.makeText(this, "passe", Toast.LENGTH_SHORT).show();
+            messageRef =database.getReference("rooms/"+roomName);
+            messageRef.removeValue();
+        }
     }
-
 }
