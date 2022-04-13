@@ -233,16 +233,15 @@ public class RoomActivity extends AppCompatActivity {
 
     private void addDefeat() {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
-            if(documentSnapshot.exists() && cpt==false)
-            {
-
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                documentReference.update("loses",loses+1);
-                cpt=true;
-            }
-        });
+       // DocumentReference documentReference = fStore.collection("users").document(userId);
+       // documentReference.addSnapshotListener(this, (documentSnapshot, e) -> {
+       //     if(documentSnapshot.exists() && cpt==false)
+       //     {
+      //          Integer loses = documentSnapshot.getLong("loses").intValue();
+      ///          documentReference.update("loses",loses+1);
+      //          cpt=true;
+       //     }
+      //  });
     }
 
     private void addVictory()
