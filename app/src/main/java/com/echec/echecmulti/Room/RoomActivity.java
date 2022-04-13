@@ -59,7 +59,6 @@ public class RoomActivity extends AppCompatActivity {
         CréationRoom();
         ItemCliquer();
         addRoomsEventListener();
-        addplayersEventLisener();
         retourProfile();
     }
 
@@ -158,51 +157,6 @@ public class RoomActivity extends AppCompatActivity {
         };
     }
 
-    private void addplayersEventLisener(){
-        roomsRef = database.getReference("players");//on récupére la référence de rooms
-        roomsRef.addValueEventListener(addPlayersEvent());
-    }
-    private ValueEventListener addPlayersEvent(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //controle de la liste des room
-                ArrayList<String> nomPlayer =  new ArrayList<>();
-                String chaine = snapshot.getValue().toString().substring(snapshot.getValue().toString().indexOf(","),snapshot.getValue().toString().length());
-                nomPlayer.add(snapshot.getValue().toString().substring(1,snapshot.getValue().toString().indexOf(",")));
-                boolean cpt=true;
-                while (cpt==true){
-                    chaine = chaine.substring(2,chaine.length());
-                    if (!chaine.contains(",")){
-                        nomPlayer.add(chaine.substring(0,chaine.indexOf("}")));
-                        cpt=false;
-                    }else{
-                        nomPlayer.add(chaine.substring(0,chaine.indexOf(",")));
-                        chaine = chaine.substring(chaine.indexOf(","),chaine.length());
-                    }
-                }
-                boolean ff=true;
-                for (int i = 0; i < nomPlayer.size(); i++) {
-                    if(nomPlayer.get(i).contains(playerName+"=Defaite")){//verifie si il y as deux joueur
-                        //incrémenter défaite
-                        addDefeat();
-                        DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
-                        PlayerRef.setValue("");
-                    }else if (nomPlayer.get(i).contains(playerName+"=Victoir")){
-                        //incrémenter victoir
-                        addVictory();
-                        DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
-                        PlayerRef.setValue("");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //erreur rien
-            }
-        };
-    }
 
     private void addRoomsEventListener(){
         roomsRef = database.getReference("rooms");//on récupére la référence de rooms
@@ -231,30 +185,4 @@ public class RoomActivity extends AppCompatActivity {
         };
     }
 
-    private void addDefeat() {
-        //Recherche dans la collection users de la BD à l'aide de de la variable userId
-         DocumentReference documentReference = fStore.collection("users").document(userId);
-         documentReference.addSnapshotListener((documentSnapshot, e) -> {
-           if(documentSnapshot.exists() && cpt==false)
-           {
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                documentReference.update("loses",loses+1);
-                cpt=true;
-           }
-        });
-    }
-
-    private void addVictory()
-    {
-        //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
-            if(documentSnapshot.exists() && cpt==false)
-            {
-                Integer victories = documentSnapshot.getLong("victories").intValue();
-                documentReference.update("victories",victories+1);
-                cpt=true;
-            }
-        });
-    }
 }

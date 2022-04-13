@@ -586,7 +586,8 @@ public class GameActivity extends AppCompatActivity {
                         intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         startActivity(intent);//on lance l'activiter
                         } else {
-                        messageRef.setValue("Victoir");Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                        messageRef.setValue("Victoir");
+                        Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                         intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
