@@ -8,30 +8,28 @@
     tools:context=".Resultat">
 
     <Button
-        android:id="@+id/Rooms"
+        android:id="@+id/Profilvoud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/douv"
+        android:layout_below="@id/voud"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50px"
-        android:text="Rooms" />
+        android:layout_marginTop="200px"
+        android:text="Profil" />
 
     <Button
-        android:id="@+id/profil"
+        android:id="@+id/Roomsvoud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/douv"
-        android:layout_marginTop="200px"
-        android:text="Profil"
- />
+        android:layout_marginTop="50px"
+        android:layout_below="@id/voud"
+        android:text="Rooms" />
 
     <TextView
-        android:id="@+id/douv"
+        android:id="@+id/voud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-/>
+        android:layout_centerHorizontal="true"
+        android:text="TextView" />
 </RelativeLayout>
