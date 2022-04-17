@@ -31,7 +31,6 @@ public class Resultat extends AppCompatActivity {
     FirebaseDatabase database;//pour se connecter as la BDD
     DatabaseReference messageRef;//pour faire référence as la BDD
     String playerName="";
-    String roomName="";
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId;
@@ -59,7 +58,6 @@ public class Resultat extends AppCompatActivity {
         if(extra != null) {
             douv = extra.getString("douv");
             playerName = extra.getString("playerName");
-            roomName = extra.getString("roomName");
         }
 
         textView.setText(douv);
@@ -106,19 +104,21 @@ public class Resultat extends AppCompatActivity {
                     }
                 }
                 boolean ff=true;
-                for (int i = 0; i < nomPlayer.size(); i++) {
-                    if(nomPlayer.get(i).contains(playerName+"=Defaite")){//verifie si il y as deux joueur
-                        //incrémenter défaite
-                        addDefeat();
-                        DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
-                        PlayerRef.setValue("");
-                    }else if (nomPlayer.get(i).contains(playerName+"=Victoir")){
-                        //incrémenter victoir
-                        addVictory();
-                        DatabaseReference PlayerRef = database.getReference("players/" + nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
-                        PlayerRef.setValue("");
+                    for (int i = 0; i < nomPlayer.size(); i++) {
+                        if(nomPlayer.get(i).contains(playerName+"=Defaite")){//verifie si il y as deux joueur
+                            //incrémenter défaite
+                            addDefeat();
+                            DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
+                            PlayerRef.setValue("");
+                        }
+                        if (nomPlayer.get(i).contains(playerName+"=Victoir")){
+                            //incrémenter victoir
+                            addVictory();
+                            DatabaseReference PlayerRef = database.getReference("players/"+nomPlayer.get(i).substring(0,nomPlayer.get(i).indexOf("=")));
+                            PlayerRef.setValue("");
+                        }
                     }
-                }
+
             }
 
             @Override
@@ -137,10 +137,7 @@ public class Resultat extends AppCompatActivity {
                     Integer loses = documentSnapshot.getLong("loses").intValue();
                     documentReference.update("loses",loses+1);
                     cpt=true;
-                    Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
-                    intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                    startActivity(intent);
-                    finish();
+
                 }
             });
 
@@ -157,10 +154,7 @@ public class Resultat extends AppCompatActivity {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
                 documentReference.update("victories",victories+1);
                 cpt=true;
-                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
-                intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                startActivity(intent);
-                finish();
+
             }
         });
 

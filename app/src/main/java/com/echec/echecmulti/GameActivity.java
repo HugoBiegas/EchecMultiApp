@@ -17,18 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.echec.echecmulti.Connection.Profile;
 import com.echec.echecmulti.Pion.Cavalier;
 import com.echec.echecmulti.Pion.Dame;
 import com.echec.echecmulti.Pion.Foue;
 import com.echec.echecmulti.Pion.PetitePion;
 import com.echec.echecmulti.Pion.Roi;
 import com.echec.echecmulti.Pion.Tour;
-import com.echec.echecmulti.Room.RoomActivity;
 import com.echec.echecmulti.adapter.adapterGrild;
 import com.echec.echecmulti.adapter.adapterMortBlanc;
 import com.echec.echecmulti.adapter.adapterMortNoir;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,19 +35,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GameActivity extends AppCompatActivity {
 
+    static boolean victoioudefaite=false;
     GridView gridView;
     GridView gridViewMortN;
     GridView gridViewMortB;
@@ -539,8 +534,22 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue() != null) {
-                    if (snapshot.getValue().toString().contains("player1")) {
-                        message();
+                    if (!snapshot.getValue().toString().contains("deco")){
+                        if (snapshot.getValue().toString().contains("player1")) {
+                            message();
+                        }
+                    }
+                }else{
+                    if (victoioudefaite == false) {
+                        Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                        intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        startActivity(intent);//on lance l'activiter
+                    }else{
+                        Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                        intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        startActivity(intent);//on lance l'activiter
                     }
                 }
             }
@@ -567,7 +576,6 @@ public class GameActivity extends AppCompatActivity {
         //Si addRoomEventClose ne donne rien on passe a addRoomEvent
         messageRef = database.getReference("rooms/"+roomName+"/message");//crée le message de la BDD
         messageRef.addValueEventListener(addRoomEvent());
-
     }
 
     //Cette méthode permet de savoir si la situation playerRoom a été mis a "déco" si oui on quitte
@@ -576,25 +584,28 @@ public class GameActivity extends AppCompatActivity {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue() != null) {
-                    if (snapshot.getValue().toString().contains("deco") && !snapshot.getValue().toString().contains(playerName)) {
-                        messageRef = database.getReference("players/" + playerName);
+            if (snapshot.getValue() != null) {
+                    if (snapshot.getValue().toString().contains("deco:") && !snapshot.getValue().toString().contains(playerName)) {
                         if (snapshot.getValue().toString().contains("DP")) {
+                            messageRef = database.getReference("players/" + playerName);
                             messageRef.setValue("Defaite");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                            intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             startActivity(intent);//on lance l'activiter
+                            victoioudefaite = false;
                         } else {
+                            messageRef = database.getReference("players/" + playerName);
                             messageRef.setValue("Victoir");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
-                            intent.putExtra("roomName", roomName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             startActivity(intent);//on lance l'activiter
+                            victoioudefaite = true;
                         }
                         finish();
+                        buttonqui.setEnabled(false);
+
                     }
                 }
             }
@@ -612,23 +623,24 @@ public class GameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //message recu
                 if (snapshot.getValue() != null) {
-                    if (role.equals("host")) {//teste si le joueur est l'host ou pas
-                        if (snapshot.getValue().toString().contains("guest")) {//regarde si l'endroit ou les donnée a changer contient guest
-                            action(snapshot);
-                            isPlayerExiste = true;
-                            tourAction.setText("tour :a vous");
-                            //affiche le message que si il est pas échec est math
-                            echecEtMath();
-                        }
-                    } else {
-                        if (snapshot.getValue().toString().contains("host")) {//regarde si l'endroit ou les donnée a changer contient host:
-                            action(snapshot);
-                            tourAction.setText("tour :a vous");
-                            //affiche le message que si il est pas échec est math
-                            echecEtMath();
+                        if (role.equals("host")) {//teste si le joueur est l'host ou pas
+                            if (snapshot.getValue().toString().contains("guest")) {//regarde si l'endroit ou les donnée a changer contient guest
+                                action(snapshot);
+                                isPlayerExiste = true;
+                                tourAction.setText("tour :a vous");
+                                //affiche le message que si il est pas échec est math
+                                echecEtMath();
+                            }
+                        } else {
+                            if (snapshot.getValue().toString().contains("host")) {//regarde si l'endroit ou les donnée a changer contient host:
+                                action(snapshot);
+                                tourAction.setText("tour :a vous");
+                                //affiche le message que si il est pas échec est math
+                                echecEtMath();
 
+                            }
                         }
-                    }
+
                 }
             }
 
@@ -653,17 +665,19 @@ public class GameActivity extends AppCompatActivity {
                             messageRef = database.getReference("rooms/"+roomName+"/playerRoom");
                             messageRef.setValue("GameQuite");
                         } else {
-                            messageRef = database.getReference("players/"+playerName);
-                            messageRef.setValue("Defaite");
                             Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                             intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                             intent.putExtra("playerName", playerName);
                             startActivity(intent);//on lance l'activiter
+                            messageRef = database.getReference("players/"+playerName);
+                            messageRef.setValue("Defaite");
                             messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
                             messageRef.setValue("deco:" + playerName + ":D");
                         }
+
                         finish();
                         deco=true;
+
                     }
                         });
     }

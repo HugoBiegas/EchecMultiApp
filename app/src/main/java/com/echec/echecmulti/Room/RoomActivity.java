@@ -63,7 +63,6 @@ public class RoomActivity extends AppCompatActivity {
         retourProfile();
     }
 
-
     private void ItemCliquer(){
         //si une personne clique sur un itéme de la liste des room
         listView.setOnItemClickListener(Itemcréjoueur2());
@@ -176,7 +175,7 @@ public class RoomActivity extends AppCompatActivity {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
                         listView.setAdapter(adapter);//ajoute un élément dans la liste
                     }
-                     if (snapshot1.getValue().toString().contains("deco:") || snapshot1.getValue().toString().contains("GameQuite")){
+                     if ( snapshot1.getValue().toString().contains("GameQuite") || snapshot1.getValue().toString().contains("deco")){
                          DatabaseReference ref = database.getReference("rooms/"+snapshot1.getKey());
                          ref.removeValue();
                      }

@@ -92,8 +92,10 @@ public class Profile extends AppCompatActivity {
                     mCheckRoom.setText("Connexion...");//changement du bouton connections en connections en cours
                     mCheckRoom.setEnabled(false);//pour que le bouton ne soit pas clicable une dexiéme foi
                     playerRef = database.getReference("players/" + playerName);//créations de players avec une sous catégori avec le nom du joueur
-                    addEventListener();//appelle de fonctions
+                    //addEventListener();//appelle de fonctions
                     playerRef.setValue("");//on mais la référence du joueur a ""(on pourat mettre d'autre info)
+                    startActivity(new Intent(getApplicationContext(), RoomActivity.class));//on lance l'activiter RooomActivity
+                    finish();//on arréte la tache actuelle
                 }
             }
         });

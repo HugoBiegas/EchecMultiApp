@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), Profile.class));
             finish();
         }
+
+        Source: https://prograide.com/pregunta/43777/comment-detecter-si-un-utilisateur-est-dej-connecte--firebase
         //Vérification des champs avant d'appuyer sur le bouton
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
