@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -175,6 +176,10 @@ public class RoomActivity extends AppCompatActivity {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(RoomActivity.this, android.R.layout.simple_list_item_1,roomList);//créer une room dans roomActivity avec la liste roomList
                         listView.setAdapter(adapter);//ajoute un élément dans la liste
                     }
+                     if (snapshot1.getValue().toString().contains("deco:") || snapshot1.getValue().toString().contains("GameQuite")){
+                         DatabaseReference ref = database.getReference("rooms/"+snapshot1.getKey());
+                         ref.removeValue();
+                     }
                 }
             }
 

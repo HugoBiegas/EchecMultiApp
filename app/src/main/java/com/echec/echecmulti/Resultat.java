@@ -2,6 +2,7 @@ package com.echec.echecmulti;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,7 +51,6 @@ public class Resultat extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
         userId = fAuth.getCurrentUser().getUid();
-
         addplayersEventLisener();
 
         String douv ="";
@@ -130,28 +130,39 @@ public class Resultat extends AppCompatActivity {
 
             private void addDefeat(){
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this,(documentSnapshot, e) -> {
-            if(documentSnapshot.exists() && cpt==false)
-            {
-                Integer loses = documentSnapshot.getLong("loses").intValue();
-                documentReference.update("loses",loses+1);
-                cpt=true;
-            }
-        });
+                DocumentReference documentReference = fStore.collection("users").document(userId);
+                documentReference.addSnapshotListener((documentSnapshot, e) -> {
+                if(documentSnapshot.exists() && cpt==false)
+                {
+                    Integer loses = documentSnapshot.getLong("loses").intValue();
+                    documentReference.update("loses",loses+1);
+                    cpt=true;
+                    Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                    intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+
     }
 
     private void addVictory()
     {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this,(documentSnapshot, e) -> {
+        documentReference.addSnapshotListener((documentSnapshot, e) -> {
             if(documentSnapshot.exists() && cpt==false)
             {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
                 documentReference.update("victories",victories+1);
                 cpt=true;
+                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);
+                finish();
             }
         });
+
     }
 }
