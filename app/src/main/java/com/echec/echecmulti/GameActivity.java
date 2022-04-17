@@ -87,7 +87,6 @@ public class GameActivity extends AppCompatActivity {
     DatabaseReference messageRef;//pour faire référence as la BDD
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userId;
     FirebaseUser user;
 
     @Override
@@ -515,7 +514,6 @@ public class GameActivity extends AppCompatActivity {
         textView = findViewById(R.id.NomJoueur);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
         room = findViewById(R.id.NomRoom);
         tourAction = findViewById(R.id.Aqui);

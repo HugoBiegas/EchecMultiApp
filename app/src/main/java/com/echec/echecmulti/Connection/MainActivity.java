@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echec.echecmulti.R;
+import com.echec.echecmulti.Resultat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mCreateBtn, forgotTextLink;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
+    String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
         mCreateBtn = findViewById(R.id.createText);
         fAuth = FirebaseAuth.getInstance();
         forgotTextLink = findViewById(R.id.forgotTextLink);
+        if (fAuth.getCurrentUser() != null)
+            userId = fAuth.getCurrentUser().getUid();
+        if (userId != null){
+            startActivity(new Intent(getApplicationContext(), Profile.class));
+            finish();
+        }
         //Vérification des champs avant d'appuyer sur le bouton
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
