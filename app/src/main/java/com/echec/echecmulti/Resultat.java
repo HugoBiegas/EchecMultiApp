@@ -131,7 +131,7 @@ public class Resultat extends AppCompatActivity {
             private void addDefeat(){
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+        documentReference.addSnapshotListener(this,(documentSnapshot, e) -> {
             if(documentSnapshot.exists() && cpt==false)
             {
                 Integer loses = documentSnapshot.getLong("loses").intValue();
@@ -145,7 +145,7 @@ public class Resultat extends AppCompatActivity {
     {
         //Recherche dans la collection users de la BD à l'aide de de la variable userId
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener((documentSnapshot, e) -> {
+        documentReference.addSnapshotListener(this,(documentSnapshot, e) -> {
             if(documentSnapshot.exists() && cpt==false)
             {
                 Integer victories = documentSnapshot.getLong("victories").intValue();
