@@ -149,7 +149,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-
     private boolean echecEtMath(){
         ArrayList<String> teste;
         boolean fin=false;
@@ -1095,6 +1094,29 @@ public class GameActivity extends AppCompatActivity {
                     colorActionPion.remove("D:" + (attaque-2));
                 else if (attaque+2 == coordonner[j] && attaque+1 == i)
                     colorActionPion.remove("D:" + (attaque+2));
+
+            }
+            ArrayList<Integer> toucher = RechecheGuesttoucherHost(BordPiece,colorP);
+            int nb=0;
+            for (int j = 0; j < toucher.size(); j++) {
+                nb = toucher.get(j);
+                Toast.makeText(this, nb+"", Toast.LENGTH_SHORT).show();
+                if((nb-1) == i)
+                    colorActionPion.remove("D:" + (i-1));
+                else if ((nb+1) == i)
+                    colorActionPion.remove("D:" + (i+1));
+                else if ((nb-9) == i)
+                    colorActionPion.remove("D:" + (i+9));
+                else if ((nb-8) == i)
+                    colorActionPion.remove("D:" + (i+8));
+                else if ((nb-7) == i)
+                    colorActionPion.remove("D:" + (i+7));
+                else if ((nb+8) == i)
+                    colorActionPion.remove("D:" + (i-8));
+                else if ((nb+7) == i)
+                    colorActionPion.remove("D:" + (i-7));
+                else if ((nb+9) == i)
+                    colorActionPion.remove("D:" + (i-9));
             }
 
         }
