@@ -96,6 +96,59 @@ public class GameActivity extends AppCompatActivity {
         itemaction();
         quiterBTN();
     }
+    private void Aveuxfaiblesse(){
+        boolean roiB=false,roiN=false;
+        for (int i = 0; i < BordPiece.length; i++) {
+            if (BordPiece[i].equals("R") && colorP[i].equals("B")){
+                roiB = true;
+            }else if(BordPiece[i].equals("R") && colorP[i].equals("N")){
+                roiN = true;
+            }
+        }
+        //teste pour voir si un roi a disparut
+        if (roiB == false){
+            //si oui on regarde as qui ces de jouer
+            if (role.equals("host")){
+                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);//on lance l'activiter
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("Defaite");
+                messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
+                messageRef.setValue("deco:" + playerName + ":D");
+            }else{
+                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);//on lance l'activiter
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("Victoir");
+                messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
+                messageRef.setValue("deco:" + playerName + ":D");
+            }
+        }else if (roiN == false){
+            if (role.equals("host")){
+                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);//on lance l'activiter
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("Victoir");
+                messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
+                messageRef.setValue("deco:" + playerName + ":D");
+            }else{
+                Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                startActivity(intent);//on lance l'activiter
+                messageRef = database.getReference("players/"+playerName);
+                messageRef.setValue("Defaite");
+                messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
+                messageRef.setValue("deco:" + playerName + ":D");
+            }
+        }
+    }
 
     private boolean echecEtMath(){
         ArrayList<String> teste;
@@ -505,7 +558,9 @@ public class GameActivity extends AppCompatActivity {
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
         gridView = findViewById(R.id.grid_echec);
         gridViewMortN = findViewById(R.id.grid_echec_mort_N);
+        gridViewMortN.setEnabled(true);
         gridViewMortB = findViewById(R.id.grid_echec_mort_B);
+        gridViewMortB.setEnabled(true);
         textView = findViewById(R.id.NomJoueur);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -750,6 +805,8 @@ public class GameActivity extends AppCompatActivity {
                 BordPiece[positionarriver] = déplace;
                 déplace = ColorDepDepart(déplace);
                 colorP[positionarriver] = déplace;
+            Aveuxfaiblesse();
+
 
         }
         int[] renplacementB = new int[]{ 56,57,58,59,60,61,62,63};
