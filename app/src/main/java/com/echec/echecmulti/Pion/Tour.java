@@ -1,6 +1,12 @@
 package com.echec.echecmulti.Pion;
 
+import static android.content.ContentValues.TAG;
+
 import android.icu.text.RelativeDateTimeFormatter;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.echec.echecmulti.GameActivity;
 
 import java.util.ArrayList;
 
@@ -44,20 +50,22 @@ public class Tour {
             ecart-=8;
         }
         for (int i=0;i<7;i++){
-            if (coordoner == 0 || coordoner == 63)
+            if (coordoner == 0 )
                 bordBase = 0;
-            else if (coordoner == borderD[i])
+            if (coordoner==63)
                 bordBase = 1;
-            else if (coordoner == borderG[i])
+            else if (coordoner == borderD[i])
                 bordBase = 2;
+            else if (coordoner == borderG[i])
+                bordBase = 3;
         }
         non=0;
         ecart = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-                    if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+                    if (bordBase ==1 || bordBase == 2 )
                         non=1;
-                    else if (non == 0){
+                    else if (non == 0 && ecart>0 && ecart<63){
                         for (int j=0;j<7;j++){
                             if (borderD[j] == ecart || borderG[j] ==ecart){
                                 non=1;
@@ -86,9 +94,9 @@ public class Tour {
         ecart = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (bordBase == 0|| bordBase == 3)
                 non=1;
-            else if (non == 0){
+            else if (non == 0 && ecart>0 && ecart<63){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == ecart || borderG[j] ==ecart){
                         non=1;
@@ -133,9 +141,8 @@ public class Tour {
                 else if (color[ecart].equals("B")){
                     déplacement.add("A:"+ecart);
                     non =1;
-                }else{
+                }else
                     non =1;
-                }
             }else
                 i=8;//sortire de la boucle
             ecart+=8;
@@ -157,20 +164,23 @@ public class Tour {
             ecart-=8;
         }
         for (int i=0;i<7;i++){
-            if (coordoner == 0 || coordoner == 63)
+            if (coordoner == 0 )
                 bordBase = 0;
-            else if (coordoner == borderD[i])
+            if (coordoner==63)
                 bordBase = 1;
-            else if (coordoner == borderG[i])
+            else if (coordoner == borderD[i])
                 bordBase = 2;
+            else if (coordoner == borderG[i])
+                bordBase = 3;
         }
+
         non=0;
         ecart = coordoner+1;
         //tour pour manger sur la droit
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (bordBase ==1 || bordBase == 2 )
                 non=1;
-            else if (non == 0){
+            else if (non == 0 && ecart>0 && ecart<63){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == ecart || borderG[j] ==ecart){
                         non=1;
@@ -199,9 +209,9 @@ public class Tour {
         ecart = coordoner-1;
         //tour pour manger sur la gauche
         for (int i=0;i<8;i++){
-            if (bordBase ==0 ||ecart == (coordoner+1) && bordBase == 1||bordBase == 2 && ecart == (coordoner-1))
+            if (bordBase == 0|| bordBase == 3)
                 non=1;
-            else if (non == 0){
+            else if (non == 0 && ecart>0 && ecart<63){
                 for (int j=0;j<7;j++){
                     if (borderD[j] == ecart || borderG[j] ==ecart){
                         non=1;
@@ -225,7 +235,6 @@ public class Tour {
             }else
                 i=8;
             ecart--;
-        }
-        return déplacement;
+        }        return déplacement;
     }
 }

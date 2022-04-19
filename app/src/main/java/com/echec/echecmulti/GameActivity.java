@@ -43,7 +43,8 @@ import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
 
-    static boolean victoioudefaite=false;
+     static boolean victoioudefaite=false;
+    int future=-1;
     GridView gridView;
     GridView gridViewMortN;
     GridView gridViewMortB;
@@ -116,7 +117,10 @@ public class GameActivity extends AppCompatActivity {
                 messageRef = database.getReference("players/"+playerName);
                 messageRef.setValue("Defaite");
                 messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
-                messageRef.setValue("deco:" + playerName + ":D");
+                messageRef.setValue("deco:" + playerName + ":DP");
+                victoioudefaite = false;
+                finish();
+
             }else{
                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                 intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
@@ -125,7 +129,10 @@ public class GameActivity extends AppCompatActivity {
                 messageRef = database.getReference("players/"+playerName);
                 messageRef.setValue("Victoir");
                 messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
-                messageRef.setValue("deco:" + playerName + ":D");
+                messageRef.setValue("deco:" + playerName + ":DP");
+                victoioudefaite = true;
+                finish();
+
             }
         }else if (roiN == false){
             if (role.equals("host")){
@@ -136,7 +143,9 @@ public class GameActivity extends AppCompatActivity {
                 messageRef = database.getReference("players/"+playerName);
                 messageRef.setValue("Victoir");
                 messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
-                messageRef.setValue("deco:" + playerName + ":D");
+                messageRef.setValue("deco:" + playerName + ":DP");
+                victoioudefaite = true;
+                finish();
             }else{
                 Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                 intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
@@ -145,7 +154,10 @@ public class GameActivity extends AppCompatActivity {
                 messageRef = database.getReference("players/"+playerName);
                 messageRef.setValue("Defaite");
                 messageRef = database.getReference("rooms/" + roomName + "/playerRoom");
-                messageRef.setValue("deco:" + playerName + ":D");
+                messageRef.setValue("deco:" + playerName + ":DP");
+                victoioudefaite = false;
+                finish();
+
             }
         }
     }
@@ -557,9 +569,9 @@ public class GameActivity extends AppCompatActivity {
         buttonqui = findViewById(R.id.quiter);//récupére le bouton quiter
         gridView = findViewById(R.id.grid_echec);
         gridViewMortN = findViewById(R.id.grid_echec_mort_N);
-        gridViewMortN.setEnabled(true);
+        gridViewMortN.setEnabled(false);
         gridViewMortB = findViewById(R.id.grid_echec_mort_B);
-        gridViewMortB.setEnabled(true);
+        gridViewMortB.setEnabled(false);
         textView = findViewById(R.id.NomJoueur);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -598,13 +610,18 @@ public class GameActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                         intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
                         startActivity(intent);//on lance l'activiter
                     }else{
                         Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
                         intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
                         intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
                         startActivity(intent);//on lance l'activiter
                     }
+                    finish();
                 }
             }
 
@@ -661,7 +678,24 @@ public class GameActivity extends AppCompatActivity {
                         buttonqui.setEnabled(false);
 
                     }
+                }else{
+                if (victoioudefaite == false) {
+                    Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                    intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
+                    startActivity(intent);//on lance l'activiter
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                    intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                    intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+
+                    startActivity(intent);//on lance l'activiter
                 }
+                finish();
+            }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -695,6 +729,21 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
 
+                }else{
+                    if (victoioudefaite == false) {
+                        Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                        intent.putExtra("douv", "Defaite");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        startActivity(intent);//on lance l'activiter
+                    }else{
+                        Intent intent = new Intent(getApplicationContext(), Resultat.class);//créations de la page Game
+                        intent.putExtra("douv", "Victoir");//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("playerName", playerName);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        intent.putExtra("supprimer", true);//on donne en extrat la valeur de la roomName pour savoir si la personne et un gest ou l'host
+                        startActivity(intent);//on lance l'activiter
+                    }
+                    finish();
                 }
             }
 
@@ -744,7 +793,7 @@ public class GameActivity extends AppCompatActivity {
     private void deplacement(){
         String déplace="";
         //rock en hat as gauche
-        if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2) && positiondepart == 4 && BordPiece[0].equals("T")){
+        if(positionarriver == 0 && (roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2|| roi.GethostRock() == true) && positiondepart == 4  ){
             déplace=BordDepDepart(déplace);
             BordPiece[2]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -754,8 +803,9 @@ public class GameActivity extends AppCompatActivity {
             BordPiece[3]=déplace;
             déplace=ColorDepArriver(déplace);
             colorP[3]= déplace;
+            roi.sethostRock(false);
             //rock en aux a droite
-        }else if (positionarriver==7 && BordPiece[7].equals("T")&&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2 ) && positiondepart == 4){
+        }else if (positionarriver==7 &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 2 || roi.GethostRock() == true) && positiondepart == 4 ){
             déplace=BordDepDepart(déplace);
             BordPiece[6]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -765,9 +815,10 @@ public class GameActivity extends AppCompatActivity {
             BordPiece[5]=déplace;
             déplace=ColorDepArriver(déplace);
             colorP[5]= déplace;
+            roi.sethostRock(false);
         }
         //rocke en bat as droit
-        else if (positionarriver==56 && BordPiece[56].equals("T") &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1) && positiondepart == 60){
+        else if (positionarriver==56  &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1||roi.GetguestRock() == true) && positiondepart == 60 ){
             déplace=BordDepDepart(déplace);
             BordPiece[58]=déplace;
             déplace=ColorDepDepart(déplace);
@@ -777,9 +828,10 @@ public class GameActivity extends AppCompatActivity {
             BordPiece[59]=déplace;
             déplace=ColorDepArriver(déplace);
             colorP[59]= déplace;
+            roi.setguestRock(false);
         }
         //rocke en bat as gauche
-        else if (positionarriver==63 && BordPiece[63].equals("T") &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1) && positiondepart == 60)
+        else if (positionarriver==63  &&(roi.GetbougRoi() == 0 || roi.GetbougRoi() == 1|| roi.GetguestRock() == true) && positiondepart == 60 )
         {
             déplace=BordDepDepart(déplace);
             BordPiece[62]=déplace;
@@ -790,6 +842,8 @@ public class GameActivity extends AppCompatActivity {
             BordPiece[61]=déplace;
             déplace=ColorDepArriver(déplace);
             colorP[61]= déplace;
+            roi.setguestRock(false);
+
             //mise en place des déplacement clasique
         }else{
             if (colorP[positionarriver].equals("N")){
@@ -808,6 +862,8 @@ public class GameActivity extends AppCompatActivity {
 
 
         }
+        //reste du future
+        future=-1;
         int[] renplacementB = new int[]{ 56,57,58,59,60,61,62,63};
         int[] renplacementN = new int[]{ 0,1,2,3,4,5,6,7};
         for (int i = 0; i < renplacementB.length; i++) {

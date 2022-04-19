@@ -58,6 +58,9 @@ public class Resultat extends AppCompatActivity {
         if(extra != null) {
             douv = extra.getString("douv");
             playerName = extra.getString("playerName");
+            boolean sup = extra.getBoolean("supprimer");
+            if (sup == true)
+                finish();
         }
 
         textView.setText(douv);
