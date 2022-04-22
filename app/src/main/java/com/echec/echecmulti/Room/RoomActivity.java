@@ -19,8 +19,10 @@ import com.echec.echecmulti.Connection.Profile;
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.FirebaseAppCheckTokenProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,11 +49,21 @@ public class RoomActivity extends AppCompatActivity {
     String userId;
     FirebaseUser user;
     boolean isPlayer2Existe=false;
-    boolean cpt=false;
 
     FirebaseDatabase database;//connections a la base de données
     DatabaseReference roomRef;//référence as la base de donnée pour une room
     DatabaseReference roomsRef;//référence as la base de donnée pour les room
+    private FirebaseAuth mAuth;
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +126,7 @@ public class RoomActivity extends AppCompatActivity {
             }
         };
     }
+
 
     private void initialisation(){
         database = FirebaseDatabase.getInstance();

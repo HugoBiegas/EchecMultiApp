@@ -23,8 +23,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     ProgressBar progressBar;
     String userId;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -49,12 +52,8 @@ public class MainActivity extends AppCompatActivity {
         mCreateBtn = findViewById(R.id.createText);
         fAuth = FirebaseAuth.getInstance();
         forgotTextLink = findViewById(R.id.forgotTextLink);
-        if (fAuth.getCurrentUser() != null)
-            userId = fAuth.getCurrentUser().getUid();
-        if (userId != null){
-            startActivity(new Intent(getApplicationContext(), Profile.class));
-            finish();
-        }
+        mAuth = FirebaseAuth.getInstance();
+
 
         Source: https://prograide.com/pregunta/43777/comment-detecter-si-un-utilisateur-est-dej-connecte--firebase
         //Vérification des champs avant d'appuyer sur le bouton
@@ -89,10 +88,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(MainActivity.this,"Connexion réussi", Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
                             startActivity(new Intent(getApplicationContext(), Profile.class));
                         }
                         else {
                             Toast.makeText(MainActivity.this,"Erreur! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            updateUI(null);
                             progressBar.setVisibility(View.GONE);
                             mLoginBtn.setEnabled(true);
                         }
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         //Bouton switch layout Creer compte
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
@@ -152,5 +155,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void updateUI(FirebaseUser account){
 
+        if(account != null){
+            Toast.makeText(this,"You Signed In successfully",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this,MainActivity.class));
+
+        }else {
+            Toast.makeText(this,"You Didnt signed in",Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

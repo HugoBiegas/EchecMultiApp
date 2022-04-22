@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.echec.echecmulti.Connection.Profile;
 import com.echec.echecmulti.Room.RoomActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,17 @@ public class Resultat extends AppCompatActivity {
     String userId;
     DatabaseReference roomsRef;//référence as la base de donnée pour les room
     boolean cpt=false;
-
+    private FirebaseAuth mAuth;
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+    }
 
 
     @Override

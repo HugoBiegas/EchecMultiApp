@@ -50,15 +50,16 @@
         android:layout_marginVertical="20px"
         android:columnWidth="1000px"
         android:numColumns="8"
-        android:scrollbars="none">
+        android:scrollbars="none"/>
 
-        <TextView
-            android:id="@+id/Aqui"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="150px"
-            android:text="tour : " />
-    </GridView>
+    <TextView
+        android:id="@+id/Aqui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/NomRoom"
+        android:layout_toRightOf="@id/quiter"
+        android:layout_marginLeft="50px"
+        android:text="tour : " />
 
     <GridView
         android:id="@+id/grid_echec_mort_B"

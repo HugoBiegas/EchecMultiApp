@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.echec.echecmulti.GameActivity;
 import com.echec.echecmulti.R;
 import com.echec.echecmulti.Room.RoomActivity;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +41,17 @@ public class Profile extends AppCompatActivity {
     String playerName="";   //le nom du joueur
     FirebaseDatabase database; // connections as la BDD
     DatabaseReference playerRef;// référence de la BD
-
+    private FirebaseAuth mAuth;
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            currentUser.reload();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
