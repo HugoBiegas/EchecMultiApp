@@ -53,7 +53,12 @@ public class MainActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         forgotTextLink = findViewById(R.id.forgotTextLink);
         mAuth = FirebaseAuth.getInstance();
-
+        if (fAuth.getCurrentUser() != null)
+            userId = fAuth.getCurrentUser().getUid();
+        if (userId != null){
+            startActivity(new Intent(getApplicationContext(), Profile.class));
+            finish();
+        }
 
         Source: https://prograide.com/pregunta/43777/comment-detecter-si-un-utilisateur-est-dej-connecte--firebase
         //Vérification des champs avant d'appuyer sur le bouton
